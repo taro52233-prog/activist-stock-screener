@@ -170,6 +170,27 @@ td.name { font-weight: 600; }
 .pl-neg { color: var(--bad); font-weight: 700; }
 
 canvas { max-width: 100%; }
+
+/* ===== 価格チャート周り ===== */
+.filing-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 8px; }
+.fs-item { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
+.fs-item .k { font-size: .72rem; color: var(--text-muted); font-weight: 600; }
+.fs-item .v { font-size: 1.15rem; font-weight: 800; }
+.chart-scroll { width: 100%; overflow-x: auto; }
+.chart-scroll svg { min-width: 520px; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: .78rem; color: var(--text-muted); }
+.legend .lg { display: inline-flex; align-items: center; gap: 6px; }
+.legend .sw { width: 16px; height: 3px; border-radius: 2px; display: inline-block; }
+.legend .sw.dash { background-image: repeating-linear-gradient(90deg, currentColor 0 4px, transparent 4px 7px); }
+
+/* ===== サブスコア横棒 ===== */
+.bars { display: flex; flex-direction: column; gap: 6px; }
+.bar-row { display: grid; grid-template-columns: 92px 1fr 28px; align-items: center; gap: 8px; font-size: .82rem; }
+.bar-row .bl { color: var(--text-muted); }
+.bar-row .bt { background: var(--surface-2); border-radius: 6px; height: 10px; overflow: hidden; }
+.bar-row .bf { display: block; height: 100%; background: var(--accent); border-radius: 6px; }
+.bar-row .bv { text-align: right; font-weight: 700; color: var(--text-muted); }
+
 @media (max-width: 640px) {
   .nav a { padding: 6px 10px; font-size: .82rem; }
   .brand { font-size: .95rem; }

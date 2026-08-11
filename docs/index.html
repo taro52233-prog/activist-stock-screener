@@ -35,7 +35,7 @@
               <th data-k="holding_ratio">保有率</th>
               <th data-k="pbr">PBR</th>
               <th data-k="dividend_yield">利回り</th>
-              <th data-k="deviation">取得単価比</th>
+              <th data-k="deviation">提出日比</th>
               <th class="l" data-k="status">状態</th>
             </tr>
           </thead>
@@ -54,7 +54,7 @@
   <script>
     let DATA = null, ROWS = [], sortKey = "score", sortDir = -1;
 
-    function deviation(c){ return c.derived.deviation_from_acq; }
+    function deviation(c){ return c.derived.deviation_from_filing; }
 
     function passFilters(c){
       const minScore = +document.getElementById("minScore").value;

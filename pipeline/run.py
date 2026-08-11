@@ -141,14 +141,16 @@ def enrich_and_score(candidates: list[Candidate], conf, warnings: list[str]) -> 
         except Exception as e:  # noqa: BLE001
             warnings.append(f"J-Quants認証失敗: {e}")
 
-    # 株価
-    prices: dict = {}
+    # 株価＋履歴
+    ph: dict = {}
     if codes:
         try:
-            from prices import get_prices
-            prices = get_prices(codes)
+            from prices import get_prices_and_histories
+            ph = get_prices_and_histories(codes)
         except Exception as e:  # noqa: BLE001
             warnings.append(f"株価取得失敗: {e}")
+
+    from prices import price_on_or_before, downsample
 
     for c in candidates:
         if c.code in fundamentals:
@@ -157,7 +159,10 @@ def enrich_and_score(candidates: list[Candidate], conf, warnings: list[str]) -> 
         if info:
             c.name = info.get("CompanyName") or c.name
             c.market = info.get("MarketCodeName") or info.get("MarketCode") or c.market
-        c.price = prices.get(c.code, PriceInfo())
+
+        price_info, hist = ph.get(c.code, (PriceInfo(), []))
+        c.price = price_info
+        c.price_history = downsample(hist, 150)
 
         # EDINETから得た発行済株式数を、J-Quants欠損時のフォールバックに使う
         edinet_shares = getattr(c, "_edinet_shares_out", None)
@@ -168,6 +173,14 @@ def enrich_and_score(candidates: list[Candidate], conf, warnings: list[str]) -> 
             getattr(c, "_shares_held", None), getattr(c, "_acq_funds", None)
         )
         c.derived = screen.compute_derived(c.price, c.fundamentals, est, method)
+
+        # 大量保有 提出日の株価と、現在との差分
+        if hist and c.filing_date:
+            pf = price_on_or_before(hist, c.filing_date)
+            if pf and c.price.close is not None and pf["c"]:
+                c.derived.price_at_filing = pf["c"]
+                c.derived.deviation_from_filing = (c.price.close - pf["c"]) / pf["c"]
+
         screen.score_candidate(c, w, th, known_bonus=getattr(c, "_bonus", 0))
 
 

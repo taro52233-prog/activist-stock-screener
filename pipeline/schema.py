@@ -63,6 +63,8 @@ class Derived:
     est_acq_price: Optional[float] = None
     acq_price_method: str = ""       # funds_div_shares | period_avg | filing_period_price | none
     deviation_from_acq: Optional[float] = None   # (現値-取得単価)/取得単価
+    price_at_filing: Optional[float] = None       # 大量保有 提出日の終値
+    deviation_from_filing: Optional[float] = None  # (現値-提出日終値)/提出日終値
 
 
 @dataclass
@@ -92,6 +94,7 @@ class Candidate:
     doc_id: str = ""
     doc_url: str = ""
     activist_exited: bool = False
+    price_history: list = field(default_factory=list)  # [{d,c}...] 約1年の日次終値
     signal: Signal = field(default_factory=Signal)
     status: str = "UNCHANGED"   # NEW | CHANGED | UNCHANGED
 
@@ -114,6 +117,7 @@ def candidate_to_dict(c: Candidate) -> dict:
         "name": c.name,
         "market": c.market,
         "price": asdict(c.price),
+        "price_history": c.price_history,
         "fundamentals": asdict(c.fundamentals),
         "derived": asdict(c.derived),
         "activist": {

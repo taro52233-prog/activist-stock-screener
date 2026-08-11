@@ -54,18 +54,48 @@ def build() -> list[Candidate]:
         c.fund, c.is_known_activist = fund, is_known
         c.holding_ratio, c.prev_ratio = hold, prev
         c.ratio_change = (hold - prev) if prev is not None else None
-        c.filing_date = "2026-08-08"
         c.doc_id, c.doc_url = "S100SAMPLE", cfg.EDINET_VIEW_URL
         c.price = PriceInfo(close=close, date="2026-08-08", source="sample")
         c.fundamentals = Fundamentals(
             equity=equity, shares_out=shares, treasury=treasury, dps_result=dps,
             eps=eps, cash=cash, interest_debt=debt, statement_date="2026-03-31",
         )
+        # 架空の価格履歴（提出日＝終端の20営業日前・提出日株価＝acq）
+        hist, fi = _make_history(close, acq)
+        c.price_history = hist
+        c.filing_date = hist[fi]["d"]
         c.derived = screen.compute_derived(c.price, c.fundamentals, acq, "funds_div_shares")
+        c.derived.price_at_filing = acq
+        c.derived.deviation_from_filing = (close - acq) / acq if acq else None
         bonus = 10 if is_known else 0
         screen.score_candidate(c, weights, th, known_bonus=bonus)
         out.append(c)
     return out
+
+
+def _make_history(close: float, acq: float):
+    """架空の日次終値（約150点）と提出日インデックスを返す。"""
+    import math
+    from datetime import date, timedelta
+    as_of = date(2026, 8, 8)
+    n = 150
+    days = []
+    d = as_of
+    while len(days) < n:
+        if d.weekday() < 5:
+            days.append(d)
+        d -= timedelta(days=1)
+    days = list(reversed(days))
+    fi = n - 20  # 提出日
+    pts = []
+    for i, day in enumerate(days):
+        t = i / (n - 1)
+        base = close * (1.25 - 0.25 * t)
+        wig = close * 0.05 * math.sin(i / 6.0)
+        pts.append({"d": day.isoformat(), "c": round(base + wig, 1)})
+    pts[fi]["c"] = round(acq, 1)
+    pts[-1]["c"] = round(close, 1)
+    return pts, fi
 
 
 def main() -> None:
