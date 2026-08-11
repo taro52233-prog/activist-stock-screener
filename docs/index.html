@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>アクティビスト追随スクリーナー</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <header class="appbar" id="appbar"></header>
+  <main class="wrap">
+    <div id="banner"></div>
+
+    <section class="tiles" id="tiles"></section>
+
+    <div class="card">
+      <div class="filters">
+        <label>最低スコア <span id="scoreVal">0</span>
+          <input type="range" id="minScore" min="0" max="100" step="5" value="0" />
+        </label>
+        <label><input type="checkbox" id="onlyKnown" /> 既知アクティビストのみ</label>
+        <label><input type="checkbox" id="onlyPbr" /> PBR&lt;1のみ</label>
+        <label><input type="checkbox" id="onlyEntry" /> エントリー可のみ</label>
+        <label><input type="checkbox" id="onlyWatch" /> ウォッチのみ</label>
+      </div>
+      <div class="table-scroll">
+        <table id="tbl">
+          <thead>
+            <tr>
+              <th class="l" data-k="star">★</th>
+              <th data-k="score">スコア</th>
+              <th class="l" data-k="code">コード</th>
+              <th class="l" data-k="name">銘柄</th>
+              <th class="l" data-k="fund">アクティビスト</th>
+              <th data-k="holding_ratio">保有率</th>
+              <th data-k="pbr">PBR</th>
+              <th data-k="dividend_yield">利回り</th>
+              <th data-k="deviation">取得単価比</th>
+              <th class="l" data-k="status">状態</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div id="emptyMsg"></div>
+    </div>
+
+    <section id="exits"></section>
+
+    <p class="footer" id="footer"></p>
+  </main>
+
+  <script src="./js/app.js"></script>
+  <script>
+    let DATA = null, ROWS = [], sortKey = "score", sortDir = -1;
+
+    function deviation(c){ return c.derived.deviation_from_acq; }
+
+    function passFilters(c){
+      const minScore = +document.getElementById("minScore").value;
+      if (c.signal.score < minScore) return false;
+      if (document.getElementById("onlyKnown").checked && !c.activist.is_known) return false;
+      if (document.getElementById("onlyPbr").checked && !(c.derived.pbr !== null && c.derived.pbr < 1)) return false;
+      if (document.getElementById("onlyEntry").checked && !c.signal.filters.entry_ok) return false;
+      if (document.getElementById("onlyWatch").checked && !isWatched(c.code)) return false;
+      return true;
+    }
+
+    function sortRows(rows){
+      const get = {
+        score: c=>c.signal.score, code: c=>c.code, name: c=>c.name, fund: c=>c.activist.fund,
+        holding_ratio: c=>c.activist.holding_ratio||0, pbr: c=>c.derived.pbr??999,
+        dividend_yield: c=>c.derived.dividend_yield??999, deviation: c=>deviation(c)??999,
+        status: c=>c.status, star: c=>isWatched(c.code)?0:1,
+      }[sortKey] || (c=>c.signal.score);
+      return rows.slice().sort((a,b)=>{
+        const va=get(a), vb=get(b);
+        if (va<vb) return -1*sortDir; if (va>vb) return 1*sortDir; return 0;
+      });
+    }
+
+    function render(){
+      const rows = sortRows(ROWS.filter(passFilters));
+      const tb = document.getElementById("tbody");
+      tb.innerHTML = rows.map(c=>{
+        const dev = deviation(c);
+        const devTxt = dev===null? "—" : (dev<=0? `<span class="pl-pos">${fmtPct(dev)}</span>` : `+${fmtPct(dev)}`);
+        return `<tr data-code="${c.code}">
+          <td class="l"><span class="star ${isWatched(c.code)?'on':''}" data-star="${c.code}">${isWatched(c.code)?'★':'☆'}</span></td>
+          <td>${scoreBadge(c.signal.score)}</td>
+          <td class="l">${c.code}</td>
+          <td class="l name">${c.name}</td>
+          <td class="l">${c.activist.fund||'—'} ${c.activist.is_known?'<span class="chip known">既知</span>':''}</td>
+          <td>${fmtPct(c.activist.holding_ratio)}</td>
+          <td>${fmt2(c.derived.pbr)}</td>
+          <td>${fmtPct(c.derived.dividend_yield)}</td>
+          <td>${devTxt}</td>
+          <td class="l">${statusChip(c.status)}</td>
+        </tr>`;
+      }).join("");
+      document.getElementById("emptyMsg").innerHTML = rows.length? "" : `<div class="empty">条件に合う銘柄がありません。フィルタを緩めてください。</div>`;
+
+      tb.querySelectorAll("tr").forEach(tr=>{
+        tr.addEventListener("click", e=>{
+          if (e.target.dataset.star!==undefined) return;
+          location.href = "stock.html?code=" + tr.dataset.code;
+        });
+      });
+      tb.querySelectorAll("[data-star]").forEach(s=>{
+        s.addEventListener("click", e=>{ e.stopPropagation(); toggleWatch(s.dataset.star); render(); });
+      });
+    }
+
+    function renderTiles(){
+      const cs = ROWS;
+      const strong = cs.filter(c=>c.signal.score>=80).length;
+      const known = cs.filter(c=>c.activist.is_known).length;
+      const entry = cs.filter(c=>c.signal.filters.entry_ok).length;
+      const nu = cs.filter(c=>c.status==='NEW').length;
+      document.getElementById("tiles").innerHTML = `
+        ${tile("候補数", cs.length, "大量保有を検出した銘柄")}
+        ${tile("強シグナル", strong, "スコア80以上")}
+        ${tile("既知アクティビスト", known, "著名ファンドが保有")}
+        ${tile("エントリー可", entry, "取得単価と同水準以下")}
+        ${tile("本日の新規", nu, "前回から新登場")}`;
+    }
+    function tile(k,v,sub){ return `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div><div class="sub">${sub}</div></div>`; }
+
+    function renderExits(){
+      const ex = DATA.activist_exits||[];
+      if(!ex.length){ document.getElementById("exits").innerHTML=""; return; }
+      document.getElementById("exits").innerHTML = `
+        <div class="section-title">⚠ アクティビスト撤退の可能性（出口検討）</div>
+        <div class="card"><div class="table-scroll"><table>
+          <thead><tr><th class="l">コード</th><th class="l">銘柄</th><th class="l">ファンド</th><th>前回</th><th>今回</th><th class="l">提出日</th></tr></thead>
+          <tbody>${ex.map(e=>`<tr><td class="l">${e.code}</td><td class="l name">${e.name}</td><td class="l">${e.fund}</td><td>${fmtPct(e.prev_ratio)}</td><td><span class="pl-neg">${fmtPct(e.new_ratio)}</span></td><td class="l">${e.filing_date||'—'}</td></tr>`).join("")}</tbody>
+        </table></div></div>`;
+    }
+
+    function bindFilters(){
+      const ids=["onlyKnown","onlyPbr","onlyEntry","onlyWatch"];
+      ids.forEach(id=>document.getElementById(id).addEventListener("change", render));
+      const ms=document.getElementById("minScore");
+      ms.addEventListener("input", ()=>{ document.getElementById("scoreVal").textContent=ms.value; render(); });
+      document.querySelectorAll("#tbl thead th").forEach(th=>{
+        th.addEventListener("click", ()=>{
+          const k=th.dataset.k; if(k===sortKey) sortDir*=-1; else { sortKey=k; sortDir=(k==='code'||k==='name'||k==='fund'||k==='status')?1:-1; }
+          render();
+        });
+      });
+    }
+
+    (async ()=>{
+      renderHeader("index.html");
+      try {
+        DATA = await loadData();
+        ROWS = DATA.candidates || [];
+        document.getElementById("banner").innerHTML = sampleBanner(DATA);
+        renderTiles(); renderExits(); bindFilters(); render();
+        document.getElementById("footer").textContent =
+          `対象日 ${DATA.as_of_date}／生成 ${new Date(DATA.generated_at).toLocaleString("ja-JP")}`;
+      } catch(err){
+        document.getElementById("banner").innerHTML = `<div class="banner info">データを読み込めませんでした。日次パイプラインがまだ実行されていない可能性があります。（${err.message}）</div>`;
+      }
+    })();
+  </script>
+</body>
+</html>

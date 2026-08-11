@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ポジション管理 | アクティビスト追随スクリーナー</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <header class="appbar" id="appbar"></header>
+  <main class="wrap">
+    <div id="banner"></div>
+
+    <section class="tiles" id="tiles"></section>
+
+    <div class="card">
+      <h2>建玉を追加</h2>
+      <form id="posForm">
+        <div class="form-grid">
+          <div class="field"><label>証券コード</label><input id="f_code" placeholder="7203" required /></div>
+          <div class="field"><label>取得単価（円）</label><input id="f_entry" type="number" step="any" placeholder="1000" required /></div>
+          <div class="field"><label>株数</label><input id="f_shares" type="number" step="any" placeholder="100" required /></div>
+          <div class="field"><label>取得日</label><input id="f_date" type="date" /></div>
+          <button class="btn" type="submit">＋ 追加</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>保有ポジション</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr>
+            <th class="l">コード</th><th class="l">銘柄</th><th>取得単価</th><th>株数</th>
+            <th>現在値</th><th>評価損益</th><th class="l">出口シグナル</th><th class="l">取得日</th><th></th>
+          </tr></thead>
+          <tbody id="posBody"></tbody>
+        </table>
+      </div>
+      <div id="posEmpty"></div>
+      <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn secondary small" id="exportBtn">💾 バックアップ書き出し</button>
+        <label class="btn secondary small">📁 読み込み<input type="file" id="importFile" accept="application/json" hidden /></label>
+      </div>
+    </div>
+
+    <div class="banner info">
+      出口ルール: <strong>-20%で損切り</strong>／<strong>アクティビストが5%を割ったら手仕舞い検討</strong>。シグナルは最新データに基づき自動判定します。
+    </div>
+
+    <p class="footer" id="footer"></p>
+  </main>
+  <script src="./js/app.js"></script>
+  <script src="./js/positions.js"></script>
+</body>
+</html>

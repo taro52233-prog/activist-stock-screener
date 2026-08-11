@@ -1,0 +1,55 @@
+{
+  "_comment": "既知アクティビスト・エンゲージメントファンドの一覧。name=表示名, aliases=大量保有報告書の提出者名に含まれうる表記ゆれ(部分一致), weight_bonus=スコア加点(0-10)。自由に追加・編集可。照合はNFKC正規化+小文字化+空白除去後の部分一致。",
+  "activists": [
+    {
+      "name": "オアシス",
+      "aliases": ["Oasis", "オアシス", "オアシス・マネジメント", "オアシスマネジメント", "Oasis Management", "Oasis Investments"],
+      "weight_bonus": 10
+    },
+    {
+      "name": "エフィッシモ",
+      "aliases": ["Effissimo", "エフィッシモ", "エフィッシモ・キャピタル", "Effissimo Capital Management"],
+      "weight_bonus": 10
+    },
+    {
+      "name": "村上系",
+      "aliases": ["シティインデックスイレブンス", "City Index Eleventh", "レノ", "南青山不動産", "エスグラントコーポレーション", "野村絢", "村上世彰", "村上絢", "オフィスサポート", "アイビスキャピタル"],
+      "weight_bonus": 10
+    },
+    {
+      "name": "ダルトン",
+      "aliases": ["Dalton", "ダルトン", "Dalton Investments", "ニッポン・アクティブ・バリュー", "Nippon Active Value"],
+      "weight_bonus": 8
+    },
+    {
+      "name": "シルチェスター",
+      "aliases": ["Silchester", "シルチェスター", "Silchester International Investors"],
+      "weight_bonus": 6
+    },
+    {
+      "name": "3D",
+      "aliases": ["3D Investment", "スリーディー", "3Dインベストメント", "3D Investment Partners"],
+      "weight_bonus": 7
+    },
+    {
+      "name": "ストラテジックキャピタル",
+      "aliases": ["Strategic Capital", "ストラテジックキャピタル", "ストラテジック・キャピタル"],
+      "weight_bonus": 7
+    },
+    {
+      "name": "アセットバリューインベスターズ",
+      "aliases": ["Asset Value Investors", "AVI", "アセット・バリュー・インベスターズ"],
+      "weight_bonus": 6
+    },
+    {
+      "name": "farallon",
+      "aliases": ["Farallon", "ファラロン", "Farallon Capital"],
+      "weight_bonus": 6
+    },
+    {
+      "name": "elliott",
+      "aliases": ["Elliott", "エリオット", "Elliott Management", "Elliott Investment"],
+      "weight_bonus": 8
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+name: daily-screening
+
+on:
+  schedule:
+    # 22:00 UTC = 07:00 JST（月〜金）。GitHubのcronはUTC・混雑時は遅延あり。
+    - cron: "0 22 * * 0-4"
+  workflow_dispatch:        # 手動実行も可能
+
+# データ(docs/data/**)をリポジトリへコミットするため書き込み権限が必要
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-screening
+  cancel-in-progress: false
+
+jobs:
+  screen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r pipeline/requirements.txt
+
+      - name: Run pipeline
+        env:
+          EDINET_API_KEY: ${{ secrets.EDINET_API_KEY }}
+          JQUANTS_MAILADDRESS: ${{ secrets.JQUANTS_MAILADDRESS }}
+          JQUANTS_PASSWORD: ${{ secrets.JQUANTS_PASSWORD }}
+          JQUANTS_REFRESH_TOKEN: ${{ secrets.JQUANTS_REFRESH_TOKEN }}
+          CHATWORK_API_TOKEN: ${{ secrets.CHATWORK_API_TOKEN }}
+          CHATWORK_ROOM_ID: ${{ secrets.CHATWORK_ROOM_ID }}
+        run: python pipeline/run.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data
+          if git diff --staged --quiet; then
+            echo "変更なし。コミットをスキップします。"
+          else
+            git commit -m "chore: update screening data ($(date -u +%Y-%m-%d))"
+            git push
+          fi
