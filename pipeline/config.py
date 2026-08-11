@@ -28,11 +28,11 @@ EDINET_DOC_GET = EDINET_BASE + "/documents/{doc_id}"
 # EDINET 書類閲覧のWeb URL（ダッシュボードのリンク用）
 EDINET_VIEW_URL = "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx"
 
-JQUANTS_BASE = "https://api.jquants.com/v1"
-JQUANTS_AUTH_USER = JQUANTS_BASE + "/token/auth_user"
-JQUANTS_AUTH_REFRESH = JQUANTS_BASE + "/token/auth_refresh"
+# J-Quants は 2025/12 に V2 へ移行。認証は x-api-key ヘッダ方式（APIキーはダッシュボードで発行）。
+JQUANTS_BASE = "https://api.jquants.com/v2"
 JQUANTS_LISTED_INFO = JQUANTS_BASE + "/listed/info"
 JQUANTS_STATEMENTS = JQUANTS_BASE + "/fins/statements"
+JQUANTS_FIN_DETAILS = JQUANTS_BASE + "/fins/details"
 
 STOOQ_CSV = "https://stooq.com/q/d/l/?s={sym}&i=d"
 YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
@@ -78,6 +78,7 @@ class Thresholds:
 @dataclass
 class Secrets:
     edinet_api_key: str = ""
+    jquants_api_key: str = ""
     jquants_mail: str = ""
     jquants_password: str = ""
     jquants_refresh_token: str = ""
@@ -90,7 +91,7 @@ class Secrets:
 
     @property
     def has_jquants(self) -> bool:
-        return bool(self.jquants_refresh_token) or bool(self.jquants_mail and self.jquants_password)
+        return bool(self.jquants_api_key)
 
     @property
     def has_chatwork(self) -> bool:
@@ -114,6 +115,7 @@ class Config:
 def load_secrets_from_env() -> Secrets:
     return Secrets(
         edinet_api_key=os.environ.get("EDINET_API_KEY", "").strip(),
+        jquants_api_key=os.environ.get("JQUANTS_API_KEY", "").strip(),
         jquants_mail=os.environ.get("JQUANTS_MAILADDRESS", "").strip(),
         jquants_password=os.environ.get("JQUANTS_PASSWORD", "").strip(),
         jquants_refresh_token=os.environ.get("JQUANTS_REFRESH_TOKEN", "").strip(),

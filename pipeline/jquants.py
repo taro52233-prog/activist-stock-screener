@@ -1,17 +1,19 @@
-"""J-Quants API：認証（refresh→id token）と財務・上場情報の取得。
+"""J-Quants API V2：APIキー（x-api-key）認証で財務・上場情報を取得。
 
-無料プランはデータが約12週間遅延するが、四半期更新の財務指標には許容範囲。
-株価は別途 prices.py で日次終値を取るため、ここでは財務・発行株数・配当のみ扱う。
+J-Quants は 2025/12 に V2 へ移行し、旧メール/パスワードのトークン方式は廃止（410 Gone）。
+V2 はダッシュボードで発行する API キーを x-api-key ヘッダに付けるだけ。
+
+環境変数 JQUANTS_DEBUG=1 のとき、最初の statements / listed_info の生キーをログに出す
+（V2のフィールド名を実データで確認するための一時診断）。
 """
 from __future__ import annotations
 
+import os
 from typing import Optional
 
 import requests
 
 from config import (
-    JQUANTS_AUTH_REFRESH,
-    JQUANTS_AUTH_USER,
     JQUANTS_LISTED_INFO,
     JQUANTS_STATEMENTS,
     Secrets,
@@ -19,93 +21,67 @@ from config import (
 from schema import Fundamentals
 
 _TIMEOUT = 30
+_DEBUG = os.environ.get("JQUANTS_DEBUG", "").strip() in ("1", "true", "True")
 
 
 class JQuantsClient:
     def __init__(self, secrets: Secrets):
         self._secrets = secrets
-        self._id_token: Optional[str] = None
         self._session = requests.Session()
-
-    # -- 認証 --------------------------------------------------------------
-    def authenticate(self) -> None:
-        refresh = self._secrets.jquants_refresh_token
-        if not refresh:
-            refresh = self._get_refresh_token()
-        self._id_token = self._get_id_token(refresh)
-
-    def _get_refresh_token(self) -> str:
-        r = self._session.post(
-            JQUANTS_AUTH_USER,
-            json={
-                "mailaddress": self._secrets.jquants_mail,
-                "password": self._secrets.jquants_password,
-            },
-            timeout=_TIMEOUT,
-        )
-        if r.status_code != 200:
-            raise RuntimeError(f"auth_user {r.status_code}: {r.text[:300]}")
-        token = r.json().get("refreshToken")
-        if not token:
-            raise RuntimeError(f"J-Quants: refreshToken 無し: {r.text[:200]}")
-        return token
-
-    def _get_id_token(self, refresh_token: str) -> str:
-        r = self._session.post(
-            JQUANTS_AUTH_REFRESH,
-            params={"refreshtoken": refresh_token},
-            timeout=_TIMEOUT,
-        )
-        if r.status_code != 200:
-            raise RuntimeError(f"auth_refresh {r.status_code}: {r.text[:300]}")
-        token = r.json().get("idToken")
-        if not token:
-            raise RuntimeError(f"J-Quants: idToken 無し: {r.text[:200]}")
-        return token
+        self._debugged = False
 
     @property
     def _headers(self) -> dict:
-        return {"Authorization": f"Bearer {self._id_token}"}
+        return {"x-api-key": self._secrets.jquants_api_key}
+
+    def authenticate(self) -> None:
+        """V2はAPIキー方式のため事前認証は不要。キーの存在だけ確認。"""
+        if not self._secrets.jquants_api_key:
+            raise RuntimeError("JQUANTS_API_KEY 未設定")
+
+    def _get(self, url: str, params: Optional[dict] = None) -> dict:
+        r = self._session.get(url, headers=self._headers, params=params or {}, timeout=_TIMEOUT)
+        if r.status_code != 200:
+            raise RuntimeError(f"J-Quants {url.split('/v2/')[-1]} {r.status_code}: {r.text[:200]}")
+        return r.json()
 
     # -- 上場情報 ----------------------------------------------------------
     def listed_info(self) -> dict[str, dict]:
-        """全上場銘柄の情報を {4桁コード: info} で返す。"""
-        r = self._session.get(JQUANTS_LISTED_INFO, headers=self._headers, timeout=_TIMEOUT)
-        r.raise_for_status()
+        data = self._get(JQUANTS_LISTED_INFO)
+        rows = data.get("info") or data.get("listed_info") or data.get("data") or []
+        if _DEBUG and rows:
+            print("[jq-debug] listed_info keys:", sorted(rows[0].keys()))
         out: dict[str, dict] = {}
-        for info in r.json().get("info", []) or []:
-            code = _code4(str(info.get("Code") or ""))
+        for info in rows:
+            code = _code4(str(info.get("Code") or info.get("code") or ""))
             if code:
                 out[code] = info
         return out
 
     # -- 財務 --------------------------------------------------------------
     def statements(self, code: str) -> list[dict]:
-        r = self._session.get(
-            JQUANTS_STATEMENTS,
-            headers=self._headers,
-            params={"code": code},
-            timeout=_TIMEOUT,
-        )
-        r.raise_for_status()
-        return r.json().get("statements", []) or []
+        data = self._get(JQUANTS_STATEMENTS, params={"code": code})
+        rows = (data.get("statements") or data.get("fin_statements")
+                or data.get("financial_statements") or data.get("data") or [])
+        if _DEBUG and rows and not self._debugged:
+            self._debugged = True
+            print(f"[jq-debug] statements[{code}] keys:", sorted(rows[0].keys()))
+            print(f"[jq-debug] statements[{code}] sample:", {k: rows[0][k] for k in list(rows[0])[:40]})
+        return rows
 
     def fundamentals(self, code: str) -> Fundamentals:
-        """最新の（必要フィールドが揃った）開示から Fundamentals を作る。"""
         stmts = self.statements(code)
         if not stmts:
             return Fundamentals(jquants_stale=True)
-        # 開示日でソートし、新しい方から採用
-        stmts.sort(key=lambda s: str(s.get("DisclosedDate") or ""), reverse=True)
-        latest = stmts[0]
-        return _statement_to_fundamentals(latest)
+        stmts.sort(key=lambda s: str(s.get("DisclosedDate") or s.get("disclosed_date") or ""), reverse=True)
+        return _statement_to_fundamentals(stmts[0])
 
 
 # ---------------------------------------------------------------------------
 # ヘルパ
 # ---------------------------------------------------------------------------
 def _code4(code: str) -> str:
-    if len(code) == 5 and code.endswith("0"):
+    if len(code) == 5 and code.endswith("0") and code[:-1].isdigit():
         return code[:-1]
     return code
 
@@ -125,24 +101,26 @@ def _f(d: dict, *keys: str) -> Optional[float]:
 
 def _statement_to_fundamentals(s: dict) -> Fundamentals:
     return Fundamentals(
-        equity=_f(s, "Equity"),
+        equity=_f(s, "Equity", "equity", "NetAssets", "net_assets"),
         shares_out=_f(
             s,
             "NumberOfIssuedAndOutstandingSharesAtTheEndOfFiscalYearIncludingTreasuryStock",
             "NumberOfIssuedSharesAtEndOfFiscalYearIncludingTreasuryStock",
+            "number_of_issued_and_outstanding_shares",
         ),
         treasury=_f(
             s,
             "NumberOfTreasuryStockAtTheEndOfFiscalYear",
             "NumberOfTreasuryStockAtEndOfFiscalYear",
         ),
-        dps_result=_f(s, "ResultDividendPerShareAnnual"),
+        dps_result=_f(s, "ResultDividendPerShareAnnual", "result_dividend_per_share_annual"),
         dps_forecast=_f(s, "ForecastDividendPerShareAnnual", "NextYearForecastDividendPerShareAnnual"),
-        eps=_f(s, "EarningsPerShare"),
-        bps=_f(s, "BookValuePerShare"),
-        cash=_f(s, "CashAndEquivalents"),
-        interest_debt=None,  # 無料プランの statements には無いことが多い
-        retained_earnings=_f(s, "RetainedEarnings"),
-        statement_date=str(s.get("DisclosedDate") or s.get("CurrentPeriodEndDate") or "") or None,
+        eps=_f(s, "EarningsPerShare", "earnings_per_share"),
+        bps=_f(s, "BookValuePerShare", "book_value_per_share"),
+        cash=_f(s, "CashAndEquivalents", "cash_and_equivalents"),
+        interest_debt=None,
+        retained_earnings=_f(s, "RetainedEarnings", "retained_earnings"),
+        statement_date=str(s.get("DisclosedDate") or s.get("disclosed_date")
+                           or s.get("CurrentPeriodEndDate") or "") or None,
         jquants_stale=True,
     )
