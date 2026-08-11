@@ -56,8 +56,8 @@
 
 | シークレット名 | 取得先 | 備考 |
 |---|---|---|
-| `EDINET_API_KEY` | [EDINET API](https://api.edinet-fsa.go.jp/) のマイページで発行 | 大量保有報告書の取得（無料） |
-| `JQUANTS_MAILADDRESS` / `JQUANTS_PASSWORD` | [J-Quants](https://jpx-jquants.com/) 無料プラン登録 | 財務データ。※`JQUANTS_REFRESH_TOKEN` を代わりに登録してもよい |
+| `EDINET_API_KEY` | EDINET閲覧サイト [disclosure2.edinet-fsa.go.jp](https://disclosure2.edinet-fsa.go.jp/) にログイン→マイページ→APIキー発行 | 大量保有報告書の取得（無料） |
+| `JQUANTS_API_KEY` | [J-Quants](https://jpx-jquants.com/) 無料登録→ダッシュボードの[設定→APIキー]で発行 | 財務データ（V2・無料プラン）。財務は `/fins/summary` を使用 |
 | `CHATWORK_API_TOKEN` | Chatwork → サービス連携 → APIトークン | 通知用 |
 | `CHATWORK_ROOM_ID` | 通知したいチャットのURL末尾の数字 | 例: `https://www.chatwork.com/#!rid123456789` の `123456789` |
 
@@ -83,7 +83,7 @@ pip install pytest && python -m pytest tests/ -q
 python pipeline/make_sample.py
 
 # 本番パイプライン（要シークレットを環境変数に設定）
-export EDINET_API_KEY=...  JQUANTS_MAILADDRESS=...  JQUANTS_PASSWORD=...
+export EDINET_API_KEY=...  JQUANTS_API_KEY=...  CHATWORK_API_TOKEN=...  CHATWORK_ROOM_ID=...
 python pipeline/run.py --dry-run          # 書き込み・通知せず要約のみ
 python pipeline/run.py --codes 7203,6758  # EDINET不使用・指定コードのみ（検証用）
 

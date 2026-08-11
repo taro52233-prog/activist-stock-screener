@@ -35,7 +35,6 @@ jobs:
           JQUANTS_API_KEY: ${{ secrets.JQUANTS_API_KEY }}
           CHATWORK_API_TOKEN: ${{ secrets.CHATWORK_API_TOKEN }}
           CHATWORK_ROOM_ID: ${{ secrets.CHATWORK_ROOM_ID }}
-          JQUANTS_DEBUG: "1"   # V2フィールド名確認用の一時デバッグ（確認後に削除）
         run: python pipeline/run.py
 
       - name: Commit updated data
