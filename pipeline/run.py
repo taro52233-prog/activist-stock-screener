@@ -35,71 +35,57 @@ def jst_today() -> date:
 # ---------------------------------------------------------------------------
 # アクティビスト候補の構築
 # ---------------------------------------------------------------------------
-def build_candidates_from_edinet(conf, known) -> tuple[list[Candidate], list[ActivistExit], list[str]]:
+def build_candidates_tracked(conf, known) -> tuple[list[Candidate], dict, list[ActivistExit], list[str]]:
+    """EDINETの新規提出を永続ストアにマージし、追跡中の全銘柄を候補化する。"""
     import edinet
+    import track
     th = conf.thresholds
     warnings: list[str] = []
+    today = jst_today()
 
-    target = jst_today()
     filings, w = edinet.collect_recent_filings(
-        conf.secrets.edinet_api_key, target, th.lookback_business_days, fetch_bodies=True
+        conf.secrets.edinet_api_key, today, th.lookback_business_days, fetch_bodies=True
     )
     warnings.extend(w)
 
-    # sec_code ごとにまとめ、代表ファンドを選ぶ
-    by_code: dict[str, list] = {}
-    for f in filings:
-        if not f.sec_code:
-            continue
-        by_code.setdefault(f.sec_code, []).append(f)
+    store = track.load()
+    exit_dicts = track.merge_filings(
+        store, filings, known, today,
+        screen.match_activist, screen.estimate_acq_price, th.holding_min,
+    )
+    track.expire(store, today, th.tracking_days)
+    active = track.active_entries(store, th.max_tracked)
+
+    exits = [ActivistExit(
+        code=e["code"], name=e["name"], fund=e["fund"], prev_ratio=e.get("prev_ratio"),
+        new_ratio=e.get("new_ratio"), filing_date=e.get("filing_date", ""),
+        doc_id=e.get("doc_id", ""), doc_url=cfg.EDINET_VIEW_URL,
+    ) for e in exit_dicts]
 
     candidates: list[Candidate] = []
-    exits: list[ActivistExit] = []
+    for e in active:
+        c = Candidate(code=e["code"], name=e.get("name") or f"(code {e['code']})")
+        c.fund = e["fund"]
+        c.is_known_activist = bool(e.get("is_known"))
+        c.holding_ratio = e.get("holding_ratio")
+        c.prev_ratio = e.get("prev_ratio")
+        if c.holding_ratio is not None and c.prev_ratio is not None:
+            c.ratio_change = c.holding_ratio - c.prev_ratio
+        c.is_joint = bool(e.get("is_joint"))
+        c.filing_date = e.get("anchor_filing_date", "")
+        c.doc_id = e.get("doc_id", "")
+        c.doc_url = cfg.EDINET_VIEW_URL
+        c._entry = e                                     # type: ignore[attr-defined]
+        c._bonus = e.get("bonus", 0)                     # type: ignore[attr-defined]
+        c._est_acq = e.get("est_acq_price")              # type: ignore[attr-defined]
+        c._acq_method = e.get("acq_method", "none")      # type: ignore[attr-defined]
+        c._edinet_shares_out = e.get("shares_out_edinet")  # type: ignore[attr-defined]
+        candidates.append(c)
 
-    for code, group in by_code.items():
-        # 各ファイリングに既知判定を付与
-        annotated = []
-        for f in group:
-            is_known, disp, bonus = screen.match_activist(f.filer_name, known)
-            annotated.append((f, is_known, disp, bonus))
-
-        # 撤退検出：既知アクティビストの変更報告で5%割れ
-        for f, is_known, disp, bonus in annotated:
-            if is_known and f.holding_ratio is not None and f.holding_ratio < th.holding_min:
-                exits.append(ActivistExit(
-                    code=code, name=f.issuer_name, fund=disp,
-                    prev_ratio=f.prev_ratio, new_ratio=f.holding_ratio,
-                    filing_date=f.submit_datetime[:10], doc_id=f.doc_id,
-                    doc_url=cfg.EDINET_VIEW_URL,
-                ))
-
-        # 代表選定：既知>weight>保有割合 の順
-        annotated.sort(
-            key=lambda t: (t[1], t[3], (t[0].holding_ratio or 0)), reverse=True
-        )
-        rep_f, is_known, disp, bonus = annotated[0]
-        # 代表が5%割れ（撤退）ならロング候補には出さない
-        if rep_f.holding_ratio is not None and rep_f.holding_ratio < th.holding_min:
-            continue
-
-        cand = Candidate(code=code, name=rep_f.issuer_name)
-        cand.fund = disp or rep_f.filer_name
-        cand.is_known_activist = is_known
-        cand.holding_ratio = rep_f.holding_ratio
-        cand.prev_ratio = rep_f.prev_ratio
-        if rep_f.holding_ratio is not None and rep_f.prev_ratio is not None:
-            cand.ratio_change = rep_f.holding_ratio - rep_f.prev_ratio
-        cand.is_joint = rep_f.is_joint
-        cand.filing_date = rep_f.submit_datetime[:10]
-        cand.doc_id = rep_f.doc_id
-        cand.doc_url = cfg.EDINET_VIEW_URL
-        cand._acq_funds = rep_f.acq_funds       # type: ignore[attr-defined]
-        cand._shares_held = rep_f.shares_held    # type: ignore[attr-defined]
-        cand._edinet_shares_out = rep_f.shares_outstanding  # type: ignore[attr-defined]
-        cand._bonus = bonus                      # type: ignore[attr-defined]
-        candidates.append(cand)
-
-    return candidates, exits, warnings
+    log = f"追跡中 {len(active)}件（新規提出 {len(filings)}件を反映）"
+    warnings.append(log) if False else None
+    print(f"[track] {log}")
+    return candidates, store, exits, warnings
 
 
 def build_candidates_from_codes(codes: list[str]) -> list[Candidate]:
@@ -110,8 +96,10 @@ def build_candidates_from_codes(codes: list[str]) -> list[Candidate]:
         c.fund = "テスト保有主体"
         c.is_known_activist = False
         c.holding_ratio = 0.06
-        c._acq_funds = None       # type: ignore[attr-defined]
-        c._shares_held = None     # type: ignore[attr-defined]
+        c._entry = None           # type: ignore[attr-defined]
+        c._est_acq = None         # type: ignore[attr-defined]
+        c._acq_method = "none"    # type: ignore[attr-defined]
+        c._edinet_shares_out = None  # type: ignore[attr-defined]
         c._bonus = 0              # type: ignore[attr-defined]
         out.append(c)
     return out
@@ -169,17 +157,22 @@ def enrich_and_score(candidates: list[Candidate], conf, warnings: list[str]) -> 
         if c.fundamentals.shares_out is None and edinet_shares:
             c.fundamentals.shares_out = edinet_shares
 
-        est, method = screen.estimate_acq_price(
-            getattr(c, "_shares_held", None), getattr(c, "_acq_funds", None)
+        c.derived = screen.compute_derived(
+            c.price, c.fundamentals, getattr(c, "_est_acq", None), getattr(c, "_acq_method", "none")
         )
-        c.derived = screen.compute_derived(c.price, c.fundamentals, est, method)
 
-        # 大量保有 提出日の株価と、現在との差分
-        if hist and c.filing_date:
-            pf = price_on_or_before(hist, c.filing_date)
-            if pf and c.price.close is not None and pf["c"]:
-                c.derived.price_at_filing = pf["c"]
-                c.derived.deviation_from_filing = (c.price.close - pf["c"]) / pf["c"]
+        # 提出日の株価（アンカー）：初回に履歴から確定し、以後は固定
+        entry = getattr(c, "_entry", None)
+        anchor = entry.get("anchor_price") if entry else None
+        if anchor is None:
+            pf = price_on_or_before(hist, c.filing_date) if (hist and c.filing_date) else None
+            anchor = pf["c"] if pf else (c.price.close if c.price.close is not None else None)
+            if entry is not None:
+                entry["anchor_price"] = anchor        # ストアに永続化（固定）
+        if anchor:
+            c.derived.price_at_filing = anchor
+            if c.price.close is not None:
+                c.derived.deviation_from_filing = (c.price.close - anchor) / anchor
 
         screen.score_candidate(c, w, th, known_bonus=getattr(c, "_bonus", 0))
 
@@ -235,16 +228,18 @@ def main(argv=None) -> int:
     p.add_argument("--codes", help="カンマ区切りコードのみ処理（EDINET不使用・検証用）")
     args = p.parse_args(argv)
 
+    import track
     conf = load_config()
     known = load_known_activists()
     as_of = date.fromisoformat(args.date) if args.date else jst_today()
     warnings: list[str] = []
     exits: list[ActivistExit] = []
+    store: dict | None = None
 
     if args.codes:
         candidates = build_candidates_from_codes([c.strip() for c in args.codes.split(",") if c.strip()])
     elif conf.secrets.has_edinet:
-        candidates, exits, w = build_candidates_from_edinet(conf, known)
+        candidates, store, exits, w = build_candidates_tracked(conf, known)
         warnings.extend(w)
     else:
         warnings.append("EDINET_API_KEY 未設定のため候補ゼロ（--codes で検証可能）")
@@ -268,6 +263,8 @@ def main(argv=None) -> int:
         return 0
 
     out = write_outputs(conf, as_of, candidates, exits, warnings)
+    if store is not None:
+        track.save(store, datetime.now(timezone.utc).isoformat())
     print_summary(out)
 
     if not args.no_notify:

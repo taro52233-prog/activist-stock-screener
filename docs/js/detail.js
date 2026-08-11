@@ -17,6 +17,8 @@ function qs(name){ return new URLSearchParams(location.search).get(name); }
   const watched = isWatched(c.code);
   const pf = d.price_at_filing;           // 提出日の株価
   const dev = d.deviation_from_filing;    // 現在との差分
+  const daysTracked = (a.filing_date && data.as_of_date)
+    ? Math.max(0, Math.round((new Date(data.as_of_date) - new Date(a.filing_date)) / 86400000)) : null;
   const devTxt = dev==null ? "—"
     : `<span class="${dev<=0?'pl-pos':'pl-neg'}">${dev>=0?'+':''}${fmtPct(dev)}</span>`;
   const devNote = dev==null ? "" : (dev<=0
@@ -38,7 +40,7 @@ function qs(name){ return new URLSearchParams(location.search).get(name); }
     <div class="card">
       <h2>株価チャートと大量保有のタイミング</h2>
       <div class="filing-summary">
-        <div class="fs-item"><div class="k">大量保有 提出日</div><div class="v">${a.filing_date||'—'}</div></div>
+        <div class="fs-item"><div class="k">大量保有 提出日</div><div class="v">${a.filing_date||'—'}${daysTracked!=null?` <span class="muted" style="font-size:.7rem">(${daysTracked}日前)</span>`:''}</div></div>
         <div class="fs-item"><div class="k">提出日の株価</div><div class="v">${fmtPrice(pf)}</div></div>
         <div class="fs-item"><div class="k">現在値</div><div class="v">${fmtPrice(c.price.close)}</div></div>
         <div class="fs-item"><div class="k">提出時との差</div><div class="v">${devTxt}</div></div>

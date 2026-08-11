@@ -93,9 +93,13 @@ cd docs && python -m http.server 8000     # → http://localhost:8000/
 
 ---
 
+## 追跡継続について
+
+一度アクティビストが大量保有を提出した銘柄は、**`tracking_days`（既定90日）の間 追跡し続けます**（永続ストア `docs/data/tracked.json`）。**提出日の株価は固定**され、現在値が毎日更新されるため、「アクティビストの取得水準まで株価が下りてきた（仕込みタイミング）」を逃さず追えます。既知アクティビストが5%を割ると自動で追跡から外れます（撤退＝手仕舞い検討）。
+
 ## 調整できる項目
 
-- **判定閾値・スコア重み**: `pipeline/config.py` の `Thresholds` / `Weights`（PBR上限、ネットキャッシュ比率、配当性向、損切り%、通知スコア閾値など）。
+- **判定閾値・スコア重み**: `pipeline/config.py` の `Thresholds` / `Weights`（PBR上限、ネットキャッシュ比率、配当性向、損切り%、通知スコア閾値、**追跡日数 `tracking_days`・最大追跡数 `max_tracked`** など）。
 - **追跡するアクティビスト**: `config/known_activists.json`（別名・加点を自由に追加・編集）。
 - **実行スケジュール**: `.github/workflows/daily.yml` の cron。
 

@@ -72,6 +72,8 @@ class Thresholds:
     loss_cut_pct: float = -0.20          # -20%で損切りライン
     min_score_to_notify: int = 60        # Chatwork通知する最低スコア
     lookback_business_days: int = 3      # EDINET書類のさかのぼり営業日数
+    tracking_days: int = 90              # 大量保有提出から何日追跡し続けるか
+    max_tracked: int = 120               # 同時に追跡する最大銘柄数（API負荷の上限）
 
 
 @dataclass

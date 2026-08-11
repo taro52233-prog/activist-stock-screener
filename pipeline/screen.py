@@ -165,15 +165,18 @@ def score_candidate(
     elif yield_ok:
         reasons.append(f"配当利回り{d.dividend_yield * 100:.1f}%（還元の伸びしろ）")
 
-    # 5) エントリー水準（現値 <= 推定取得単価 * (1+許容乖離)）
-    if d.deviation_from_acq is not None:
-        filters["entry_ok"] = d.deviation_from_acq <= th.entry_deviation_max
-        # 取得単価を下回るほど高スコア（-20%で満点、+許容ラインで0）
-        subs["entry"] = clamp((th.entry_deviation_max - d.deviation_from_acq) / 0.25)
-        if d.deviation_from_acq <= 0:
-            reasons.append(f"現値が推定取得単価を{abs(d.deviation_from_acq) * 100:.0f}%下回る（プロと同水準以下で仕込める）")
-        elif d.deviation_from_acq <= th.entry_deviation_max:
-            reasons.append(f"現値が推定取得単価とほぼ同水準（+{d.deviation_from_acq * 100:.0f}%）")
+    # 5) エントリー水準（現値 <= 提出時の株価 * (1+許容乖離)）
+    #    提出日株価(アンカー)を優先。無ければ推定取得単価からの乖離を使う。
+    entry_dev = d.deviation_from_filing if d.deviation_from_filing is not None else d.deviation_from_acq
+    ref_label = "提出時株価" if d.deviation_from_filing is not None else "推定取得単価"
+    if entry_dev is not None:
+        filters["entry_ok"] = entry_dev <= th.entry_deviation_max
+        # 取得水準を下回るほど高スコア（-25%で満点、+許容ラインで0）
+        subs["entry"] = clamp((th.entry_deviation_max - entry_dev) / 0.25)
+        if entry_dev <= 0:
+            reasons.append(f"現値が{ref_label}を{abs(entry_dev) * 100:.0f}%下回る（プロと同水準以下で仕込める）")
+        elif entry_dev <= th.entry_deviation_max:
+            reasons.append(f"現値が{ref_label}とほぼ同水準（+{entry_dev * 100:.0f}%）")
     else:
         filters["entry_ok"] = False
         subs["entry"] = 0.0

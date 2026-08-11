@@ -118,7 +118,7 @@
       const entry = cs.filter(c=>c.signal.filters.entry_ok).length;
       const nu = cs.filter(c=>c.status==='NEW').length;
       document.getElementById("tiles").innerHTML = `
-        ${tile("候補数", cs.length, "大量保有を検出した銘柄")}
+        ${tile("追跡中", cs.length, "大量保有を追跡中の銘柄")}
         ${tile("強シグナル", strong, "スコア80以上")}
         ${tile("既知アクティビスト", known, "著名ファンドが保有")}
         ${tile("エントリー可", entry, "取得単価と同水準以下")}
