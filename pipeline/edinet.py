@@ -135,71 +135,96 @@ def _value(row: dict) -> Optional[str]:
     return v
 
 
-def _find_ratio(rows: list[dict], want_prev: bool) -> Optional[float]:
-    """保有割合を探す。want_prev=True なら「前回/直前」を含む項目を優先。
+# 大量保有報告書CSVの要素ID（EDINETタクソノミ jplvh_cor / jpdei_cor 名前空間）
+# ※ 診断で実データから確定した正確なID。
+EL_ISSUER_NAME = "jplvh_cor:NameOfIssuer"                 # 発行者の名称＝対象銘柄名
+EL_ISSUER_CODE = "jplvh_cor:SecurityCodeOfIssuer"         # 発行者の証券コード＝対象銘柄コード
+EL_FILER_NAME = ("jplvh_cor:FilerNameInJapaneseDEI", "jpdei_cor:FilerNameInJapaneseDEI")  # 提出者=保有主体
+EL_RATIO = "jplvh_cor:HoldingRatioOfShareCertificatesEtc"                 # 株券等保有割合(小数)
+EL_PREV_RATIO = "jplvh_cor:HoldingRatioOfShareCertificatesEtcPerLastReport"  # 直前報告の保有割合
+EL_SHARES_HELD = "jplvh_cor:TotalNumberOfStocksEtcHeld"                   # 保有株券等の数(総数)
+EL_OUTSTANDING = "jplvh_cor:TotalNumberOfOutstandingStocksEtc"           # 発行済株式等総数
+EL_FUNDS = "jplvh_cor:TotalAmountOfFundingForAcquisition"                # 取得資金合計
+EL_JOINT_COUNT = "jplvh_cor:TotalNumberOfFilersAndJointHoldersCoverPage"  # 提出者及び共同保有者の総数
 
-    値はパーセント表記(7.23)のことも小数(0.0723)のこともあるため 1 を超えたら%とみなす。
-    """
-    prev_kw = ("前回", "直前", "提出後", "前回報告")
-    candidates: list[float] = []
+
+def _index_by_element(rows: list[dict]) -> dict[str, str]:
+    """要素ID → 最初の非空値 の辞書を作る。"""
+    out: dict[str, str] = {}
     for row in rows:
-        label = _label(row)
         el = _element(row)
-        is_holding = ("保有割合" in label) or ("HoldingRatio" in el)
-        if not is_holding:
+        if not el or el in out:
             continue
-        is_prev = any(k in label for k in prev_kw)
-        if want_prev != is_prev:
-            continue
-        val = _to_float(_value(row))
-        if val is None:
-            continue
-        if val > 1.0:
-            val = val / 100.0
-        candidates.append(val)
-    if not candidates:
+        val = _value(row)
+        if val is not None:
+            out[el] = val
+    return out
+
+
+def _get_str(idx: dict, key) -> str:
+    if isinstance(key, tuple):
+        for k in key:
+            if idx.get(k):
+                return str(idx[k])
+        return ""
+    return str(idx.get(key) or "")
+
+
+def _ratio_from(idx: dict, key: str) -> Optional[float]:
+    val = _to_float(idx.get(key))
+    if val is None:
         return None
-    # 最も妥当（0<r<=1）なものを返す
-    valid = [v for v in candidates if 0 < v <= 1.0]
-    return (valid or candidates)[0]
+    if val > 1.0:   # パーセント表記(例 11.34)なら小数化
+        val = val / 100.0
+    return val
 
 
-def _find_by_labels(rows: list[dict], keywords: tuple[str, ...]) -> Optional[float]:
-    for row in rows:
-        label = _label(row)
-        if any(k in label for k in keywords):
-            val = _to_float(_value(row))
-            if val is not None:
-                return val
-    return None
+def normalize_sec_code(code: str) -> str:
+    """証券コードを4桁/4文字に正規化。5桁数字で末尾0なら1桁削る。英数字コード(例 607A)はそのまま。"""
+    code = (code or "").strip()
+    if len(code) == 5 and code.endswith("0") and code[:-1].isdigit():
+        return code[:-1]
+    return code
 
 
 # ---------------------------------------------------------------------------
 # 1書類のパース
 # ---------------------------------------------------------------------------
 def parse_filing(meta: dict, csv_rows: list[dict]) -> Filing:
-    """一覧メタ＋CSV行から Filing を組み立てる。"""
-    sec = str(meta.get("secCode") or "")
-    # secCode は5桁(末尾0)で来ることが多い → 4桁化
-    code4 = sec[:-1] if len(sec) == 5 and sec.endswith("0") else sec
+    """一覧メタ＋CSV行から Filing を組み立てる。
+
+    大量保有報告書では:
+      - 提出者(filer) = 保有主体（ファンド/投資家）… メタ filerName ＋ CSVの提出者名で確定
+      - 対象会社(issuer) = 実際に見るべき銘柄 … CSVの NameOfIssuer / SecurityCodeOfIssuer
+    メタの secCode は「提出者の」コードなので銘柄には使わない。
+    """
     filing = Filing(
         doc_id=str(meta.get("docID") or ""),
         doc_type_code=str(meta.get("docTypeCode") or ""),
         filer_name=str(meta.get("filerName") or ""),
-        sec_code=code4,
-        issuer_name=str(meta.get("issuerName") or meta.get("filerName") or ""),
+        sec_code="",
+        issuer_name="",
         submit_datetime=str(meta.get("submitDateTime") or ""),
     )
-    if csv_rows:
-        filing.holding_ratio = _find_ratio(csv_rows, want_prev=False)
-        if str(filing.doc_type_code) in EDINET_DOCTYPE_CHANGE:
-            filing.prev_ratio = _find_ratio(csv_rows, want_prev=True)
-        filing.shares_held = _find_by_labels(
-            csv_rows, ("保有株券等の数", "保有株券等の総数", "株券等保有数")
-        )
-        filing.acq_funds = _find_by_labels(
-            csv_rows, ("取得資金", "取得に要した資金", "取得のために要した資金")
-        )
+    if not csv_rows:
+        return filing
+    idx = _index_by_element(csv_rows)
+
+    # 対象会社（銘柄）
+    filing.sec_code = normalize_sec_code(_get_str(idx, EL_ISSUER_CODE))
+    filing.issuer_name = _get_str(idx, EL_ISSUER_NAME)
+    # 提出者（保有主体）… CSV表記を優先、無ければメタ
+    filer_csv = _get_str(idx, EL_FILER_NAME)
+    if filer_csv:
+        filing.filer_name = filer_csv
+    # 保有割合・前回・株数・取得資金・発行済・共同保有
+    filing.holding_ratio = _ratio_from(idx, EL_RATIO)
+    filing.prev_ratio = _ratio_from(idx, EL_PREV_RATIO)
+    filing.shares_held = _to_float(idx.get(EL_SHARES_HELD))
+    filing.shares_outstanding = _to_float(idx.get(EL_OUTSTANDING))
+    filing.acq_funds = _to_float(idx.get(EL_FUNDS))
+    joint = _to_float(idx.get(EL_JOINT_COUNT))
+    filing.is_joint = bool(joint and joint > 1)
     return filing
 
 

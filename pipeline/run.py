@@ -95,6 +95,7 @@ def build_candidates_from_edinet(conf, known) -> tuple[list[Candidate], list[Act
         cand.doc_url = cfg.EDINET_VIEW_URL
         cand._acq_funds = rep_f.acq_funds       # type: ignore[attr-defined]
         cand._shares_held = rep_f.shares_held    # type: ignore[attr-defined]
+        cand._edinet_shares_out = rep_f.shares_outstanding  # type: ignore[attr-defined]
         cand._bonus = bonus                      # type: ignore[attr-defined]
         candidates.append(cand)
 
@@ -157,6 +158,11 @@ def enrich_and_score(candidates: list[Candidate], conf, warnings: list[str]) -> 
             c.name = info.get("CompanyName") or c.name
             c.market = info.get("MarketCodeName") or info.get("MarketCode") or c.market
         c.price = prices.get(c.code, PriceInfo())
+
+        # EDINETから得た発行済株式数を、J-Quants欠損時のフォールバックに使う
+        edinet_shares = getattr(c, "_edinet_shares_out", None)
+        if c.fundamentals.shares_out is None and edinet_shares:
+            c.fundamentals.shares_out = edinet_shares
 
         est, method = screen.estimate_acq_price(
             getattr(c, "_shares_held", None), getattr(c, "_acq_funds", None)

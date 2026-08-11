@@ -23,6 +23,7 @@ class Filing:
     holding_ratio: Optional[float] = None      # 今回保有割合 (0-1)
     prev_ratio: Optional[float] = None         # 変更報告書の場合の前回割合 (0-1)
     shares_held: Optional[float] = None        # 保有株券等の数
+    shares_outstanding: Optional[float] = None  # 対象会社の発行済株式等総数
     acq_funds: Optional[float] = None          # 取得資金額（円）
     is_joint: bool = False
 

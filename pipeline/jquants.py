@@ -43,10 +43,11 @@ class JQuantsClient:
             },
             timeout=_TIMEOUT,
         )
-        r.raise_for_status()
+        if r.status_code != 200:
+            raise RuntimeError(f"auth_user {r.status_code}: {r.text[:300]}")
         token = r.json().get("refreshToken")
         if not token:
-            raise RuntimeError("J-Quants: refreshToken を取得できませんでした")
+            raise RuntimeError(f"J-Quants: refreshToken 無し: {r.text[:200]}")
         return token
 
     def _get_id_token(self, refresh_token: str) -> str:
@@ -55,10 +56,11 @@ class JQuantsClient:
             params={"refreshtoken": refresh_token},
             timeout=_TIMEOUT,
         )
-        r.raise_for_status()
+        if r.status_code != 200:
+            raise RuntimeError(f"auth_refresh {r.status_code}: {r.text[:300]}")
         token = r.json().get("idToken")
         if not token:
-            raise RuntimeError("J-Quants: idToken を取得できませんでした")
+            raise RuntimeError(f"J-Quants: idToken 無し: {r.text[:200]}")
         return token
 
     @property
