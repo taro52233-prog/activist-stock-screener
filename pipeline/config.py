@@ -29,10 +29,9 @@ EDINET_DOC_GET = EDINET_BASE + "/documents/{doc_id}"
 EDINET_VIEW_URL = "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx"
 
 # J-Quants は 2025/12 に V2 へ移行。認証は x-api-key ヘッダ方式（APIキーはダッシュボードで発行）。
+# 無料プランで財務が取れるのは /fins/summary（/listed/info や /fins/statements は403）。
 JQUANTS_BASE = "https://api.jquants.com/v2"
-JQUANTS_LISTED_INFO = JQUANTS_BASE + "/listed/info"
-JQUANTS_STATEMENTS = JQUANTS_BASE + "/fins/statements"
-JQUANTS_FIN_DETAILS = JQUANTS_BASE + "/fins/details"
+JQUANTS_SUMMARY = JQUANTS_BASE + "/fins/summary"
 
 STOOQ_CSV = "https://stooq.com/q/d/l/?s={sym}&i=d"
 YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}"

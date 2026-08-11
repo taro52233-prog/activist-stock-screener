@@ -1,10 +1,8 @@
-"""J-Quants API V2：APIキー（x-api-key）認証で財務・上場情報を取得。
+"""J-Quants API V2（無料プラン）：APIキー（x-api-key）認証で財務サマリーを取得。
 
-J-Quants は 2025/12 に V2 へ移行し、旧メール/パスワードのトークン方式は廃止（410 Gone）。
-V2 はダッシュボードで発行する API キーを x-api-key ヘッダに付けるだけ。
-
-環境変数 JQUANTS_DEBUG=1 のとき、最初の statements / listed_info の生キーをログに出す
-（V2のフィールド名を実データで確認するための一時診断）。
+無料プランで財務が取れるのは /v2/fins/summary のみ（/listed/info や /fins/statements は403）。
+summary のフィールドは略称（Eq=純資産, BPS, EPS, ShOutFY=発行済株式数, TrShFY=自己株,
+DivFY=配当, PayoutRatioAnn=配当性向, CashEq=現金 等）。
 """
 from __future__ import annotations
 
@@ -13,11 +11,7 @@ from typing import Optional
 
 import requests
 
-from config import (
-    JQUANTS_LISTED_INFO,
-    JQUANTS_STATEMENTS,
-    Secrets,
-)
+from config import JQUANTS_SUMMARY, Secrets
 from schema import Fundamentals
 
 _TIMEOUT = 30
@@ -39,53 +33,36 @@ class JQuantsClient:
         if not self._secrets.jquants_api_key:
             raise RuntimeError("JQUANTS_API_KEY 未設定")
 
+    def listed_info(self) -> dict[str, dict]:
+        """無料プランでは /listed/info が使えないため空を返す（社名はEDINET由来を使用）。"""
+        return {}
+
     def _get(self, url: str, params: Optional[dict] = None) -> dict:
         r = self._session.get(url, headers=self._headers, params=params or {}, timeout=_TIMEOUT)
         if r.status_code != 200:
             raise RuntimeError(f"J-Quants {url.split('/v2/')[-1]} {r.status_code}: {r.text[:200]}")
         return r.json()
 
-    # -- 上場情報 ----------------------------------------------------------
-    def listed_info(self) -> dict[str, dict]:
-        data = self._get(JQUANTS_LISTED_INFO)
-        rows = data.get("info") or data.get("listed_info") or data.get("data") or []
-        if _DEBUG and rows:
-            print("[jq-debug] listed_info keys:", sorted(rows[0].keys()))
-        out: dict[str, dict] = {}
-        for info in rows:
-            code = _code4(str(info.get("Code") or info.get("code") or ""))
-            if code:
-                out[code] = info
-        return out
-
-    # -- 財務 --------------------------------------------------------------
-    def statements(self, code: str) -> list[dict]:
-        data = self._get(JQUANTS_STATEMENTS, params={"code": code})
-        rows = (data.get("statements") or data.get("fin_statements")
-                or data.get("financial_statements") or data.get("data") or [])
+    def summary(self, code: str) -> list[dict]:
+        data = self._get(JQUANTS_SUMMARY, params={"code": code})
+        rows = data.get("data") or data.get("summary") or []
         if _DEBUG and rows and not self._debugged:
             self._debugged = True
-            print(f"[jq-debug] statements[{code}] keys:", sorted(rows[0].keys()))
-            print(f"[jq-debug] statements[{code}] sample:", {k: rows[0][k] for k in list(rows[0])[:40]})
+            print(f"[jq-debug] summary[{code}] keys:", sorted(rows[0].keys()))
         return rows
 
     def fundamentals(self, code: str) -> Fundamentals:
-        stmts = self.statements(code)
-        if not stmts:
+        rows = self.summary(code)
+        if not rows:
             return Fundamentals(jquants_stale=True)
-        stmts.sort(key=lambda s: str(s.get("DisclosedDate") or s.get("disclosed_date") or ""), reverse=True)
-        return _statement_to_fundamentals(stmts[0])
+        # 開示日(DiscDate)で新しい順に
+        rows.sort(key=lambda s: str(s.get("DiscDate") or ""), reverse=True)
+        return _summary_to_fundamentals(rows[0])
 
 
 # ---------------------------------------------------------------------------
 # ヘルパ
 # ---------------------------------------------------------------------------
-def _code4(code: str) -> str:
-    if len(code) == 5 and code.endswith("0") and code[:-1].isdigit():
-        return code[:-1]
-    return code
-
-
 def _f(d: dict, *keys: str) -> Optional[float]:
     """複数キー候補を順に試し、最初に数値化できた値を返す。"""
     for k in keys:
@@ -99,28 +76,19 @@ def _f(d: dict, *keys: str) -> Optional[float]:
     return None
 
 
-def _statement_to_fundamentals(s: dict) -> Fundamentals:
+def _summary_to_fundamentals(s: dict) -> Fundamentals:
+    """V2 /fins/summary の略称フィールドを Fundamentals にマップ。"""
     return Fundamentals(
-        equity=_f(s, "Equity", "equity", "NetAssets", "net_assets"),
-        shares_out=_f(
-            s,
-            "NumberOfIssuedAndOutstandingSharesAtTheEndOfFiscalYearIncludingTreasuryStock",
-            "NumberOfIssuedSharesAtEndOfFiscalYearIncludingTreasuryStock",
-            "number_of_issued_and_outstanding_shares",
-        ),
-        treasury=_f(
-            s,
-            "NumberOfTreasuryStockAtTheEndOfFiscalYear",
-            "NumberOfTreasuryStockAtEndOfFiscalYear",
-        ),
-        dps_result=_f(s, "ResultDividendPerShareAnnual", "result_dividend_per_share_annual"),
-        dps_forecast=_f(s, "ForecastDividendPerShareAnnual", "NextYearForecastDividendPerShareAnnual"),
-        eps=_f(s, "EarningsPerShare", "earnings_per_share"),
-        bps=_f(s, "BookValuePerShare", "book_value_per_share"),
-        cash=_f(s, "CashAndEquivalents", "cash_and_equivalents"),
+        equity=_f(s, "Eq", "ShEq", "NCEq"),                 # 純資産（自己資本）
+        shares_out=_f(s, "ShOutFY"),                        # 期末発行済株式数
+        treasury=_f(s, "TrShFY"),                           # 期末自己株式数
+        dps_result=_f(s, "DivFY", "DivAnn", "DivTotalAnn"),  # 実績1株配当（年間）
+        dps_forecast=_f(s, "FDivFY", "FDivAnn", "NxFDivFY"),  # 予想1株配当
+        eps=_f(s, "EPS", "NCEPS"),
+        bps=_f(s, "BPS", "NCBPS"),
+        cash=_f(s, "CashEq"),                               # 現金及び現金同等物
         interest_debt=None,
-        retained_earnings=_f(s, "RetainedEarnings", "retained_earnings"),
-        statement_date=str(s.get("DisclosedDate") or s.get("disclosed_date")
-                           or s.get("CurrentPeriodEndDate") or "") or None,
+        retained_earnings=None,
+        statement_date=str(s.get("DiscDate") or s.get("CurFYEn") or "") or None,
         jquants_stale=True,
     )
