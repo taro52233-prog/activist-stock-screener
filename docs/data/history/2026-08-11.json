@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T13:32:28.217770+00:00",
+  "generated_at": "2026-08-11T14:50:41.542815+00:00",
   "as_of_date": "2026-08-11",
   "params": {
     "weights": {
@@ -25,394 +25,578 @@
   },
   "candidates": [
     {
-      "code": "7148",
-      "name": "サンプル金融HD",
-      "market": "プライム",
+      "code": "7267",
+      "name": "本田技研工業株式会社",
+      "market": "",
       "price": {
-        "close": 980,
-        "date": "2026-08-08",
-        "source": "sample"
+        "close": 1692.0,
+        "date": "2026-08-10",
+        "source": "yahoo"
       },
       "fundamentals": {
-        "equity": 620000000000,
-        "shares_out": 210000000,
-        "treasury": 3000000,
-        "dps_result": 22,
+        "equity": null,
+        "shares_out": null,
+        "treasury": null,
+        "dps_result": null,
         "dps_forecast": null,
-        "eps": 96,
+        "eps": null,
         "bps": null,
-        "cash": 380000000000,
-        "interest_debt": 40000000000,
+        "cash": null,
+        "interest_debt": null,
         "retained_earnings": null,
-        "statement_date": "2026-03-31",
+        "statement_date": null,
         "jquants_stale": true
       },
       "derived": {
-        "market_cap": 202860000000,
-        "pbr": 0.3271935483870968,
-        "dividend_yield": 0.022448979591836733,
-        "payout_ratio": 0.22916666666666666,
-        "net_cash": 340000000000,
-        "net_cash_to_mktcap": 1.676032731933353,
-        "est_acq_price": 1040,
+        "market_cap": null,
+        "pbr": null,
+        "dividend_yield": null,
+        "payout_ratio": null,
+        "net_cash": null,
+        "net_cash_to_mktcap": null,
+        "est_acq_price": 2682.468485125582,
         "acq_price_method": "funds_div_shares",
-        "deviation_from_acq": -0.057692307692307696
-      },
-      "activist": {
-        "detected": true,
-        "is_known": true,
-        "fund": "オアシス",
-        "holding_ratio": 0.0721,
-        "prev_ratio": 0.0512,
-        "ratio_change": 0.020899999999999995,
-        "is_joint": false,
-        "est_acq_price": 1040,
-        "acq_price_method": "funds_div_shares",
-        "filing_date": "2026-08-08",
-        "doc_id": "S100SAMPLE",
-        "doc_url": "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx",
-        "activist_exited": false
-      },
-      "signal": {
-        "score": 93,
-        "filters": {
-          "activist": true,
-          "pbr_lt_1": true,
-          "cash_rich": true,
-          "low_payout": true,
-          "entry_ok": true
-        },
-        "subscores": {
-          "activist": 1.0,
-          "pbr": 1.0,
-          "cash": 1.0,
-          "payout": 0.236,
-          "entry": 0.431
-        },
-        "reasons_ja": [
-          "オアシスが7.2%保有（既知アクティビスト）",
-          "PBR 0.33（1.0未満・資産価値に対して割安）",
-          "ネットキャッシュが時価総額の168%（余剰資金潤沢）",
-          "配当性向23%（増配・自社株買いの余地大）",
-          "現値が推定取得単価を6%下回る（プロと同水準以下で仕込める）"
-        ]
-      },
-      "status": "NEW"
-    },
-    {
-      "code": "6000",
-      "name": "サンプル素材工業",
-      "market": "プライム",
-      "price": {
-        "close": 1520,
-        "date": "2026-08-08",
-        "source": "sample"
-      },
-      "fundamentals": {
-        "equity": 180000000000,
-        "shares_out": 95000000,
-        "treasury": 1500000,
-        "dps_result": 30,
-        "dps_forecast": null,
-        "eps": 140,
-        "bps": null,
-        "cash": 90000000000,
-        "interest_debt": 12000000000,
-        "retained_earnings": null,
-        "statement_date": "2026-03-31",
-        "jquants_stale": true
-      },
-      "derived": {
-        "market_cap": 142120000000,
-        "pbr": 0.7895555555555556,
-        "dividend_yield": 0.019736842105263157,
-        "payout_ratio": 0.21428571428571427,
-        "net_cash": 78000000000,
-        "net_cash_to_mktcap": 0.5488319729805798,
-        "est_acq_price": 1500,
-        "acq_price_method": "funds_div_shares",
-        "deviation_from_acq": 0.013333333333333334
-      },
-      "activist": {
-        "detected": true,
-        "is_known": true,
-        "fund": "村上系",
-        "holding_ratio": 0.0655,
-        "prev_ratio": null,
-        "ratio_change": null,
-        "is_joint": false,
-        "est_acq_price": 1500,
-        "acq_price_method": "funds_div_shares",
-        "filing_date": "2026-08-08",
-        "doc_id": "S100SAMPLE",
-        "doc_url": "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx",
-        "activist_exited": false
-      },
-      "signal": {
-        "score": 76,
-        "filters": {
-          "activist": true,
-          "pbr_lt_1": true,
-          "cash_rich": true,
-          "low_payout": true,
-          "entry_ok": true
-        },
-        "subscores": {
-          "activist": 1.0,
-          "pbr": 0.421,
-          "cash": 1.0,
-          "payout": 0.286,
-          "entry": 0.147
-        },
-        "reasons_ja": [
-          "村上系が6.6%保有（既知アクティビスト）",
-          "PBR 0.79（1.0未満・資産価値に対して割安）",
-          "ネットキャッシュが時価総額の55%（余剰資金潤沢）",
-          "配当性向21%（増配・自社株買いの余地大）",
-          "現値が推定取得単価とほぼ同水準（+1%）"
-        ]
-      },
-      "status": "NEW"
-    },
-    {
-      "code": "3401",
-      "name": "サンプル化学",
-      "market": "プライム",
-      "price": {
-        "close": 720,
-        "date": "2026-08-08",
-        "source": "sample"
-      },
-      "fundamentals": {
-        "equity": 140000000000,
-        "shares_out": 160000000,
-        "treasury": 2000000,
-        "dps_result": 12,
-        "dps_forecast": null,
-        "eps": 70,
-        "bps": null,
-        "cash": 65000000000,
-        "interest_debt": 20000000000,
-        "retained_earnings": null,
-        "statement_date": "2026-03-31",
-        "jquants_stale": true
-      },
-      "derived": {
-        "market_cap": 113760000000,
-        "pbr": 0.8125714285714286,
-        "dividend_yield": 0.016666666666666666,
-        "payout_ratio": 0.17142857142857143,
-        "net_cash": 45000000000,
-        "net_cash_to_mktcap": 0.39556962025316456,
-        "est_acq_price": 760,
-        "acq_price_method": "funds_div_shares",
-        "deviation_from_acq": -0.05263157894736842
-      },
-      "activist": {
-        "detected": true,
-        "is_known": true,
-        "fund": "ダルトン",
-        "holding_ratio": 0.0533,
-        "prev_ratio": 0.0488,
-        "ratio_change": 0.004499999999999997,
-        "is_joint": false,
-        "est_acq_price": 760,
-        "acq_price_method": "funds_div_shares",
-        "filing_date": "2026-08-08",
-        "doc_id": "S100SAMPLE",
-        "doc_url": "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx",
-        "activist_exited": false
-      },
-      "signal": {
-        "score": 76,
-        "filters": {
-          "activist": true,
-          "pbr_lt_1": true,
-          "cash_rich": true,
-          "low_payout": true,
-          "entry_ok": true
-        },
-        "subscores": {
-          "activist": 1.0,
-          "pbr": 0.375,
-          "cash": 0.791,
-          "payout": 0.429,
-          "entry": 0.411
-        },
-        "reasons_ja": [
-          "ダルトンが5.3%保有（既知アクティビスト）",
-          "PBR 0.81（1.0未満・資産価値に対して割安）",
-          "ネットキャッシュが時価総額の40%（余剰資金潤沢）",
-          "配当性向17%（増配・自社株買いの余地大）",
-          "現値が推定取得単価を5%下回る（プロと同水準以下で仕込める）"
-        ]
-      },
-      "status": "NEW"
-    },
-    {
-      "code": "8000",
-      "name": "サンプル商事",
-      "market": "スタンダード",
-      "price": {
-        "close": 2380,
-        "date": "2026-08-08",
-        "source": "sample"
-      },
-      "fundamentals": {
-        "equity": 240000000000,
-        "shares_out": 78000000,
-        "treasury": 500000,
-        "dps_result": 70,
-        "dps_forecast": null,
-        "eps": 210,
-        "bps": null,
-        "cash": 55000000000,
-        "interest_debt": 8000000000,
-        "retained_earnings": null,
-        "statement_date": "2026-03-31",
-        "jquants_stale": true
-      },
-      "derived": {
-        "market_cap": 184450000000,
-        "pbr": 0.7685416666666667,
-        "dividend_yield": 0.029411764705882353,
-        "payout_ratio": 0.3333333333333333,
-        "net_cash": 47000000000,
-        "net_cash_to_mktcap": 0.2548116020601789,
-        "est_acq_price": 2300,
-        "acq_price_method": "funds_div_shares",
-        "deviation_from_acq": 0.034782608695652174
-      },
-      "activist": {
-        "detected": true,
-        "is_known": true,
-        "fund": "シルチェスター",
-        "holding_ratio": 0.0512,
-        "prev_ratio": null,
-        "ratio_change": null,
-        "is_joint": false,
-        "est_acq_price": 2300,
-        "acq_price_method": "funds_div_shares",
-        "filing_date": "2026-08-08",
-        "doc_id": "S100SAMPLE",
-        "doc_url": "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx",
-        "activist_exited": false
-      },
-      "signal": {
-        "score": 62,
-        "filters": {
-          "activist": true,
-          "pbr_lt_1": true,
-          "cash_rich": true,
-          "low_payout": false,
-          "entry_ok": true
-        },
-        "subscores": {
-          "activist": 1.0,
-          "pbr": 0.463,
-          "cash": 0.51,
-          "payout": 0.0,
-          "entry": 0.061
-        },
-        "reasons_ja": [
-          "シルチェスターが5.1%保有（既知アクティビスト）",
-          "PBR 0.77（1.0未満・資産価値に対して割安）",
-          "ネットキャッシュが時価総額の25%（余剰資金潤沢）",
-          "現値が推定取得単価とほぼ同水準（+3%）"
-        ]
-      },
-      "status": "NEW"
-    },
-    {
-      "code": "4005",
-      "name": "サンプル機械",
-      "market": "プライム",
-      "price": {
-        "close": 1180,
-        "date": "2026-08-08",
-        "source": "sample"
-      },
-      "fundamentals": {
-        "equity": 95000000000,
-        "shares_out": 62000000,
-        "treasury": 0,
-        "dps_result": 18,
-        "dps_forecast": null,
-        "eps": 88,
-        "bps": null,
-        "cash": 30000000000,
-        "interest_debt": 15000000000,
-        "retained_earnings": null,
-        "statement_date": "2026-03-31",
-        "jquants_stale": true
-      },
-      "derived": {
-        "market_cap": 73160000000.0,
-        "pbr": 0.7701052631578947,
-        "dividend_yield": 0.015254237288135594,
-        "payout_ratio": 0.20454545454545456,
-        "net_cash": 15000000000,
-        "net_cash_to_mktcap": 0.2050300710770913,
-        "est_acq_price": 1150,
-        "acq_price_method": "funds_div_shares",
-        "deviation_from_acq": 0.02608695652173913
+        "deviation_from_acq": -0.3692376967773444
       },
       "activist": {
         "detected": true,
         "is_known": false,
-        "fund": "一般投資ファンド",
-        "holding_ratio": 0.0601,
+        "fund": "本田技研工業株式会社",
+        "holding_ratio": 0.077,
         "prev_ratio": null,
         "ratio_change": null,
         "is_joint": false,
-        "est_acq_price": 1150,
+        "est_acq_price": 2682.468485125582,
         "acq_price_method": "funds_div_shares",
-        "filing_date": "2026-08-08",
-        "doc_id": "S100SAMPLE",
+        "filing_date": "2026-08-10",
+        "doc_id": "S100YRME",
         "doc_url": "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx",
         "activist_exited": false
       },
       "signal": {
-        "score": 43,
+        "score": 28,
         "filters": {
           "activist": true,
-          "pbr_lt_1": true,
-          "cash_rich": true,
-          "low_payout": true,
+          "pbr_lt_1": false,
+          "cash_rich": false,
+          "low_payout": false,
           "entry_ok": true
         },
         "subscores": {
           "activist": 0.6,
-          "pbr": 0.46,
-          "cash": 0.41,
-          "payout": 0.318,
-          "entry": 0.096
+          "pbr": 0.0,
+          "cash": 0.0,
+          "payout": 0.0,
+          "entry": 1.0
         },
         "reasons_ja": [
-          "一般投資ファンドが6.0%保有（5%超の大量保有）",
-          "PBR 0.77（1.0未満・資産価値に対して割安）",
-          "ネットキャッシュが時価総額の21%（余剰資金潤沢）",
-          "配当性向20%（増配・自社株買いの余地大）",
-          "現値が推定取得単価とほぼ同水準（+3%）"
+          "本田技研工業株式会社が7.7%保有（5%超の大量保有）",
+          "現値が推定取得単価を37%下回る（プロと同水準以下で仕込める）"
+        ]
+      },
+      "status": "NEW"
+    },
+    {
+      "code": "9257",
+      "name": "ＹＣＰホールディングス（グローバル）リミテッド",
+      "market": "",
+      "price": {
+        "close": 522.0,
+        "date": "2026-08-10",
+        "source": "yahoo"
+      },
+      "fundamentals": {
+        "equity": null,
+        "shares_out": null,
+        "treasury": null,
+        "dps_result": null,
+        "dps_forecast": null,
+        "eps": null,
+        "bps": null,
+        "cash": null,
+        "interest_debt": null,
+        "retained_earnings": null,
+        "statement_date": null,
+        "jquants_stale": true
+      },
+      "derived": {
+        "market_cap": null,
+        "pbr": null,
+        "dividend_yield": null,
+        "payout_ratio": null,
+        "net_cash": null,
+        "net_cash_to_mktcap": null,
+        "est_acq_price": 634.6881892921596,
+        "acq_price_method": "funds_div_shares",
+        "deviation_from_acq": -0.17754889911822033
+      },
+      "activist": {
+        "detected": true,
+        "is_known": false,
+        "fund": "ＹＣＰホールディングス（グローバル）リミテッド",
+        "holding_ratio": 0.1339,
+        "prev_ratio": null,
+        "ratio_change": null,
+        "is_joint": false,
+        "est_acq_price": 634.6881892921596,
+        "acq_price_method": "funds_div_shares",
+        "filing_date": "2026-08-07",
+        "doc_id": "S100YUUV",
+        "doc_url": "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx",
+        "activist_exited": false
+      },
+      "signal": {
+        "score": 27,
+        "filters": {
+          "activist": true,
+          "pbr_lt_1": false,
+          "cash_rich": false,
+          "low_payout": false,
+          "entry_ok": true
+        },
+        "subscores": {
+          "activist": 0.6,
+          "pbr": 0.0,
+          "cash": 0.0,
+          "payout": 0.0,
+          "entry": 0.91
+        },
+        "reasons_ja": [
+          "ＹＣＰホールディングス（グローバル）リミテッドが13.4%保有（5%超の大量保有）",
+          "現値が推定取得単価を18%下回る（プロと同水準以下で仕込める）"
+        ]
+      },
+      "status": "NEW"
+    },
+    {
+      "code": "9869",
+      "name": "加藤産業株式会社",
+      "market": "",
+      "price": {
+        "close": 6610.0,
+        "date": "2026-08-10",
+        "source": "yahoo"
+      },
+      "fundamentals": {
+        "equity": null,
+        "shares_out": null,
+        "treasury": null,
+        "dps_result": null,
+        "dps_forecast": null,
+        "eps": null,
+        "bps": null,
+        "cash": null,
+        "interest_debt": null,
+        "retained_earnings": null,
+        "statement_date": null,
+        "jquants_stale": true
+      },
+      "derived": {
+        "market_cap": null,
+        "pbr": null,
+        "dividend_yield": null,
+        "payout_ratio": null,
+        "net_cash": null,
+        "net_cash_to_mktcap": null,
+        "est_acq_price": 1063.0388611445956,
+        "acq_price_method": "funds_div_shares",
+        "deviation_from_acq": 5.218022916756663
+      },
+      "activist": {
+        "detected": true,
+        "is_known": false,
+        "fund": "加藤産業株式会社",
+        "holding_ratio": 0.1134,
+        "prev_ratio": null,
+        "ratio_change": null,
+        "is_joint": false,
+        "est_acq_price": 1063.0388611445956,
+        "acq_price_method": "funds_div_shares",
+        "filing_date": "2026-08-10",
+        "doc_id": "S100YNU3",
+        "doc_url": "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx",
+        "activist_exited": false
+      },
+      "signal": {
+        "score": 18,
+        "filters": {
+          "activist": true,
+          "pbr_lt_1": false,
+          "cash_rich": false,
+          "low_payout": false,
+          "entry_ok": false
+        },
+        "subscores": {
+          "activist": 0.6,
+          "pbr": 0.0,
+          "cash": 0.0,
+          "payout": 0.0,
+          "entry": 0.0
+        },
+        "reasons_ja": [
+          "加藤産業株式会社が11.3%保有（5%超の大量保有）"
+        ]
+      },
+      "status": "NEW"
+    },
+    {
+      "code": "5401",
+      "name": "日本製鉄株式会社",
+      "market": "",
+      "price": {
+        "close": 689.4,
+        "date": "2026-08-10",
+        "source": "yahoo"
+      },
+      "fundamentals": {
+        "equity": null,
+        "shares_out": null,
+        "treasury": null,
+        "dps_result": null,
+        "dps_forecast": null,
+        "eps": null,
+        "bps": null,
+        "cash": null,
+        "interest_debt": null,
+        "retained_earnings": null,
+        "statement_date": null,
+        "jquants_stale": true
+      },
+      "derived": {
+        "market_cap": null,
+        "pbr": null,
+        "dividend_yield": null,
+        "payout_ratio": null,
+        "net_cash": null,
+        "net_cash_to_mktcap": null,
+        "est_acq_price": 247.11446481997842,
+        "acq_price_method": "funds_div_shares",
+        "deviation_from_acq": 1.7898002672657152
+      },
+      "activist": {
+        "detected": true,
+        "is_known": false,
+        "fund": "日本製鉄株式会社",
+        "holding_ratio": 0.328,
+        "prev_ratio": null,
+        "ratio_change": null,
+        "is_joint": false,
+        "est_acq_price": 247.11446481997842,
+        "acq_price_method": "funds_div_shares",
+        "filing_date": "2026-08-07",
+        "doc_id": "S100YUD2",
+        "doc_url": "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx",
+        "activist_exited": false
+      },
+      "signal": {
+        "score": 18,
+        "filters": {
+          "activist": true,
+          "pbr_lt_1": false,
+          "cash_rich": false,
+          "low_payout": false,
+          "entry_ok": false
+        },
+        "subscores": {
+          "activist": 0.6,
+          "pbr": 0.0,
+          "cash": 0.0,
+          "payout": 0.0,
+          "entry": 0.0
+        },
+        "reasons_ja": [
+          "日本製鉄株式会社が32.8%保有（5%超の大量保有）"
+        ]
+      },
+      "status": "NEW"
+    },
+    {
+      "code": "9101",
+      "name": "日本郵船株式会社",
+      "market": "",
+      "price": {
+        "close": 6157.0,
+        "date": "2026-08-10",
+        "source": "yahoo"
+      },
+      "fundamentals": {
+        "equity": null,
+        "shares_out": null,
+        "treasury": null,
+        "dps_result": null,
+        "dps_forecast": null,
+        "eps": null,
+        "bps": null,
+        "cash": null,
+        "interest_debt": null,
+        "retained_earnings": null,
+        "statement_date": null,
+        "jquants_stale": true
+      },
+      "derived": {
+        "market_cap": null,
+        "pbr": null,
+        "dividend_yield": null,
+        "payout_ratio": null,
+        "net_cash": null,
+        "net_cash_to_mktcap": null,
+        "est_acq_price": 8.841024573816833,
+        "acq_price_method": "funds_div_shares",
+        "deviation_from_acq": 695.4124970576696
+      },
+      "activist": {
+        "detected": true,
+        "is_known": false,
+        "fund": "日本郵船株式会社",
+        "holding_ratio": 0.1804,
+        "prev_ratio": null,
+        "ratio_change": null,
+        "is_joint": false,
+        "est_acq_price": 8.841024573816833,
+        "acq_price_method": "funds_div_shares",
+        "filing_date": "2026-08-07",
+        "doc_id": "S100YTMB",
+        "doc_url": "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx",
+        "activist_exited": false
+      },
+      "signal": {
+        "score": 18,
+        "filters": {
+          "activist": true,
+          "pbr_lt_1": false,
+          "cash_rich": false,
+          "low_payout": false,
+          "entry_ok": false
+        },
+        "subscores": {
+          "activist": 0.6,
+          "pbr": 0.0,
+          "cash": 0.0,
+          "payout": 0.0,
+          "entry": 0.0
+        },
+        "reasons_ja": [
+          "日本郵船株式会社が18.0%保有（5%超の大量保有）"
+        ]
+      },
+      "status": "NEW"
+    },
+    {
+      "code": "5706",
+      "name": "三井金属株式会社",
+      "market": "",
+      "price": {
+        "close": 27855.0,
+        "date": "2026-08-10",
+        "source": "yahoo"
+      },
+      "fundamentals": {
+        "equity": null,
+        "shares_out": null,
+        "treasury": null,
+        "dps_result": null,
+        "dps_forecast": null,
+        "eps": null,
+        "bps": null,
+        "cash": null,
+        "interest_debt": null,
+        "retained_earnings": null,
+        "statement_date": null,
+        "jquants_stale": true
+      },
+      "derived": {
+        "market_cap": null,
+        "pbr": null,
+        "dividend_yield": null,
+        "payout_ratio": null,
+        "net_cash": null,
+        "net_cash_to_mktcap": null,
+        "est_acq_price": 6.8846815834767645e-06,
+        "acq_price_method": "funds_div_shares",
+        "deviation_from_acq": 4045938749.0
+      },
+      "activist": {
+        "detected": true,
+        "is_known": false,
+        "fund": "三井金属株式会社",
+        "holding_ratio": 0.1116,
+        "prev_ratio": null,
+        "ratio_change": null,
+        "is_joint": false,
+        "est_acq_price": 6.8846815834767645e-06,
+        "acq_price_method": "funds_div_shares",
+        "filing_date": "2026-08-07",
+        "doc_id": "S100YUL6",
+        "doc_url": "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx",
+        "activist_exited": false
+      },
+      "signal": {
+        "score": 18,
+        "filters": {
+          "activist": true,
+          "pbr_lt_1": false,
+          "cash_rich": false,
+          "low_payout": false,
+          "entry_ok": false
+        },
+        "subscores": {
+          "activist": 0.6,
+          "pbr": 0.0,
+          "cash": 0.0,
+          "payout": 0.0,
+          "entry": 0.0
+        },
+        "reasons_ja": [
+          "三井金属株式会社が11.2%保有（5%超の大量保有）"
+        ]
+      },
+      "status": "NEW"
+    },
+    {
+      "code": "9020",
+      "name": "東日本旅客鉄道株式会社",
+      "market": "",
+      "price": {
+        "close": 3453.0,
+        "date": "2026-08-10",
+        "source": "yahoo"
+      },
+      "fundamentals": {
+        "equity": null,
+        "shares_out": null,
+        "treasury": null,
+        "dps_result": null,
+        "dps_forecast": null,
+        "eps": null,
+        "bps": null,
+        "cash": null,
+        "interest_debt": null,
+        "retained_earnings": null,
+        "statement_date": null,
+        "jquants_stale": true
+      },
+      "derived": {
+        "market_cap": null,
+        "pbr": null,
+        "dividend_yield": null,
+        "payout_ratio": null,
+        "net_cash": null,
+        "net_cash_to_mktcap": null,
+        "est_acq_price": 1829.3209398399174,
+        "acq_price_method": "funds_div_shares",
+        "deviation_from_acq": 0.8875856744427633
+      },
+      "activist": {
+        "detected": true,
+        "is_known": false,
+        "fund": "東日本旅客鉄道株式会社",
+        "holding_ratio": 0.1989,
+        "prev_ratio": null,
+        "ratio_change": null,
+        "is_joint": false,
+        "est_acq_price": 1829.3209398399174,
+        "acq_price_method": "funds_div_shares",
+        "filing_date": "2026-08-07",
+        "doc_id": "S100YSUU",
+        "doc_url": "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx",
+        "activist_exited": false
+      },
+      "signal": {
+        "score": 18,
+        "filters": {
+          "activist": true,
+          "pbr_lt_1": false,
+          "cash_rich": false,
+          "low_payout": false,
+          "entry_ok": false
+        },
+        "subscores": {
+          "activist": 0.6,
+          "pbr": 0.0,
+          "cash": 0.0,
+          "payout": 0.0,
+          "entry": 0.0
+        },
+        "reasons_ja": [
+          "東日本旅客鉄道株式会社が19.9%保有（5%超の大量保有）"
+        ]
+      },
+      "status": "NEW"
+    },
+    {
+      "code": "8089",
+      "name": "ナイス株式会社",
+      "market": "",
+      "price": {
+        "close": 1930.0,
+        "date": "2026-08-10",
+        "source": "yahoo"
+      },
+      "fundamentals": {
+        "equity": null,
+        "shares_out": null,
+        "treasury": null,
+        "dps_result": null,
+        "dps_forecast": null,
+        "eps": null,
+        "bps": null,
+        "cash": null,
+        "interest_debt": null,
+        "retained_earnings": null,
+        "statement_date": null,
+        "jquants_stale": true
+      },
+      "derived": {
+        "market_cap": null,
+        "pbr": null,
+        "dividend_yield": null,
+        "payout_ratio": null,
+        "net_cash": null,
+        "net_cash_to_mktcap": null,
+        "est_acq_price": 456.9316060321042,
+        "acq_price_method": "funds_div_shares",
+        "deviation_from_acq": 3.223826880262683
+      },
+      "activist": {
+        "detected": true,
+        "is_known": false,
+        "fund": "ナイス株式会社",
+        "holding_ratio": 0.5928,
+        "prev_ratio": null,
+        "ratio_change": null,
+        "is_joint": false,
+        "est_acq_price": 456.9316060321042,
+        "acq_price_method": "funds_div_shares",
+        "filing_date": "2026-08-07",
+        "doc_id": "S100YU8A",
+        "doc_url": "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx",
+        "activist_exited": false
+      },
+      "signal": {
+        "score": 18,
+        "filters": {
+          "activist": true,
+          "pbr_lt_1": false,
+          "cash_rich": false,
+          "low_payout": false,
+          "entry_ok": false
+        },
+        "subscores": {
+          "activist": 0.6,
+          "pbr": 0.0,
+          "cash": 0.0,
+          "payout": 0.0,
+          "entry": 0.0
+        },
+        "reasons_ja": [
+          "ナイス株式会社が59.3%保有（5%超の大量保有）"
         ]
       },
       "status": "NEW"
     }
   ],
-  "activist_exits": [
-    {
-      "code": "7208",
-      "name": "サンプル自動車部品",
-      "fund": "エフィッシモ",
-      "prev_ratio": 0.0612,
-      "new_ratio": 0.0431,
-      "filing_date": "2026-08-10",
-      "doc_id": "S100SAMPLE",
-      "doc_url": "https://disclosure2.edinet-fsa.go.jp/WEEK0010.aspx"
-    }
-  ],
+  "activist_exits": [],
   "warnings": [
-    "これはサンプル（架空）データです。シークレットを設定しGitHub Actionsが実行されると実データに置き換わります。"
-  ],
-  "sample": true
+    "J-Quants認証失敗: 410 Client Error: Gone for url: https://api.jquants.com/v1/token/auth_user"
+  ]
 }
