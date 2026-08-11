@@ -264,3 +264,45 @@ def collect_recent_filings(
                 warnings.append(f"EDINET本文取得失敗 {doc_id}: {e}")
         filings.append(parse_filing(meta, csv_rows))
     return filings, warnings
+
+
+def backfill_known_filings(
+    api_key: str,
+    end_day: date,
+    days: int,
+    known: list[dict],
+    match_fn,
+    sleep_sec: float = 0.15,
+) -> tuple[list[Filing], list[str]]:
+    """過去 days 日分を1日ずつ遡り、既知アクティビストの大量保有報告だけを集める。
+
+    提出者名は一覧メタデータで判別できるため、既知に一致した書類のみCSVを取得する
+    （＝ダウンロード数を大幅に削減）。returns: (filings, warnings)
+    """
+    warnings: list[str] = []
+    filings: list[Filing] = []
+    d = end_day
+    for _ in range(days):
+        if d.weekday() < 5:  # 平日のみ（休日は提出なし）
+            try:
+                results = list_documents(api_key, d)
+            except Exception as e:  # noqa: BLE001
+                warnings.append(f"backfill一覧失敗 {d}: {e}")
+                results = []
+            for meta in filter_holding_reports(results):
+                filer = str(meta.get("filerName") or "")
+                is_known, _, _ = match_fn(filer, known)
+                if not is_known:
+                    continue
+                doc_id = str(meta.get("docID") or "")
+                csv_rows: list[dict] = []
+                if doc_id:
+                    try:
+                        csv_rows = download_csv_rows(api_key, doc_id)
+                        if sleep_sec:
+                            time.sleep(sleep_sec)
+                    except Exception as e:  # noqa: BLE001
+                        warnings.append(f"backfill本文失敗 {doc_id}: {e}")
+                filings.append(parse_filing(meta, csv_rows))
+        d -= timedelta(days=1)
+    return filings, warnings

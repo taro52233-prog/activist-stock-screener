@@ -35,25 +35,19 @@ def jst_today() -> date:
 # ---------------------------------------------------------------------------
 # アクティビスト候補の構築
 # ---------------------------------------------------------------------------
-def build_candidates_tracked(conf, known) -> tuple[list[Candidate], dict, list[ActivistExit], list[str]]:
-    """EDINETの新規提出を永続ストアにマージし、追跡中の全銘柄を候補化する。"""
-    import edinet
+def build_candidates_tracked(conf, known, filings, window_days) -> tuple[list[Candidate], dict, list[ActivistExit], list[str]]:
+    """提出リストを永続ストアにマージし、追跡中の全銘柄を候補化する。"""
     import track
     th = conf.thresholds
     warnings: list[str] = []
     today = jst_today()
-
-    filings, w = edinet.collect_recent_filings(
-        conf.secrets.edinet_api_key, today, th.lookback_business_days, fetch_bodies=True
-    )
-    warnings.extend(w)
 
     store = track.load()
     exit_dicts = track.merge_filings(
         store, filings, known, today,
         screen.match_activist, screen.estimate_acq_price, th.holding_min,
     )
-    track.expire(store, today, th.tracking_days)
+    track.expire(store, today, window_days)
     active = track.active_entries(store, th.max_tracked)
 
     exits = [ActivistExit(
@@ -82,9 +76,7 @@ def build_candidates_tracked(conf, known) -> tuple[list[Candidate], dict, list[A
         c._edinet_shares_out = e.get("shares_out_edinet")  # type: ignore[attr-defined]
         candidates.append(c)
 
-    log = f"追跡中 {len(active)}件（新規提出 {len(filings)}件を反映）"
-    warnings.append(log) if False else None
-    print(f"[track] {log}")
+    print(f"[track] 追跡中 {len(active)}件（提出 {len(filings)}件を反映・窓 {window_days}日）")
     return candidates, store, exits, warnings
 
 
@@ -226,6 +218,8 @@ def main(argv=None) -> int:
     p.add_argument("--dry-run", action="store_true", help="書き込み/通知せず要約のみ")
     p.add_argument("--no-notify", action="store_true", help="Chatwork通知を抑止")
     p.add_argument("--codes", help="カンマ区切りコードのみ処理（EDINET不使用・検証用）")
+    p.add_argument("--backfill", type=int, metavar="DAYS",
+                   help="過去DAYS日分の既知アクティビスト大量保有を遡って登録（初期化用・通知抑止）")
     args = p.parse_args(argv)
 
     import track
@@ -239,8 +233,20 @@ def main(argv=None) -> int:
     if args.codes:
         candidates = build_candidates_from_codes([c.strip() for c in args.codes.split(",") if c.strip()])
     elif conf.secrets.has_edinet:
-        candidates, store, exits, w = build_candidates_tracked(conf, known)
+        import edinet
+        if args.backfill:
+            args.no_notify = True   # 初期化時は大量通知を避ける
+            filings, w = edinet.backfill_known_filings(
+                conf.secrets.edinet_api_key, jst_today(), args.backfill, known, screen.match_activist)
+            window = max(args.backfill, conf.thresholds.tracking_days)
+        else:
+            filings, w = edinet.collect_recent_filings(
+                conf.secrets.edinet_api_key, jst_today(),
+                conf.thresholds.lookback_business_days, fetch_bodies=True)
+            window = conf.thresholds.tracking_days
         warnings.extend(w)
+        candidates, store, exits, w2 = build_candidates_tracked(conf, known, filings, window)
+        warnings.extend(w2)
     else:
         warnings.append("EDINET_API_KEY 未設定のため候補ゼロ（--codes で検証可能）")
         candidates = []
