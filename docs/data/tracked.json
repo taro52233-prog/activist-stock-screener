@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-11T16:24:52.200519+00:00",
+  "updated_at": "2026-08-11T22:35:49.298688+00:00",
   "entries": {
     "3544::テラ株式会社": {
       "code": "3544",
@@ -335,10 +335,10 @@
       "est_acq_price": 3298.5753432127713,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 122905481.0,
-      "holding_ratio": 0.0923,
-      "prev_ratio": 0.1025,
+      "holding_ratio": 0.0597,
+      "prev_ratio": 0.0703,
       "is_joint": false,
-      "doc_id": "S100XNNQ",
+      "doc_id": "S100YVNX",
       "first_seen": "2026-08-12",
       "last_seen": "2026-08-12",
       "exited": false
@@ -544,10 +544,10 @@
       "est_acq_price": 447.48963658974714,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 267507864.0,
-      "holding_ratio": 0.0507,
-      "prev_ratio": null,
+      "holding_ratio": 0.0974,
+      "prev_ratio": 0.0854,
       "is_joint": false,
-      "doc_id": "S100YMTO",
+      "doc_id": "S100YUFM",
       "first_seen": "2026-08-12",
       "last_seen": "2026-08-12",
       "exited": false
