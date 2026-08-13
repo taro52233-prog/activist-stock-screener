@@ -182,6 +182,7 @@ def build_report(base: dict, base_params: Params, sweep: list[dict],
     ・エントリーは「トリガー当日の終値」で約定と仮定（実際は翌日始値・スリッページで差が出ます）。<br>
     ・株価は<strong>株式分割の調整が不完全</strong>な場合があり、極端な損益({base.get("anomalies",0)}件)は異常として除外済み。それでも残る歪みの可能性あり。<br>
     ・PBR等の財務フィルタは<strong>提出時点の値ではない</strong>ため本検証には未使用。<br>
+    ・検証期間は日本の<strong>ガバナンス改革・低PBR是正・アクティビスト活況</strong>という追い風局面。相場環境が変われば再現しない可能性大（レジーム依存）。<br>
     ・{warn_count}件のデータ取得警告あり（一部銘柄の履歴欠損）。<br>
     ・<strong>過去の好成績は将来を保証しません。</strong>
   </div>
