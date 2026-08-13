@@ -92,6 +92,46 @@ def _history_from_yahoo(code: str) -> list[dict]:
         return []
 
 
+def get_history_full(code: str) -> list[dict]:
+    """バックテスト用：全期間の日次終値 [{d,c}]（Stooq全期間→Yahoo5年フォールバック）。"""
+    url = STOOQ_CSV.format(sym=f"{code}.jp")
+    try:
+        r = _SESSION.get(url, timeout=_TIMEOUT)
+        r.raise_for_status()
+        text = r.text.strip()
+        if text and not text.lower().startswith("<") and "no data" not in text.lower():
+            out = []
+            for row in csv.DictReader(io.StringIO(text)):
+                c = row.get("Close") or row.get("close")
+                d = row.get("Date") or row.get("date")
+                if c not in (None, "", "N/D") and d:
+                    try:
+                        out.append({"d": d, "c": float(c)})
+                    except ValueError:
+                        pass
+            if out:
+                return out
+    except Exception:  # noqa: BLE001
+        pass
+    # Yahoo フォールバック（5年）
+    try:
+        u = YAHOO_CHART.format(sym=f"{code}.T")
+        r = _SESSION.get(u, params={"range": "5y", "interval": "1d"}, timeout=_TIMEOUT)
+        r.raise_for_status()
+        result = (r.json().get("chart", {}).get("result") or [None])[0]
+        if not result:
+            return []
+        ts = result.get("timestamp") or []
+        closes = (result.get("indicators", {}).get("quote") or [{}])[0].get("close") or []
+        out = []
+        for t, c in zip(ts, closes):
+            if c is not None:
+                out.append({"d": datetime.fromtimestamp(t, tz=timezone.utc).date().isoformat(), "c": float(c)})
+        return out
+    except Exception:  # noqa: BLE001
+        return []
+
+
 def price_on_or_before(history: list[dict], date_iso: str) -> Optional[dict]:
     """指定日以前で最も近い終値 {d,c} を返す。無ければ最初の点。"""
     if not history:
