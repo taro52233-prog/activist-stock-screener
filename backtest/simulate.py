@@ -125,12 +125,25 @@ def _max_drawdown(equity: list[float]) -> float:
     return mdd
 
 
-def summarize(trades: list[Trade]) -> dict:
-    """closed（TP/SL/時間切れ）トレードで勝率・期待値・DD等を集計。"""
-    closed = [t for t in trades if t.closed]
+# 分割・データ異常の除外閾値：エグジット設計(TP+40%/SL-25%)を大きく超える実現損益は
+# 未調整の株式分割や誤った価格行に由来する可能性が高いため異常として除外する。
+ANOM_HI = 1.0    # +100%超は異常（分割による見かけ上の急騰など）
+ANOM_LO = -0.6   # -60%未満は異常（分割・誤値）
+
+
+def summarize(trades: list[Trade], bet_fraction: float = 0.2) -> dict:
+    """closed（TP/SL/時間切れ）トレードで勝率・期待値・DD等を集計。
+
+    分割/データ異常（|ret|が極端）を除外し、資産曲線は資金の一定割合(bet_fraction)
+    ずつ賭ける前提で複利計算（1トレードで資金が尽きない・符号破綻しない）。
+    """
+    closed_all = [t for t in trades if t.closed]
     entered = [t for t in trades if t.entered]
     open_trades = [t for t in entered if t.exit_reason == "eod"]
     no_entry = [t for t in trades if not t.entered]
+
+    closed = [t for t in closed_all if ANOM_LO <= t.ret <= ANOM_HI]
+    anomalies = len(closed_all) - len(closed)
 
     rets = [t.ret for t in closed]
     wins = [r for r in rets if r > 0]
@@ -140,6 +153,7 @@ def summarize(trades: list[Trade]) -> dict:
         "signals": len(trades),
         "entered": len(entered),
         "closed": len(closed),
+        "anomalies": anomalies,
         "open": len(open_trades),
         "no_entry": len(no_entry),
         "win_rate": (len(wins) / len(closed)) if closed else None,
@@ -152,10 +166,11 @@ def summarize(trades: list[Trade]) -> dict:
         "worst": min(rets) if rets else None,
     }
 
-    # 概念的な資産曲線：エグジット日順に1銘柄ずつ回して複利
+    # 資産曲線：エグジット日順に、資金の bet_fraction ずつ賭けて複利（符号破綻しない）
     curve = [1.0]
     for t in sorted(closed, key=lambda x: x.exit_date):
-        curve.append(curve[-1] * (1 + t.ret))
+        curve.append(curve[-1] * (1 + bet_fraction * t.ret))
+    res["bet_fraction"] = bet_fraction
     res["total_return"] = (curve[-1] - 1.0) if len(curve) > 1 else None
     res["max_drawdown"] = _max_drawdown(curve) if len(curve) > 1 else None
     res["equity_curve"] = curve

@@ -106,14 +106,15 @@ def build_report(base: dict, base_params: Params, sweep: list[dict],
                  by_fund: dict, period: str, warn_count: int) -> str:
     exp = base["expectancy"]
     exp_cls = "pl-pos" if (exp or 0) > 0 else "pl-neg"
+    betpct = int(base.get("bet_fraction", 0.2) * 100)
     tiles = "".join([
         _tile("対象シグナル", base["signals"], "既知アクティビストの提出(重複除く)"),
-        _tile("エントリー成立", base["entered"], f'内 決済済み {base["closed"]} / 保有中 {base["open"]}'),
-        _tile("勝率", _pct(base["win_rate"]), "決済済みトレード"),
+        _tile("エントリー成立", base["entered"], f'決済 {base["closed"]} / 保有中 {base["open"]} / 異常除外 {base.get("anomalies",0)}'),
+        _tile("勝率", _pct(base["win_rate"]), "決済済みトレード(異常除外後)"),
         _tile("期待値/トレード", f'<span class="{exp_cls}">{_pct(exp,2)}</span>', "コスト控除後"),
         _tile("平均利益 / 平均損失", f'{_pct(base["avg_win"])} / {_pct(base["avg_loss"])}', ""),
         _tile("プロフィットファクター", "—" if base["profit_factor"] is None else f'{base["profit_factor"]:.2f}', "総利益÷総損失"),
-        _tile("累積リターン", _pct(base["total_return"]), "概念的資産曲線(1銘柄ずつ複利)"),
+        _tile("累積リターン", _pct(base["total_return"]), f"資金の{betpct}%ずつ賭けた複利"),
         _tile("最大ドローダウン", _pct(base["max_drawdown"]), "資産曲線の最大下落"),
     ])
 
@@ -155,9 +156,9 @@ def build_report(base: dict, base_params: Params, sweep: list[dict],
       <strong>+{p.take_profit:.0%}で利確 / {p.stop_loss:.0%}で損切り / {p.max_hold}営業日で時間切れ</strong>。往復コスト{p.cost:.1%}を控除。対象期間: {period}。
     </p>
     <section class="tiles">{tiles}</section>
-    <div class="section-title">概念的な資産曲線（決済トレードをエグジット日順に1銘柄ずつ複利）</div>
+    <div class="section-title">資産曲線（資金の{betpct}%ずつ賭けて複利・分割等の異常トレードは除外）</div>
     {_svg_equity(base["equity_curve"])}
-    <p class="muted" style="font-size:.8rem">手仕舞い内訳: {reason_txt}（tp=利確 / sl=損切り / time=時間切れ）</p>
+    <p class="muted" style="font-size:.8rem">手仕舞い内訳: {reason_txt}（tp=利確 / sl=損切り / time=時間切れ）／ 異常除外 {base.get("anomalies",0)}件（未調整の株式分割・誤値によるもの）</p>
   </div>
 
   <div class="card">
@@ -179,6 +180,7 @@ def build_report(base: dict, base_params: Params, sweep: list[dict],
     <strong>この結果の限界（必ずお読みください）</strong><br>
     ・サンプル数が限られ、<strong>生存者バイアス</strong>（上場廃止・株価取得不可の銘柄は除外）があります。<br>
     ・エントリーは「トリガー当日の終値」で約定と仮定（実際は翌日始値・スリッページで差が出ます）。<br>
+    ・株価は<strong>株式分割の調整が不完全</strong>な場合があり、極端な損益({base.get("anomalies",0)}件)は異常として除外済み。それでも残る歪みの可能性あり。<br>
     ・PBR等の財務フィルタは<strong>提出時点の値ではない</strong>ため本検証には未使用。<br>
     ・{warn_count}件のデータ取得警告あり（一部銘柄の履歴欠損）。<br>
     ・<strong>過去の好成績は将来を保証しません。</strong>
