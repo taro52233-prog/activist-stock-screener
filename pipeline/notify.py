@@ -21,10 +21,14 @@ def build_message(
     exits: list[ActivistExit],
     th: Thresholds,
     dashboard_url: str = "",
+    paper_entries: Optional[list] = None,
+    paper_exits: Optional[list] = None,
 ) -> Optional[str]:
     """通知本文を組み立てる。通知対象が無ければ None。"""
+    paper_entries = paper_entries or []
+    paper_exits = paper_exits or []
     notable = [c for c in new_changed if c.signal.score >= th.min_score_to_notify]
-    if not notable and not exits:
+    if not notable and not exits and not paper_entries and not paper_exits:
         return None
 
     lines: list[str] = []
@@ -50,6 +54,22 @@ def build_message(
             pr = f"{e.prev_ratio * 100:.1f}%" if e.prev_ratio is not None else "-"
             nr = f"{e.new_ratio * 100:.1f}%" if e.new_ratio is not None else "-"
             lines.append(f"⚠ {e.code} {e.name}｜{e.fund} {pr}→{nr}")
+
+    if paper_entries:
+        lines.append("")
+        lines.append(f"🟢 新規ペーパー買いシグナル {len(paper_entries)}件（紙上・実弾なし）")
+        for t in paper_entries:
+            dev = t.get("dev_at_entry")
+            devtxt = f"提出時比{dev * 100:+.0f}%" if dev is not None else ""
+            lines.append(f"　{t['code']} {t['name']}｜{t['fund']}｜{t['entry_price']:.0f}円 {devtxt}")
+
+    if paper_exits:
+        lines.append("")
+        lines.append(f"🔴 ペーパー手仕舞い {len(paper_exits)}件")
+        _rlabel = {"tp": "利確", "sl": "損切り", "time": "時間切れ"}
+        for t in paper_exits:
+            r = t.get("ret") or 0
+            lines.append(f"　{t['code']} {t['name']}｜{_rlabel.get(t.get('exit_reason'), '')} {r * 100:+.1f}%")
 
     if dashboard_url:
         lines.append("")

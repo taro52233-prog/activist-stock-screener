@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ペーパー検証 | アクティビスト追随スクリーナー</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <header class="appbar" id="appbar"></header>
+  <main class="wrap">
+    <div class="banner sample">🧻 <strong>フォワード・ペーパー検証：実際の売買はしていません。</strong>
+      買いシグナルを当日終値で仮に約定したと記録し、+30%利確/-20%損切り/365日で仮決済。バックテスト（過去）が未来でも通用するかを、実弾なしで検証しています。</div>
+
+    <section class="tiles" id="tiles"></section>
+
+    <div class="card">
+      <h2>オープン中（仮保有）</h2>
+      <div class="table-scroll"><table>
+        <thead><tr><th class="l">コード</th><th class="l">銘柄</th><th class="l">ファンド</th>
+          <th>エントリー</th><th>取得</th><th>現在</th><th>含み損益</th><th>保有日数</th></tr></thead>
+        <tbody id="openBody"></tbody></table></div>
+      <div id="openEmpty"></div>
+    </div>
+
+    <div class="card">
+      <h2>クローズ済み（仮決済）</h2>
+      <div class="table-scroll"><table>
+        <thead><tr><th class="l">コード</th><th class="l">銘柄</th><th class="l">ファンド</th>
+          <th>エントリー日</th><th>決済日</th><th class="l">結果</th><th>損益</th></tr></thead>
+        <tbody id="closedBody"></tbody></table></div>
+      <div id="closedEmpty"></div>
+    </div>
+
+    <p class="footer" id="footer">本ツールは投資判断の補助であり投資勧誘ではありません。</p>
+  </main>
+  <script src="./js/app.js"></script>
+  <script src="./js/paper.js"></script>
+</body>
+</html>

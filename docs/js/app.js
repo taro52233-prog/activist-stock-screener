@@ -59,6 +59,7 @@ function renderHeader(active) {
   const links = [
     ["index.html", "候補一覧"],
     ["positions.html", "ポジション管理"],
+    ["paper.html", "ペーパー検証"],
     ["backtest.html", "バックテスト"],
   ];
   const nav = links.map(([href, label]) =>

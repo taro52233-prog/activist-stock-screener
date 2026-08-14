@@ -257,6 +257,16 @@ def main(argv=None) -> int:
     previous = diffmod.load_previous(cfg.HISTORY_DIR, exclude_date=as_of.isoformat())
     diffmod.annotate_status(candidates, previous)
 
+    # フォワード・ペーパー検証（実弾なし。--codes 検証時はスキップ）
+    import paper as papermod
+    paper_entries: list = []
+    paper_exits: list = []
+    pstore = papermod.load()
+    if not args.codes:
+        paper_entries, paper_exits = papermod.update(pstore, candidates, conf.paper, as_of.isoformat())
+        print(f"[paper] 新規エントリー {len(paper_entries)} / 手仕舞い {len(paper_exits)} "
+              f"（累積 {papermod.summarize(pstore)}）")
+
     if args.dry_run:
         out = build_output(
             generated_at=datetime.now(timezone.utc).isoformat(),
@@ -271,12 +281,14 @@ def main(argv=None) -> int:
     out = write_outputs(conf, as_of, candidates, exits, warnings)
     if store is not None:
         track.save(store, datetime.now(timezone.utc).isoformat())
+    papermod.save(pstore, datetime.now(timezone.utc).isoformat(), conf.paper)
     print_summary(out)
 
     if not args.no_notify:
         from notify import build_message, post_chatwork
         nc = diffmod.new_or_changed(candidates)
-        msg = build_message(as_of.isoformat(), nc, exits, conf.thresholds, DASHBOARD_URL)
+        msg = build_message(as_of.isoformat(), nc, exits, conf.thresholds, DASHBOARD_URL,
+                            paper_entries=paper_entries, paper_exits=paper_exits)
         if msg:
             ok, detail = post_chatwork(conf.secrets, msg)
             print("[chatwork] " + detail)

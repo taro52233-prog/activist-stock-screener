@@ -77,6 +77,16 @@ class Thresholds:
 
 
 @dataclass
+class PaperParams:
+    """フォワード・ペーパー検証のルール（実弾なし）。"""
+    entry_floor: float = -0.20    # 提出時比がこれ以上（暴落し切った銘柄は除外）
+    entry_ceiling: float = 0.05   # 提出時比がこれ以下（プロの取得水準付近）でエントリー
+    take_profit: float = 0.30     # +30%で利確
+    stop_loss: float = -0.20      # -20%で損切り
+    max_hold_days: int = 365      # 経過日数で時間切れ
+
+
+@dataclass
 class Secrets:
     edinet_api_key: str = ""
     jquants_api_key: str = ""
@@ -103,6 +113,7 @@ class Secrets:
 class Config:
     weights: Weights = field(default_factory=Weights)
     thresholds: Thresholds = field(default_factory=Thresholds)
+    paper: PaperParams = field(default_factory=PaperParams)
     secrets: Secrets = field(default_factory=Secrets)
 
     def public_params(self) -> dict:
