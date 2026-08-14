@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-14T01:49:49.119362+00:00",
+  "updated_at": "2026-08-14T02:02:40.768365+00:00",
   "entries": {
     "3544::テラ株式会社": {
       "code": "3544",
@@ -4063,6 +4063,25 @@
       "prev_ratio": 0.1122,
       "is_joint": true,
       "doc_id": "S100YVS9",
+      "first_seen": "2026-08-14",
+      "last_seen": "2026-08-14",
+      "exited": false
+    },
+    "6573::エボ　ファンド（Evo Fund）": {
+      "code": "6573",
+      "name": "CRAVIA株式会社",
+      "fund": "エボ　ファンド（Evo Fund）",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-08-14",
+      "anchor_price": 26.0,
+      "est_acq_price": 0.0001010427612965807,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 67185080.0,
+      "holding_ratio": 0.2365,
+      "prev_ratio": 0.2502,
+      "is_joint": true,
+      "doc_id": "S100YWBK",
       "first_seen": "2026-08-14",
       "last_seen": "2026-08-14",
       "exited": false
