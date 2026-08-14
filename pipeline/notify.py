@@ -58,10 +58,13 @@ def build_message(
     if paper_entries:
         lines.append("")
         lines.append(f"🟢 新規ペーパー買いシグナル {len(paper_entries)}件（紙上・実弾なし）")
-        for t in paper_entries:
+        shown = sorted(paper_entries, key=lambda t: t.get("dev_at_entry") if t.get("dev_at_entry") is not None else 0)
+        for t in shown[:15]:
             dev = t.get("dev_at_entry")
             devtxt = f"提出時比{dev * 100:+.0f}%" if dev is not None else ""
             lines.append(f"　{t['code']} {t['name']}｜{t['fund']}｜{t['entry_price']:.0f}円 {devtxt}")
+        if len(shown) > 15:
+            lines.append(f"　…他 {len(shown) - 15}件（ダッシュボードのペーパー検証で全件表示）")
 
     if paper_exits:
         lines.append("")
