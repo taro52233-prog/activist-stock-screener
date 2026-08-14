@@ -121,6 +121,7 @@ class Config:
         return {
             "weights": asdict(self.weights),
             "thresholds": asdict(self.thresholds),
+            "paper": asdict(self.paper),
         }
 
 

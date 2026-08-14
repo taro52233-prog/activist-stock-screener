@@ -11,6 +11,17 @@
   <main class="wrap">
     <div id="banner"></div>
 
+    <div class="card" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <strong style="font-size:.95rem">🔎 銘柄コードでトレードプランを見る</strong>
+      <form id="codeForm" style="display:flex;gap:8px;flex-wrap:wrap">
+        <input id="codeInput" list="codeList" placeholder="例: 7731 / 6302" class="field"
+               style="padding:8px 10px;min-width:180px" autocomplete="off" />
+        <datalist id="codeList"></datalist>
+        <button class="btn" type="submit">開く</button>
+      </form>
+      <span class="muted" style="font-size:.8rem">※アクティビスト大量保有の追跡銘柄のみ（買いゾーン・利確/損切りを表示）</span>
+    </div>
+
     <section class="tiles" id="tiles"></section>
 
     <div class="card">
@@ -150,13 +161,27 @@
       });
     }
 
+    function bindCodeSearch(){
+      const dl = document.getElementById("codeList");
+      dl.innerHTML = ROWS.map(c=>`<option value="${c.code}">${c.code} ${c.name}</option>`).join("");
+      document.getElementById("codeForm").addEventListener("submit", e=>{
+        e.preventDefault();
+        const raw = document.getElementById("codeInput").value.trim();
+        const code = (raw.split(/\s/)[0] || "").toUpperCase();
+        if (!code) return;
+        const hit = ROWS.find(c=>c.code.toUpperCase()===code);
+        if (hit) location.href = "stock.html?code=" + hit.code;
+        else alert("この銘柄は追跡対象（アクティビスト大量保有）ではありません。候補一覧から選んでください。");
+      });
+    }
+
     (async ()=>{
       renderHeader("index.html");
       try {
         DATA = await loadData();
         ROWS = DATA.candidates || [];
         document.getElementById("banner").innerHTML = sampleBanner(DATA);
-        renderTiles(); renderExits(); bindFilters(); render();
+        renderTiles(); renderExits(); bindFilters(); bindCodeSearch(); render();
         document.getElementById("footer").textContent =
           `対象日 ${DATA.as_of_date}／生成 ${new Date(DATA.generated_at).toLocaleString("ja-JP")}`;
       } catch(err){

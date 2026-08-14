@@ -25,6 +25,26 @@ function qs(name){ return new URLSearchParams(location.search).get(name); }
     ? "（提出時より<strong>安い</strong>＝プロと同水準以下で仕込める）"
     : "（提出時より高い）");
 
+  // --- トレードプラン（買いゾーン／利確／損切り） ---
+  const pp = (data.params && data.params.paper) ||
+    { entry_floor:-0.20, entry_ceiling:0.05, take_profit:0.30, stop_loss:-0.20, max_hold_days:365 };
+  const anchor = pf;
+  const cur = c.price.close;
+  const band = anchor!=null ? { lo: anchor*(1+pp.entry_floor), hi: anchor*(1+pp.entry_ceiling) } : null;
+  const tpPrice = anchor!=null ? anchor*(1+pp.take_profit) : null;
+  const slPrice = anchor!=null ? anchor*(1+pp.stop_loss) : null;
+  const plan = { band, tpPrice, slPrice };
+  let verdict="—", vcls="banner info", vnote="";
+  if (band && cur!=null){
+    if (cur < band.lo){ verdict="⚠ 買いゾーンを下抜け（-20%超）"; vcls="banner sample";
+      vnote="損切り水準を割れています。押し目ではなく下落トレンドの可能性。基本は見送り。"; }
+    else if (cur > band.hi){ verdict="⏳ まだ高い（押し目待ち）"; vcls="banner info";
+      vnote=`提出時＋${(pp.entry_ceiling*100).toFixed(0)}%より上。${fmtPrice(band.hi)} 以下まで下がるのを待つのが基本。`; }
+    else { verdict="✅ 今が買いゾーン"; vcls="banner";
+      vnote="アクティビストの取得水準付近。戦略上のエントリー好機（あくまで検証中のルール）。"; }
+  }
+  const paperTrade = await findPaperTrade(c.code);
+
   root.innerHTML = `
     <a href="index.html" class="muted">← 候補一覧へ戻る</a>
     <div class="detail-head" style="margin-top:8px">
@@ -49,10 +69,29 @@ function qs(name){ return new URLSearchParams(location.search).get(name); }
       <div id="chart"></div>
       <div class="legend">
         <span class="lg"><span class="sw" style="background:var(--accent)"></span>株価</span>
-        <span class="lg"><span class="sw dash" style="background:var(--warn)"></span>大量保有 提出日</span>
-        <span class="lg"><span class="sw dash" style="background:var(--text-muted)"></span>提出日の株価</span>
-        <span class="lg"><span class="sw dash" style="background:var(--bad)"></span>提出日から-20%</span>
+        <span class="lg"><span class="sw" style="background:var(--good);opacity:.35"></span>買いゾーン</span>
+        <span class="lg"><span class="sw dash" style="background:var(--good)"></span>利確+30%</span>
+        <span class="lg"><span class="sw dash" style="background:var(--warn)"></span>提出日</span>
+        <span class="lg"><span class="sw dash" style="background:var(--bad)"></span>損切り-20%</span>
       </div>
+    </div>
+
+    <div class="card">
+      <h2>📋 トレードプラン（この戦略のルール）</h2>
+      <div class="${vcls}">現在の判定: <strong>${verdict}</strong>${vnote?` — ${vnote}`:''}</div>
+      <div class="metrics">
+        ${metric("買いゾーン", band? `${fmtPrice(band.lo)}〜${fmtPrice(band.hi)}` : '—')}
+        ${metric("利確目標 (+30%)", `<span class="pl-pos">${fmtPrice(tpPrice)}</span>`)}
+        ${metric("損切り (-20%)", `<span class="pl-neg">${fmtPrice(slPrice)}</span>`)}
+        ${metric("現在値", fmtPrice(cur))}
+        ${metric("想定保有", `〜${pp.max_hold_days}日`)}
+        ${metric("ペーパー状況", paperTrade ? paperStatusLabel(paperTrade) : '未エントリー')}
+      </div>
+      <p class="muted" style="font-size:.8rem;margin-top:10px">
+        考え方: アクティビストの取得水準付近（<strong>買いゾーン</strong>）で買い、<strong>+30%で利確</strong>／<strong>-20%で損切り</strong>／最長${pp.max_hold_days}日。
+        参考成績はバックテストで勝率≈70%・期待値≈+12%だが、<strong>生存者バイアス等で楽観的な可能性</strong>があり
+        <a href="paper.html">ペーパー検証</a>で実地確認中。<a href="backtest.html">検証の詳細と限界はこちら</a>。実弾の売買ではありません。
+      </p>
     </div>
 
     <div class="card">
@@ -103,11 +142,30 @@ function qs(name){ return new URLSearchParams(location.search).get(name); }
     const on = toggleWatch(c.code); e.target.textContent = on?'★':'☆'; e.target.classList.toggle('on', on);
   });
 
-  document.getElementById("chart").innerHTML = buildPriceChart(c);
+  document.getElementById("chart").innerHTML = buildPriceChart(c, plan);
 })();
 
+/* ペーパー検証の該当トレードを探す */
+async function findPaperTrade(code){
+  try {
+    const r = await fetch("./data/paper.json", { cache: "no-store" });
+    if (!r.ok) return null;
+    const j = await r.json();
+    const ts = (j.trades || []).filter(t => t.code === code);
+    return ts.find(t => t.status === "open") || ts[0] || null;
+  } catch { return null; }
+}
+function paperStatusLabel(t){
+  if (t.status === "open"){
+    const pl = t.ret==null ? "" : ` ${t.ret>=0?'+':''}${fmtPct(t.ret)}`;
+    return `<span class="chip ok">仮保有中</span>${pl}`;
+  }
+  const rl = { tp:"利確", sl:"損切り", time:"時間切れ" }[t.exit_reason] || "決済";
+  return `<span class="chip">${rl}</span> ${(t.ret||0)>=0?'+':''}${fmtPct(t.ret)}`;
+}
+
 /* ---- SVG 価格チャート ---- */
-function buildPriceChart(c){
+function buildPriceChart(c, plan){
   const hist = c.price_history || [];
   if (hist.length < 2) return `<div class="empty">価格履歴が取得できませんでした（新規上場・低流動性の銘柄など）。</div>`;
 
@@ -116,16 +174,28 @@ function buildPriceChart(c){
   const closes = hist.map(p => p.c);
   const pf = c.derived.price_at_filing;
   const filingDate = c.activist.filing_date;
-  const lossCut = pf != null ? pf * 0.8 : null;
+  const band = plan && plan.band;
+  const tpPrice = plan && plan.tpPrice;
+  const lossCut = (plan && plan.slPrice != null) ? plan.slPrice : (pf != null ? pf * 0.8 : null);
 
   let lo = Math.min(...closes), hi = Math.max(...closes);
   if (pf != null){ lo = Math.min(lo, pf); hi = Math.max(hi, pf); }
   if (lossCut != null) lo = Math.min(lo, lossCut);
+  if (tpPrice != null){ hi = Math.max(hi, tpPrice); }
+  if (band){ lo = Math.min(lo, band.lo); hi = Math.max(hi, band.hi); }
   const pad = (hi - lo) * 0.08 || hi * 0.05 || 1;
   lo -= pad; hi += pad;
 
   const x = i => padL + (i / (hist.length - 1)) * iw;
   const y = v => padT + (1 - (v - lo) / (hi - lo)) * ih;
+
+  // 買いゾーン(帯)を背景に描画
+  let bg = "";
+  if (band){
+    const yhi = y(band.hi), ylo = y(band.lo);
+    bg += `<rect x="${padL}" y="${yhi.toFixed(1)}" width="${iw}" height="${Math.max(0,ylo-yhi).toFixed(1)}" fill="var(--good)" opacity="0.12"/>`;
+    bg += `<text x="${padL+6}" y="${(yhi+13).toFixed(1)}" font-size="10" fill="var(--good)">買いゾーン</text>`;
+  }
 
   // 提出日に最も近いインデックス
   let fi = -1;
@@ -162,8 +232,13 @@ function buildPriceChart(c){
   }
   if (lossCut != null){
     const yc = y(lossCut);
-    markers += `<line x1="${padL}" y1="${yc.toFixed(1)}" x2="${padL+iw}" y2="${yc.toFixed(1)}" stroke="var(--bad)" stroke-width="1" stroke-dasharray="3 4" opacity="0.7"/>`;
-    markers += `<text x="${padL+iw+6}" y="${yc.toFixed(1)}" dominant-baseline="middle" font-size="10" fill="var(--bad)">-20% ${Math.round(lossCut).toLocaleString()}</text>`;
+    markers += `<line x1="${padL}" y1="${yc.toFixed(1)}" x2="${padL+iw}" y2="${yc.toFixed(1)}" stroke="var(--bad)" stroke-width="1.2" stroke-dasharray="3 4" opacity="0.8"/>`;
+    markers += `<text x="${padL+iw+6}" y="${yc.toFixed(1)}" dominant-baseline="middle" font-size="10" fill="var(--bad)">損切り ${Math.round(lossCut).toLocaleString()}</text>`;
+  }
+  if (tpPrice != null){
+    const yt = y(tpPrice);
+    markers += `<line x1="${padL}" y1="${yt.toFixed(1)}" x2="${padL+iw}" y2="${yt.toFixed(1)}" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="6 4"/>`;
+    markers += `<text x="${padL+iw+6}" y="${yt.toFixed(1)}" dominant-baseline="middle" font-size="10" fill="var(--good)">利確 ${Math.round(tpPrice).toLocaleString()}</text>`;
   }
   if (fi >= 0){
     const xf = x(fi);
@@ -183,6 +258,7 @@ function buildPriceChart(c){
       <stop offset="1" stop-color="var(--accent)" stop-opacity="0"/>
     </linearGradient></defs>
     ${grid}
+    ${bg}
     <polygon points="${areaPts}" fill="url(#ar)"/>
     <polyline points="${linePts}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>
     ${markers}
