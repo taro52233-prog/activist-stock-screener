@@ -21,14 +21,14 @@ def build_message(
     exits: list[ActivistExit],
     th: Thresholds,
     dashboard_url: str = "",
-    paper_entries: Optional[list] = None,
+    zone_entries: Optional[list] = None,
     paper_exits: Optional[list] = None,
 ) -> Optional[str]:
     """通知本文を組み立てる。通知対象が無ければ None。"""
-    paper_entries = paper_entries or []
+    zone_entries = zone_entries or []
     paper_exits = paper_exits or []
     notable = [c for c in new_changed if c.signal.score >= th.min_score_to_notify]
-    if not notable and not exits and not paper_entries and not paper_exits:
+    if not notable and not exits and not zone_entries and not paper_exits:
         return None
 
     lines: list[str] = []
@@ -55,16 +55,18 @@ def build_message(
             nr = f"{e.new_ratio * 100:.1f}%" if e.new_ratio is not None else "-"
             lines.append(f"⚠ {e.code} {e.name}｜{e.fund} {pr}→{nr}")
 
-    if paper_entries:
+    if zone_entries:
         lines.append("")
-        lines.append(f"🟢 新規ペーパー買いシグナル {len(paper_entries)}件（紙上・実弾なし）")
-        shown = sorted(paper_entries, key=lambda t: t.get("dev_at_entry") if t.get("dev_at_entry") is not None else 0)
-        for t in shown[:15]:
-            dev = t.get("dev_at_entry")
+        lines.append(f"🟢 買いゾーン入り {len(zone_entries)}件（今、取得水準に到達）")
+        shown = sorted(zone_entries, key=lambda c: c.signal.buy_score, reverse=True)
+        for c in shown[:15]:
+            pbr = f"PBR{c.derived.pbr:.2f}" if c.derived.pbr is not None else "PBR-"
+            dev = c.derived.deviation_from_filing
             devtxt = f"提出時比{dev * 100:+.0f}%" if dev is not None else ""
-            lines.append(f"　{t['code']} {t['name']}｜{t['fund']}｜{t['entry_price']:.0f}円 {devtxt}")
+            price = f"{c.price.close:.0f}円" if c.price.close is not None else "-"
+            lines.append(f"　買い時{c.signal.buy_score} {c.code} {c.name}｜{c.fund}｜{price} {devtxt}｜{pbr}")
         if len(shown) > 15:
-            lines.append(f"　…他 {len(shown) - 15}件（ダッシュボードのペーパー検証で全件表示）")
+            lines.append(f"　…他 {len(shown) - 15}件（ダッシュボードで買い時順に表示）")
 
     if paper_exits:
         lines.append("")

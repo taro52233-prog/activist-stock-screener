@@ -257,6 +257,15 @@ def main(argv=None) -> int:
     previous = diffmod.load_previous(cfg.HISTORY_DIR, exclude_date=as_of.isoformat())
     diffmod.annotate_status(candidates, previous)
 
+    # 買いゾーン入り（前日は圏外→今日ゾーン内）を検出。前日にbuy_zone情報が無い銘柄は
+    # 初回混雑を避けるため対象外（is False のみ＝真の遷移）。
+    prev_zone: dict = {}
+    if previous:
+        for pc in previous.get("candidates", []):
+            prev_zone[pc.get("code")] = (pc.get("signal", {}) or {}).get("buy_zone")
+    zone_entries = [c for c in candidates if c.signal.buy_zone and prev_zone.get(c.code) is False]
+    print(f"[zone] 買いゾーン入り {len(zone_entries)}件")
+
     # フォワード・ペーパー検証（実弾なし。--codes 検証時はスキップ）
     import paper as papermod
     paper_entries: list = []
@@ -288,7 +297,7 @@ def main(argv=None) -> int:
         from notify import build_message, post_chatwork
         nc = diffmod.new_or_changed(candidates)
         msg = build_message(as_of.isoformat(), nc, exits, conf.thresholds, DASHBOARD_URL,
-                            paper_entries=paper_entries, paper_exits=paper_exits)
+                            zone_entries=zone_entries, paper_exits=paper_exits)
         if msg:
             ok, detail = post_chatwork(conf.secrets, msg)
             print("[chatwork] " + detail)
