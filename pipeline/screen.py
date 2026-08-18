@@ -107,8 +107,9 @@ def score_candidate(
     weights: Weights,
     th: Thresholds,
     known_bonus: int = 0,
+    paper=None,
 ) -> None:
-    """Candidate に signal（filters/subscores/score/reasons_ja）を書き込む。破壊的。"""
+    """Candidate に signal（filters/subscores/score/reasons_ja/buy_score/buy_zone）を書き込む。破壊的。"""
     d = c.derived
     filters: dict[str, bool] = {}
     subs: dict[str, float] = {}
@@ -196,6 +197,31 @@ def score_candidate(
     c.signal.filters = filters
     c.signal.subscores = {k: round(v, 3) for k, v in subs.items()}
     c.signal.reasons_ja = reasons
+
+    # 「買い時スコア」：今が買いゾーン(タイミング)×アクティビスト×PBR割安 に特化
+    _buy_score(c, subs, paper)
+
+
+def _buy_score(c: Candidate, subs: dict, paper) -> None:
+    from config import PaperParams
+    p = paper or PaperParams()
+    dev = c.derived.deviation_from_filing
+    floor, ceil = p.entry_floor, p.entry_ceiling
+    in_zone = dev is not None and floor <= dev <= ceil
+    # タイミング：ゾーン内=1.0／上に外れ=漸減／下抜け・不明=0
+    if dev is None:
+        timing = 0.0
+    elif in_zone:
+        timing = 1.0
+    elif dev > ceil:
+        timing = clamp(1.0 - (dev - ceil) / 0.15)
+    else:
+        timing = 0.0
+    activist = 1.0 if c.is_known_activist else (0.5 if c.fund else 0.0)
+    pbr = subs.get("pbr", 0.0)   # PBR割安度（PBR<1で高い）
+    buy = 100.0 * (0.45 * timing + 0.30 * activist + 0.25 * pbr)
+    c.signal.buy_score = int(round(clamp(buy, 0.0, 100.0)))
+    c.signal.buy_zone = bool(in_zone)
 
 
 def estimate_acq_price(filing_shares: Optional[float], acq_funds: Optional[float]) -> tuple[Optional[float], str]:

@@ -80,6 +80,7 @@ function qs(name){ return new URLSearchParams(location.search).get(name); }
       <h2>📋 トレードプラン（この戦略のルール）</h2>
       <div class="${vcls}">現在の判定: <strong>${verdict}</strong>${vnote?` — ${vnote}`:''}</div>
       <div class="metrics">
+        ${metric("買い時スコア", `<span style="color:${buyScoreColor(c.signal.buy_score||0)}">${c.signal.buy_score||0}</span><span class="muted" style="font-size:.6rem"> /100</span>`)}
         ${metric("買いゾーン", band? `${fmtPrice(band.lo)}〜${fmtPrice(band.hi)}` : '—')}
         ${metric("利確目標 (+30%)", `<span class="pl-pos">${fmtPrice(tpPrice)}</span>`)}
         ${metric("損切り (-20%)", `<span class="pl-neg">${fmtPrice(slPrice)}</span>`)}
@@ -280,6 +281,7 @@ function subScoreBars(subs){
   }).join("")}</div>`;
 }
 
+function buyScoreColor(s){ return s>=80?'var(--good)':s>=60?'var(--accent)':s>=40?'var(--warn)':'var(--text-muted)'; }
 function filterChip(label, ok){ return `<span class="chip ${ok?'ok':'ng'}">${ok?'✓':'—'} ${label}</span> `; }
 function metric(k,v){ return `<div class="metric"><div class="k">${k}</div><div class="v">${v}</div></div>`; }
 function acqMethod(m){ return { funds_div_shares:"取得資金÷株数", period_avg:"期間平均", none:"推定不可" }[m] || m || "—"; }

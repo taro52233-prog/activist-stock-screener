@@ -166,7 +166,7 @@ def enrich_and_score(candidates: list[Candidate], conf, warnings: list[str]) -> 
             if c.price.close is not None:
                 c.derived.deviation_from_filing = (c.price.close - anchor) / anchor
 
-        screen.score_candidate(c, w, th, known_bonus=getattr(c, "_bonus", 0))
+        screen.score_candidate(c, w, th, known_bonus=getattr(c, "_bonus", 0), paper=conf.paper)
 
 
 # ---------------------------------------------------------------------------

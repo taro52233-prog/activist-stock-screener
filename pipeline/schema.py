@@ -70,6 +70,8 @@ class Derived:
 @dataclass
 class Signal:
     score: int = 0
+    buy_score: int = 0        # 「今が買い時」に特化したスコア（タイミング×アクティビスト×PBR割安）
+    buy_zone: bool = False    # 現在値が買いゾーン帯の中にあるか
     filters: dict = field(default_factory=dict)   # {activist, pbr_lt_1, cash_rich, low_payout, entry_ok}
     subscores: dict = field(default_factory=dict)
     reasons_ja: list = field(default_factory=list)
@@ -137,6 +139,8 @@ def candidate_to_dict(c: Candidate) -> dict:
         },
         "signal": {
             "score": c.signal.score,
+            "buy_score": c.signal.buy_score,
+            "buy_zone": c.signal.buy_zone,
             "filters": c.signal.filters,
             "subscores": c.signal.subscores,
             "reasons_ja": c.signal.reasons_ja,

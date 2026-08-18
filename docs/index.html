@@ -29,6 +29,7 @@
         <label>最低スコア <span id="scoreVal">0</span>
           <input type="range" id="minScore" min="0" max="100" step="5" value="0" />
         </label>
+        <label><input type="checkbox" id="onlyZone" /> 今が買いゾーンのみ</label>
         <label><input type="checkbox" id="onlyKnown" /> 既知アクティビストのみ</label>
         <label><input type="checkbox" id="onlyPbr" /> PBR&lt;1のみ</label>
         <label><input type="checkbox" id="onlyEntry" /> エントリー可のみ</label>
@@ -39,7 +40,8 @@
           <thead>
             <tr>
               <th class="l" data-k="star">★</th>
-              <th data-k="score">スコア</th>
+              <th data-k="buy">買い時</th>
+              <th data-k="score">総合</th>
               <th class="l" data-k="code">コード</th>
               <th class="l" data-k="name">銘柄</th>
               <th class="l" data-k="fund">アクティビスト</th>
@@ -63,13 +65,21 @@
 
   <script src="./js/app.js"></script>
   <script>
-    let DATA = null, ROWS = [], sortKey = "score", sortDir = -1;
+    let DATA = null, ROWS = [], sortKey = "buy", sortDir = -1;
 
     function deviation(c){ return c.derived.deviation_from_filing; }
+    function buyScore(c){ return (c.signal && c.signal.buy_score) || 0; }
+    function buyBadge(c){
+      const s = buyScore(c);
+      const col = s>=80?'var(--good)':s>=60?'var(--accent)':s>=40?'var(--warn)':'var(--text-muted)';
+      const zone = c.signal && c.signal.buy_zone ? ' <span class="chip ok" style="padding:1px 5px">今</span>' : '';
+      return `<span class="badge score-badge" style="background:${col}">${s}</span>${zone}`;
+    }
 
     function passFilters(c){
       const minScore = +document.getElementById("minScore").value;
       if (c.signal.score < minScore) return false;
+      if (document.getElementById("onlyZone").checked && !(c.signal && c.signal.buy_zone)) return false;
       if (document.getElementById("onlyKnown").checked && !c.activist.is_known) return false;
       if (document.getElementById("onlyPbr").checked && !(c.derived.pbr !== null && c.derived.pbr < 1)) return false;
       if (document.getElementById("onlyEntry").checked && !c.signal.filters.entry_ok) return false;
@@ -79,6 +89,7 @@
 
     function sortRows(rows){
       const get = {
+        buy: c=>buyScore(c),
         score: c=>c.signal.score, code: c=>c.code, name: c=>c.name, fund: c=>c.activist.fund,
         holding_ratio: c=>c.activist.holding_ratio||0, pbr: c=>c.derived.pbr??999,
         dividend_yield: c=>c.derived.dividend_yield??999, deviation: c=>deviation(c)??999,
@@ -98,6 +109,7 @@
         const devTxt = dev===null? "—" : (dev<=0? `<span class="pl-pos">${fmtPct(dev)}</span>` : `+${fmtPct(dev)}`);
         return `<tr data-code="${c.code}">
           <td class="l"><span class="star ${isWatched(c.code)?'on':''}" data-star="${c.code}">${isWatched(c.code)?'★':'☆'}</span></td>
+          <td>${buyBadge(c)}</td>
           <td>${scoreBadge(c.signal.score)}</td>
           <td class="l">${c.code}</td>
           <td class="l name">${c.name}</td>
@@ -124,15 +136,15 @@
 
     function renderTiles(){
       const cs = ROWS;
-      const strong = cs.filter(c=>c.signal.score>=80).length;
+      const trio = cs.filter(c=>c.signal && c.signal.buy_zone && c.activist.is_known && c.derived.pbr!=null && c.derived.pbr<1).length;
+      const zone = cs.filter(c=>c.signal && c.signal.buy_zone).length;
       const known = cs.filter(c=>c.activist.is_known).length;
-      const entry = cs.filter(c=>c.signal.filters.entry_ok).length;
       const nu = cs.filter(c=>c.status==='NEW').length;
       document.getElementById("tiles").innerHTML = `
-        ${tile("追跡中", cs.length, "大量保有を追跡中の銘柄")}
-        ${tile("強シグナル", strong, "スコア80以上")}
+        ${tile("🎯 今が買い場", trio, "買いゾーン×既知×PBR&lt;1")}
+        ${tile("買いゾーン内", zone, "今その水準にある銘柄")}
+        ${tile("追跡中", cs.length, "大量保有を追跡中")}
         ${tile("既知アクティビスト", known, "著名ファンドが保有")}
-        ${tile("エントリー可", entry, "取得単価と同水準以下")}
         ${tile("本日の新規", nu, "前回から新登場")}`;
     }
     function tile(k,v,sub){ return `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div><div class="sub">${sub}</div></div>`; }
@@ -149,7 +161,7 @@
     }
 
     function bindFilters(){
-      const ids=["onlyKnown","onlyPbr","onlyEntry","onlyWatch"];
+      const ids=["onlyZone","onlyKnown","onlyPbr","onlyEntry","onlyWatch"];
       ids.forEach(id=>document.getElementById(id).addEventListener("change", render));
       const ms=document.getElementById("minScore");
       ms.addEventListener("input", ()=>{ document.getElementById("scoreVal").textContent=ms.value; render(); });

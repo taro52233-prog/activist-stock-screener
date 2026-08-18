@@ -7,8 +7,8 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "pipeline"))
 
-from config import Thresholds, Weights          # noqa: E402
-from schema import Candidate, Fundamentals, PriceInfo  # noqa: E402
+from config import Thresholds, Weights, PaperParams  # noqa: E402
+from schema import Candidate, Derived, Fundamentals, PriceInfo  # noqa: E402
 import screen                                    # noqa: E402
 
 
@@ -128,3 +128,34 @@ def test_clamp():
     assert screen.clamp(1.5) == 1.0
     assert screen.clamp(-0.2) == 0.0
     assert screen.clamp(0.4) == 0.4
+
+
+# -- 買い時スコア -----------------------------------------------------------
+def _buy_cand(dev, known=True, pbr=0.4, fund="オアシス"):
+    c = Candidate(code="1", name="x")
+    c.fund = fund if known else "一般投資家"
+    c.is_known_activist = known
+    c.derived = Derived(pbr=pbr, deviation_from_filing=dev)
+    return c
+
+
+def test_buy_score_in_zone_high():
+    c = _buy_cand(0.0, known=True, pbr=0.4)   # ゾーン内・既知・PBR0.4
+    screen.score_candidate(c, Weights(), Thresholds(), paper=PaperParams())
+    assert c.signal.buy_zone is True and c.signal.buy_score >= 90
+
+
+def test_buy_score_out_of_zone_drops():
+    inz = _buy_cand(0.0, known=True, pbr=0.4)
+    out = _buy_cand(0.30, known=True, pbr=0.4)   # 提出時+30%＝高すぎ（ゾーン外）
+    screen.score_candidate(inz, Weights(), Thresholds(), paper=PaperParams())
+    screen.score_candidate(out, Weights(), Thresholds(), paper=PaperParams())
+    assert out.signal.buy_zone is False
+    assert out.signal.buy_score < inz.signal.buy_score   # タイミングを失って低下
+
+
+def test_buy_score_generic_and_expensive_low():
+    c = _buy_cand(0.0, known=False, pbr=2.0)  # ゾーン内だが一般保有＋PBR割高
+    screen.score_candidate(c, Weights(), Thresholds(), paper=PaperParams())
+    # timing1.0*0.45 + activist0.5*0.30 + pbr0*0.25 = 0.60 → 60点程度
+    assert 50 <= c.signal.buy_score <= 70
