@@ -146,6 +146,24 @@ td.name { font-weight: 600; }
 .metric { background: var(--surface-2); border-radius: 10px; padding: 12px; }
 .metric .k { font-size: .75rem; color: var(--text-muted); font-weight: 600; }
 .metric .v { font-size: 1.25rem; font-weight: 800; }
+
+/* 買い目安ヒーロー（コードを開いた時に一番上に大きく出す） */
+.buy-guide { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; justify-content: space-between;
+  border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin-bottom: 14px; background: var(--surface-2); }
+.buy-guide .bg-k { font-size: .72rem; color: var(--text-muted); letter-spacing: .04em; font-weight: 600; }
+.buy-guide .bg-price { font-size: 1.7rem; font-weight: 800; line-height: 1.15; }
+.buy-guide .bg-ideal { font-size: .78rem; color: var(--text-muted); margin-top: 2px; }
+.buy-guide .bg-action-wrap { text-align: right; max-width: 46ch; }
+.buy-guide .bg-action { font-size: 1.02rem; font-weight: 700; }
+.buy-guide .bg-sub { font-size: .8rem; color: var(--text-muted); margin-top: 3px; }
+.buy-guide.bg-good { background: var(--good-weak); border-color: var(--good); }
+.buy-guide.bg-good .bg-price, .buy-guide.bg-good .bg-action { color: var(--good); }
+.buy-guide.bg-warn { background: var(--warn-weak); border-color: var(--warn); }
+.buy-guide.bg-warn .bg-action { color: var(--warn); }
+.buy-guide.bg-bad { background: var(--bad-weak); border-color: var(--bad); }
+.buy-guide.bg-bad .bg-action { color: var(--bad); }
+@media (max-width: 560px) { .buy-guide .bg-action-wrap { text-align: left; } .buy-guide .bg-price { font-size: 1.45rem; } }
+
 .reasons { list-style: none; padding: 0; margin: 0; }
 .reasons li { padding: 8px 12px; background: var(--good-weak); border-left: 3px solid var(--good); border-radius: 6px; margin-bottom: 6px; font-size: .9rem; }
 .kv { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; font-size: .9rem; }

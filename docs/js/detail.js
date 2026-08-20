@@ -34,15 +34,7 @@ function qs(name){ return new URLSearchParams(location.search).get(name); }
   const tpPrice = anchor!=null ? anchor*(1+pp.take_profit) : null;
   const slPrice = anchor!=null ? anchor*(1+pp.stop_loss) : null;
   const plan = { band, tpPrice, slPrice };
-  let verdict="—", vcls="banner info", vnote="";
-  if (band && cur!=null){
-    if (cur < band.lo){ verdict="⚠ 買いゾーンを下抜け（-20%超）"; vcls="banner sample";
-      vnote="損切り水準を割れています。押し目ではなく下落トレンドの可能性。基本は見送り。"; }
-    else if (cur > band.hi){ verdict="⏳ まだ高い（押し目待ち）"; vcls="banner info";
-      vnote=`提出時＋${(pp.entry_ceiling*100).toFixed(0)}%より上。${fmtPrice(band.hi)} 以下まで下がるのを待つのが基本。`; }
-    else { verdict="✅ 今が買いゾーン"; vcls="banner";
-      vnote="アクティビストの取得水準付近。戦略上のエントリー好機（あくまで検証中のルール）。"; }
-  }
+  const bg = buyGuide(cur, plan, anchor);   // 「いくらで買うか」の目安・現在地の判定
   const paperTrade = await findPaperTrade(c.code);
 
   root.innerHTML = `
@@ -78,7 +70,17 @@ function qs(name){ return new URLSearchParams(location.search).get(name); }
 
     <div class="card">
       <h2>📋 トレードプラン（この戦略のルール）</h2>
-      <div class="${vcls}">現在の判定: <strong>${verdict}</strong>${vnote?` — ${vnote}`:''}</div>
+      <div class="buy-guide ${bg.cls}">
+        <div class="bg-price-wrap">
+          <div class="bg-k">買い目安価格</div>
+          <div class="bg-price">${bg.price}</div>
+          ${bg.ideal?`<div class="bg-ideal">${bg.ideal}</div>`:''}
+        </div>
+        <div class="bg-action-wrap">
+          <div class="bg-action">${bg.action}</div>
+          ${bg.sub?`<div class="bg-sub">${bg.sub}</div>`:''}
+        </div>
+      </div>
       <div class="metrics">
         ${metric("買い時スコア", `<span style="color:${buyScoreColor(c.signal.buy_score||0)}">${c.signal.buy_score||0}</span><span class="muted" style="font-size:.6rem"> /100</span>`)}
         ${metric("買いゾーン", band? `${fmtPrice(band.lo)}〜${fmtPrice(band.hi)}` : '—')}
@@ -279,6 +281,30 @@ function subScoreBars(subs){
       <span class="bt"><span class="bf" style="width:${pct}%"></span></span>
       <span class="bv">${pct}</span></div>`;
   }).join("")}</div>`;
+}
+
+/* 「いくらで買うか」の目安と現在地の判定（ゾーンの上=待ち／中=今／下=見送り） */
+function buyGuide(cur, plan, anchor){
+  const band = plan && plan.band;
+  if (!band) return { cls:"bg-neutral", price:"—", ideal:"取得時株価が不明のため目安を計算できません。", action:"", sub:"" };
+  const lo = band.lo, hi = band.hi;
+  const price = `${fmtPrice(lo)}〜${fmtPrice(hi)}`;
+  const ideal = anchor!=null ? `理想は ${fmtPrice(anchor)} 付近以下（アクティビスト取得水準）` : "";
+  if (cur==null) return { cls:"bg-neutral", price, ideal, action:"現在値が取得できません。", sub:"" };
+  if (cur < lo){
+    return { cls:"bg-bad", price, ideal,
+      action:`⚠ 現在 ${fmtPrice(cur)}：下抜け（見送りが基本）`,
+      sub:`損切り水準（${fmtPrice(lo)}）を割れています。反発して ${fmtPrice(lo)} 回復まで様子見。` };
+  }
+  if (cur > hi){
+    const down = (cur - hi) / cur;
+    return { cls:"bg-warn", price, ideal,
+      action:`⏳ ${fmtPrice(hi)} まで下げれば買い（現在から -${(down*100).toFixed(1)}%）`,
+      sub:`現在 ${fmtPrice(cur)}。押し目 ${fmtPrice(hi)} 以下まで下がるのを待つのが基本。` };
+  }
+  return { cls:"bg-good", price, ideal,
+    action:`✅ 今が買い目安：現在 ${fmtPrice(cur)} はゾーン内`,
+    sub:`利確 ${fmtPrice(plan.tpPrice)}／損切り ${fmtPrice(plan.slPrice)} を機械的に。` };
 }
 
 function buyScoreColor(s){ return s>=80?'var(--good)':s>=60?'var(--accent)':s>=40?'var(--warn)':'var(--text-muted)'; }
