@@ -19,7 +19,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import config as cfg
-from config import load_config, load_known_activists
+from config import load_config, load_known_activists, load_watchlist
 from schema import ActivistExit, Candidate, PriceInfo, build_output
 import screen
 import diff as diffmod
@@ -78,6 +78,30 @@ def build_candidates_tracked(conf, known, filings, window_days) -> tuple[list[Ca
 
     print(f"[track] 追跡中 {len(active)}件（提出 {len(filings)}件を反映・窓 {window_days}日）")
     return candidates, store, exits, warnings
+
+
+def build_candidates_watchlist(codes: list[str], exclude: set[str]) -> list[Candidate]:
+    """監視リスト（アクティビスト不在のバリュー参考）銘柄を候補化する。
+
+    既に追跡中（アクティビスト）の銘柄は除外。財務・株価は enrich_and_score が付与。
+    アンカー（提出時株価）は持たないので買いゾーンは非対象。フロントでBPS基準の
+    バリュー判定を表示する。
+    """
+    out = []
+    for code in codes:
+        if code in exclude:
+            continue
+        c = Candidate(code=code, name=f"(code {code})")
+        c.fund = ""
+        c.is_known_activist = False
+        c.is_watchlist = True
+        c._entry = None           # type: ignore[attr-defined]
+        c._est_acq = None         # type: ignore[attr-defined]
+        c._acq_method = "none"    # type: ignore[attr-defined]
+        c._edinet_shares_out = None  # type: ignore[attr-defined]
+        c._bonus = 0              # type: ignore[attr-defined]
+        out.append(c)
+    return out
 
 
 def build_candidates_from_codes(codes: list[str]) -> list[Candidate]:
@@ -153,10 +177,11 @@ def enrich_and_score(candidates: list[Candidate], conf, warnings: list[str]) -> 
             c.price, c.fundamentals, getattr(c, "_est_acq", None), getattr(c, "_acq_method", "none")
         )
 
-        # 提出日の株価（アンカー）：初回に履歴から確定し、以後は固定
+        # 提出日の株価（アンカー）：初回に履歴から確定し、以後は固定。
+        # 監視リスト（アクティビスト不在）はアンカーを持たない＝買いゾーン非対象。
         entry = getattr(c, "_entry", None)
         anchor = entry.get("anchor_price") if entry else None
-        if anchor is None:
+        if anchor is None and not c.is_watchlist:
             pf = price_on_or_before(hist, c.filing_date) if (hist and c.filing_date) else None
             anchor = pf["c"] if pf else (c.price.close if c.price.close is not None else None)
             if entry is not None:
@@ -250,6 +275,15 @@ def main(argv=None) -> int:
     else:
         warnings.append("EDINET_API_KEY 未設定のため候補ゼロ（--codes で検証可能）")
         candidates = []
+
+    # 監視リスト（アクティビスト不在のバリュー参考銘柄）を追加。--codes 検証時はスキップ。
+    if not args.codes:
+        watch_codes = load_watchlist()
+        existing = {c.code for c in candidates}
+        watch_cands = build_candidates_watchlist(watch_codes, existing)
+        if watch_cands:
+            print(f"[watch] 監視リスト {len(watch_cands)}件を追加取得")
+        candidates.extend(watch_cands)
 
     enrich_and_score(candidates, conf, warnings)
 

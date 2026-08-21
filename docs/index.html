@@ -12,15 +12,17 @@
     <div id="banner"></div>
 
     <div class="card" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <strong style="font-size:.95rem">🔎 銘柄コードでトレードプランを見る</strong>
+      <strong style="font-size:.95rem">🔎 銘柄コードで開く</strong>
       <form id="codeForm" style="display:flex;gap:8px;flex-wrap:wrap">
-        <input id="codeInput" list="codeList" placeholder="例: 7731 / 6302" class="field"
-               style="padding:8px 10px;min-width:180px" autocomplete="off" />
+        <input id="codeInput" list="codeList" placeholder="例: 7731 / 6302 / 7203" class="field"
+               style="padding:8px 10px;min-width:180px" autocomplete="off" inputmode="numeric" />
         <datalist id="codeList"></datalist>
         <button class="btn" type="submit">開く</button>
       </form>
-      <span class="muted" style="font-size:.8rem">※アクティビスト大量保有の追跡銘柄のみ（買いゾーン・利確/損切りを表示）</span>
+      <span class="muted" style="font-size:.8rem">※リストに無いコードも入力可。未取得なら監視リストに登録できます。</span>
     </div>
+
+    <div id="myWatch"></div>
 
     <section class="tiles" id="tiles"></section>
 
@@ -179,11 +181,49 @@
       document.getElementById("codeForm").addEventListener("submit", e=>{
         e.preventDefault();
         const raw = document.getElementById("codeInput").value.trim();
-        const code = (raw.split(/\s/)[0] || "").toUpperCase();
+        const code = normCode(raw.split(/\s/)[0] || "");
         if (!code) return;
-        const hit = ROWS.find(c=>c.code.toUpperCase()===code);
-        if (hit) location.href = "stock.html?code=" + hit.code;
-        else alert("この銘柄は追跡対象（アクティビスト大量保有）ではありません。候補一覧から選んでください。");
+        // 追跡・監視の別を問わず開く。未取得コードは stock.html 側で登録パネルを表示。
+        location.href = "stock.html?code=" + code;
+      });
+    }
+
+    function renderMyWatch(){
+      const codes = getVWatch();
+      const box = document.getElementById("myWatch");
+      if (!codes.length){ box.innerHTML = ""; return; }
+      const byCode = {}; ROWS.forEach(c=>byCode[c.code]=c);
+      const rows = codes.map(code=>{
+        const c = byCode[code];
+        const has = !!c;
+        const status = has ? '<span class="chip ok">取得済み</span>' : '<span class="chip">取得待ち</span>';
+        const nm = has ? (/^\(code /.test(c.name) ? `銘柄 ${c.code}` : c.name) : '';
+        const info = has ? `${nm}${c.derived.pbr!=null?`｜PBR${fmt2(c.derived.pbr)}`:''}` : '<span class="muted">日次取得に載るとチャート・財務が表示されます</span>';
+        return `<tr data-code="${code}"><td class="l">${code}</td><td class="l">${info}</td><td>${status}</td>
+          <td class="l"><a href="stock.html?code=${code}">開く</a> <button class="linkbtn" data-del="${code}">削除</button></td></tr>`;
+      }).join("");
+      box.innerHTML = `<div class="section-title">👁 マイ監視リスト（${codes.length}件）</div>
+        <div class="card">
+          <p class="muted" style="font-size:.82rem;margin:0 0 10px">
+            ブラウザに保存された監視コードです。<strong>毎日データを取得</strong>するには、この一覧を
+            <code>config/watchlist.txt</code> に反映する必要があります（静的サイトのため自動反映は不可）。
+            下のボタンでコピーできます。
+          </p>
+          <div class="table-scroll"><table>
+            <thead><tr><th class="l">コード</th><th class="l">銘柄 / 指標</th><th>状態</th><th class="l">操作</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table></div>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" id="copyWatch">📋 watchlist.txt 用にコピー</button>
+            <span class="muted" id="copyMsg" style="font-size:.8rem;align-self:center"></span>
+          </div>
+        </div>`;
+      box.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click", ()=>{ removeVWatch(b.dataset.del); renderMyWatch(); }));
+      const cp = document.getElementById("copyWatch");
+      if (cp) cp.addEventListener("click", async ()=>{
+        const txt = getVWatch().join("\n") + "\n";
+        try { await navigator.clipboard.writeText(txt); document.getElementById("copyMsg").textContent = "コピーしました"; }
+        catch { document.getElementById("copyMsg").textContent = txt.replace(/\n/g," "); }
       });
     }
 
@@ -193,7 +233,7 @@
         DATA = await loadData();
         ROWS = DATA.candidates || [];
         document.getElementById("banner").innerHTML = sampleBanner(DATA);
-        renderTiles(); renderExits(); bindFilters(); bindCodeSearch(); render();
+        renderTiles(); renderExits(); bindFilters(); bindCodeSearch(); renderMyWatch(); render();
         document.getElementById("footer").textContent =
           `対象日 ${DATA.as_of_date}／生成 ${new Date(DATA.generated_at).toLocaleString("ja-JP")}`;
       } catch(err){

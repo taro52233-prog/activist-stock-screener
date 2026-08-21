@@ -18,6 +18,7 @@ DATA_DIR = REPO_ROOT / "docs" / "data"
 HISTORY_DIR = DATA_DIR / "history"
 CONFIG_DIR = REPO_ROOT / "config"
 KNOWN_ACTIVISTS_PATH = CONFIG_DIR / "known_activists.json"
+WATCHLIST_PATH = CONFIG_DIR / "watchlist.txt"
 
 # ---------------------------------------------------------------------------
 # 外部APIエンドポイント
@@ -148,3 +149,24 @@ def load_known_activists() -> list[dict]:
     with open(KNOWN_ACTIVISTS_PATH, encoding="utf-8") as f:
         data = json.load(f)
     return data.get("activists", [])
+
+
+def load_watchlist() -> list[str]:
+    """config/watchlist.txt を読み込み、監視銘柄コードの一覧を返す。
+
+    1行1コード。# 以降と空行は無視。全角→半角化と重複排除も行う。
+    アクティビスト大量保有が無い銘柄でも、ここに載せれば毎日
+    株価・財務・チャートを取得し「バリュー参考」として表示する。
+    """
+    if not WATCHLIST_PATH.exists():
+        return []
+    seen: list[str] = []
+    with open(WATCHLIST_PATH, encoding="utf-8") as f:
+        for line in f:
+            line = line.split("#", 1)[0].strip()
+            if not line:
+                continue
+            code = line.translate(str.maketrans("０１２３４５６７８９", "0123456789")).strip().upper()
+            if code and code not in seen:
+                seen.append(code)
+    return seen

@@ -11,7 +11,8 @@ function qs(name){ return new URLSearchParams(location.search).get(name); }
 
   const c = (data.candidates || []).find(x => x.code === code);
   document.getElementById("banner").innerHTML = sampleBanner(data);
-  if (!c){ root.innerHTML = `<div class="empty">コード ${code || "(未指定)"} の銘柄が見つかりません。<br><a href="index.html">← 候補一覧へ戻る</a></div>`; return; }
+  if (!c){ renderRegisterPanel(code, root); return; }
+  if (c.is_watchlist){ renderValueView(c, data, root); return; }
 
   const d = c.derived, f = c.fundamentals, a = c.activist;
   const watched = isWatched(c.code);
@@ -179,13 +180,15 @@ function buildPriceChart(c, plan){
   const filingDate = c.activist.filing_date;
   const band = plan && plan.band;
   const tpPrice = plan && plan.tpPrice;
+  const fair = plan && plan.fair;        // 簿価(PBR1倍)＝バリュー参考の基準線
   const lossCut = (plan && plan.slPrice != null) ? plan.slPrice : (pf != null ? pf * 0.8 : null);
 
   let lo = Math.min(...closes), hi = Math.max(...closes);
   if (pf != null){ lo = Math.min(lo, pf); hi = Math.max(hi, pf); }
-  if (lossCut != null) lo = Math.min(lo, lossCut);
+  if (!plan || !plan.fair) { if (lossCut != null) lo = Math.min(lo, lossCut); }
   if (tpPrice != null){ hi = Math.max(hi, tpPrice); }
   if (band){ lo = Math.min(lo, band.lo); hi = Math.max(hi, band.hi); }
+  if (fair != null){ lo = Math.min(lo, fair); hi = Math.max(hi, fair); }
   const pad = (hi - lo) * 0.08 || hi * 0.05 || 1;
   lo -= pad; hi += pad;
 
@@ -242,6 +245,11 @@ function buildPriceChart(c, plan){
     const yt = y(tpPrice);
     markers += `<line x1="${padL}" y1="${yt.toFixed(1)}" x2="${padL+iw}" y2="${yt.toFixed(1)}" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="6 4"/>`;
     markers += `<text x="${padL+iw+6}" y="${yt.toFixed(1)}" dominant-baseline="middle" font-size="10" fill="var(--good)">利確 ${Math.round(tpPrice).toLocaleString()}</text>`;
+  }
+  if (fair != null){
+    const yv = y(fair);
+    markers += `<line x1="${padL}" y1="${yv.toFixed(1)}" x2="${padL+iw}" y2="${yv.toFixed(1)}" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="6 4"/>`;
+    markers += `<text x="${padL+iw+6}" y="${yv.toFixed(1)}" dominant-baseline="middle" font-size="10" fill="var(--good)">簿価 ${Math.round(fair).toLocaleString()}</text>`;
   }
   if (fi >= 0){
     const xf = x(fi);
@@ -311,3 +319,171 @@ function buyScoreColor(s){ return s>=80?'var(--good)':s>=60?'var(--accent)':s>=4
 function filterChip(label, ok){ return `<span class="chip ${ok?'ok':'ng'}">${ok?'✓':'—'} ${label}</span> `; }
 function metric(k,v){ return `<div class="metric"><div class="k">${k}</div><div class="v">${v}</div></div>`; }
 function acqMethod(m){ return { funds_div_shares:"取得資金÷株数", period_avg:"期間平均", none:"推定不可" }[m] || m || "—"; }
+
+/* ===== 監視リスト（バリュー参考）＝アクティビスト不在の銘柄向け ===== */
+
+/* 簿価(PBR1倍株価=BPS)を基準にした割安/割高の目安 */
+function valueGuide(cur, bps, pbr){
+  if (bps==null) return { cls:"bg-neutral", price:"—", ideal:"簿価(BPS)が取得できず割安判定できません。", action:"", sub:"" };
+  const price = `${fmtPrice(bps)} 以下（PBR1倍）`;
+  const ideal = "PBRが低いほど割安（純資産に対して株価が安い）";
+  const pbrTxt = pbr!=null ? `PBR ${fmt2(pbr)}` : "PBR—";
+  if (cur==null) return { cls:"bg-neutral", price, ideal, action:"現在値が取得できません。", sub:"" };
+  if (cur <= bps){
+    return { cls:"bg-good", price, ideal,
+      action:`✅ 割安：現在 ${fmtPrice(cur)} は簿価 ${fmtPrice(bps)} 以下（${pbrTxt}）`,
+      sub:`純資産より安く買える水準。PBR1倍(=${fmtPrice(bps)})までの是正余地が目安。` };
+  }
+  const up = (cur - bps) / cur;
+  return { cls:"bg-warn", price, ideal,
+    action:`⏳ 簿価 ${fmtPrice(bps)} 以下で割安（現在 ${pbrTxt}）`,
+    sub:`現在 ${fmtPrice(cur)} は簿価より高い。${fmtPrice(bps)} 付近（-${(up*100).toFixed(1)}%）まで下げれば割安圏。` };
+}
+
+/* 監視リスト（バリュー参考）銘柄の詳細ビュー */
+function renderValueView(c, data, root){
+  const d = c.derived, f = c.fundamentals;
+  const cur = c.price.close;
+  const bps = (f.bps!=null) ? f.bps
+    : (f.equity!=null && f.shares_out ? f.equity / f.shares_out : null);
+  const vg = valueGuide(cur, bps, d.pbr);
+  const plan = { band:null, tpPrice:null, slPrice:null, fair:bps };
+  const onVW = isVWatched(c.code);
+  const dispName = /^\(code /.test(c.name) ? `銘柄 ${c.code}` : c.name;
+
+  root.innerHTML = `
+    <a href="index.html" class="muted">← 候補一覧へ戻る</a>
+    <div class="detail-head" style="margin-top:8px">
+      <span class="code">${c.code}</span>
+      <h1>${dispName}</h1>
+      <span class="chip">監視・バリュー参考</span>
+      <span class="muted">${c.market || ''}</span>
+    </div>
+
+    <div class="banner info">この銘柄は<strong>アクティビストの大量保有報告がありません</strong>。
+      PBR・簿価によるバリュー参考表示です（アクティビスト追随の買いゾーンは非対象）。</div>
+
+    <div class="card">
+      <h2>株価チャートと簿価（PBR1倍）水準</h2>
+      <div class="filing-summary">
+        <div class="fs-item"><div class="k">現在値</div><div class="v">${fmtPrice(cur)}</div></div>
+        <div class="fs-item"><div class="k">簿価(BPS)</div><div class="v">${fmtPrice(bps)}</div></div>
+        <div class="fs-item"><div class="k">PBR</div><div class="v">${fmt2(d.pbr)}</div></div>
+        <div class="fs-item"><div class="k">配当利回り</div><div class="v">${fmtPct(d.dividend_yield)}</div></div>
+      </div>
+      <div id="chart"></div>
+      <div class="legend">
+        <span class="lg"><span class="sw" style="background:var(--accent)"></span>株価</span>
+        <span class="lg"><span class="sw dash" style="background:var(--good)"></span>簿価(PBR1倍)</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📋 バリュー判定（割安/割高の目安）</h2>
+      <div class="buy-guide ${vg.cls}">
+        <div class="bg-price-wrap">
+          <div class="bg-k">買い目安価格</div>
+          <div class="bg-price">${vg.price}</div>
+          ${vg.ideal?`<div class="bg-ideal">${vg.ideal}</div>`:''}
+        </div>
+        <div class="bg-action-wrap">
+          <div class="bg-action">${vg.action}</div>
+          ${vg.sub?`<div class="bg-sub">${vg.sub}</div>`:''}
+        </div>
+      </div>
+      <div class="metrics">
+        ${metric("PBR", fmt2(d.pbr))}
+        ${metric("PBR1倍株価(簿価)", fmtPrice(bps))}
+        ${metric("配当利回り", fmtPct(d.dividend_yield))}
+        ${metric("時価総額", fmtYokuEn(d.market_cap))}
+        ${metric("現在値", fmtPrice(cur))}
+      </div>
+      <p class="muted" style="font-size:.8rem;margin-top:10px">
+        バリュー参考です。<strong>PBR&lt;1（株価&lt;簿価）＝純資産より安い</strong>の目安を示すもので、
+        アクティビストの取得水準を基準にした買いゾーン・利確/損切りルールとは別物です。割安=必ず上がる、ではありません。
+      </p>
+      <div style="margin-top:10px">
+        <button class="btn" id="vwBtn">${onVW ? '監視リストから外す' : '👁 監視リストに登録'}</button>
+        <span class="muted" id="vwMsg" style="font-size:.8rem;margin-left:8px"></span>
+      </div>
+    </div>
+
+    ${financeCard(f, d)}
+  `;
+
+  document.getElementById("chart").innerHTML = buildPriceChart(c, plan);
+  const vwBtn = document.getElementById("vwBtn");
+  vwBtn.addEventListener("click", ()=>{
+    if (isVWatched(c.code)){ removeVWatch(c.code); vwBtn.textContent = '👁 監視リストに登録'; document.getElementById("vwMsg").textContent = '監視リストから外しました'; }
+    else { addVWatch(c.code); vwBtn.textContent = '監視リストから外す'; document.getElementById("vwMsg").textContent = '登録しました（トップの監視リストに表示）'; }
+  });
+}
+
+/* 未取得コード：監視リスト登録パネル */
+function renderRegisterPanel(code, root){
+  const onVW = isVWatched(code);
+  root.innerHTML = `
+    <a href="index.html" class="muted">← 候補一覧へ戻る</a>
+    <div class="detail-head" style="margin-top:8px">
+      <span class="code">${code || '—'}</span>
+      <h1>未取得の銘柄</h1>
+      <span class="chip">データなし</span>
+    </div>
+    <div class="card">
+      <p>コード <strong>${code || '(未指定)'}</strong> は、まだ日次取得の対象になっていません。</p>
+      <p class="muted" style="font-size:.9rem">
+        このダッシュボードは静的サイトのため、表示できるのは<strong>毎日パイプラインが取得済みのデータだけ</strong>です。
+        下のボタンでこの銘柄を<strong>監視リスト（ブラウザ保存）</strong>に登録し、
+        その一覧を <code>config/watchlist.txt</code> に反映すると、翌営業日以降チャート・財務・割安判定が表示されます。
+      </p>
+      <div style="margin:12px 0">
+        <button class="btn" id="regBtn">${onVW ? '登録済み（外す）' : '👁 監視リストに登録する'}</button>
+        <span class="muted" id="regMsg" style="font-size:.85rem;margin-left:8px"></span>
+      </div>
+      <div id="regList"></div>
+    </div>
+  `;
+  const regBtn = document.getElementById("regBtn");
+  regBtn.addEventListener("click", ()=>{
+    if (isVWatched(code)){ removeVWatch(code); regBtn.textContent='👁 監視リストに登録する'; document.getElementById("regMsg").textContent='外しました'; }
+    else { addVWatch(code); regBtn.textContent='登録済み（外す）'; document.getElementById("regMsg").textContent='登録しました'; }
+    drawRegList();
+  });
+  function drawRegList(){
+    const codes = getVWatch();
+    const el = document.getElementById("regList");
+    if (!codes.length){ el.innerHTML=""; return; }
+    el.innerHTML = `<div class="section-title" style="margin-top:6px">監視リスト（${codes.length}件）</div>
+      <p class="muted" style="font-size:.82rem;margin:2px 0 8px">毎日取得に載せるには、この内容を <code>config/watchlist.txt</code> に貼り付けてコミットしてください。</p>
+      <textarea readonly rows="${Math.min(8,codes.length)}" class="field" style="width:100%;font-family:monospace">${codes.join("\n")}</textarea>
+      <div style="margin-top:8px"><button class="btn" id="regCopy">📋 コピー</button>
+        <span class="muted" id="regCopyMsg" style="font-size:.8rem;margin-left:8px"></span></div>`;
+    document.getElementById("regCopy").addEventListener("click", async ()=>{
+      try { await navigator.clipboard.writeText(codes.join("\n")+"\n"); document.getElementById("regCopyMsg").textContent="コピーしました"; }
+      catch { document.getElementById("regCopyMsg").textContent="上のテキストを選択してコピーしてください"; }
+    });
+  }
+  drawRegList();
+}
+
+/* 財務・派生指標カード（アクティビスト/バリュー両ビューで共用） */
+function financeCard(f, d){
+  return `<div class="card">
+      <h2>財務・派生指標</h2>
+      <div class="metrics">
+        ${metric("PBR", fmt2(d.pbr))}
+        ${metric("配当利回り", fmtPct(d.dividend_yield))}
+        ${metric("配当性向", fmtPct(d.payout_ratio))}
+        ${metric("時価総額", fmtYokuEn(d.market_cap))}
+        ${metric("ネットキャッシュ", fmtYokuEn(d.net_cash))}
+        ${metric("NC/時価総額", fmtPct(d.net_cash_to_mktcap))}
+        ${metric("純資産", fmtYokuEn(f.equity))}
+        ${metric("1株純資産(BPS)", f.bps!=null?fmtPrice(f.bps):'—')}
+        ${metric("1株利益(EPS)", f.eps!=null?fmtPrice(f.eps):'—')}
+        ${metric("実績DPS", f.dps_result!=null?fmtPrice(f.dps_result):'—')}
+      </div>
+      <p class="muted" style="font-size:.8rem;margin-top:10px">
+        財務は開示日 ${f.statement_date||'—'} 時点${f.jquants_stale?'（J-Quants無料枠のため最大約12週遅延）':''}。PBR・利回りは最新終値で再計算。
+      </p>
+    </div>`;
+}

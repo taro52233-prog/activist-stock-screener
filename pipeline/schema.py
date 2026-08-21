@@ -99,6 +99,7 @@ class Candidate:
     price_history: list = field(default_factory=list)  # [{d,c}...] 約1年の日次終値
     signal: Signal = field(default_factory=Signal)
     status: str = "UNCHANGED"   # NEW | CHANGED | UNCHANGED
+    is_watchlist: bool = False   # True=ユーザー監視リスト（アクティビスト報告なし・バリュー参考）
 
 
 @dataclass
@@ -146,6 +147,7 @@ def candidate_to_dict(c: Candidate) -> dict:
             "reasons_ja": c.signal.reasons_ja,
         },
         "status": c.status,
+        "is_watchlist": c.is_watchlist,
     }
 
 

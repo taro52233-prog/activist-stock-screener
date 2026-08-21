@@ -2,6 +2,7 @@
 const DATA_URL = "./data/latest.json";
 const LS_WATCH = "asc_watchlist";
 const LS_POS = "asc_positions";
+const LS_VWATCH = "asc_valuewatch";   // 監視リスト（日次取得対象にしたい任意コード）
 
 /* ---- データ ---- */
 async function loadData() {
@@ -48,6 +49,22 @@ function toggleWatch(code) {
   if (i >= 0) w.splice(i, 1); else w.push(code);
   localStorage.setItem(LS_WATCH, JSON.stringify(w));
   return w.includes(code);
+}
+
+/* ---- 監視リスト（任意コードを日次取得対象に）----
+   ブラウザ内（localStorage）に登録。実際の毎日取得に載せるには config/watchlist.txt へ反映が必要。 */
+function normCode(x){ return String(x||"").replace(/[０-９]/g, d=>"0123456789"["０１２３４５６７８９".indexOf(d)]).trim().toUpperCase(); }
+function getVWatch() { try { return JSON.parse(localStorage.getItem(LS_VWATCH) || "[]"); } catch { return []; } }
+function isVWatched(code) { return getVWatch().includes(normCode(code)); }
+function addVWatch(code) {
+  code = normCode(code); if (!code) return getVWatch();
+  const w = getVWatch(); if (!w.includes(code)) w.push(code);
+  localStorage.setItem(LS_VWATCH, JSON.stringify(w)); return w;
+}
+function removeVWatch(code) {
+  code = normCode(code);
+  const w = getVWatch().filter(c => c !== code);
+  localStorage.setItem(LS_VWATCH, JSON.stringify(w)); return w;
 }
 
 /* ---- ポジション ---- */
