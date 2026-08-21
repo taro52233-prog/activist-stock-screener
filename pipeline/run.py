@@ -128,20 +128,27 @@ def enrich_and_score(candidates: list[Candidate], conf, warnings: list[str]) -> 
     th, w = conf.thresholds, conf.weights
     codes = [c.code for c in candidates]
 
-    # J-Quants 財務
+    # J-Quants 財務。無料プランはレート制限が厳しいので、ユーザー監視リストを先に取得。
     fundamentals: dict = {}
     listed: dict = {}
-    if conf.secrets.has_jquants and codes:
+    watch_first = [c.code for c in candidates if c.is_watchlist]
+    others = [c.code for c in candidates if not c.is_watchlist]
+    fetch_order = watch_first + others
+    if conf.secrets.has_jquants and fetch_order:
         try:
             from jquants import JQuantsClient
             jq = JQuantsClient(conf.secrets)
             jq.authenticate()
             listed = jq.listed_info()
-            for code in codes:
+            for code in fetch_order:
                 try:
                     fundamentals[code] = jq.fundamentals(code)
                 except Exception as e:  # noqa: BLE001
                     warnings.append(f"J-Quants財務取得失敗 {code}: {e}")
+                    if jq.rate_limited:
+                        remaining = len(fetch_order) - fetch_order.index(code) - 1
+                        warnings.append(f"J-Quantsレート制限のため残り{remaining}件の財務取得を打ち切り（翌日再取得）")
+                        break
         except Exception as e:  # noqa: BLE001
             warnings.append(f"J-Quants認証失敗: {e}")
 
