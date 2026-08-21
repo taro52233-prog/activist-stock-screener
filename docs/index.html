@@ -22,6 +22,7 @@
       <span class="muted" style="font-size:.8rem">※リストに無いコードも入力可。未取得なら監視リストに登録できます。</span>
     </div>
 
+    <div id="ghSettings"></div>
     <div id="myWatch"></div>
 
     <section class="tiles" id="tiles"></section>
@@ -188,6 +189,67 @@
       });
     }
 
+    function renderGhSettings(){
+      const box = document.getElementById("ghSettings");
+      const on = ghConfigured();
+      box.innerHTML = `<details class="card" ${on?'':'open'} style="padding:0">
+        <summary style="cursor:pointer;padding:12px 14px;font-weight:600">
+          ⚙ 自動反映（GitHub連携） ${on?'<span class="chip ok">設定済み</span>':'<span class="chip">未設定</span>'}
+        </summary>
+        <div style="padding:0 14px 14px">
+          ${on ? `
+            <p class="muted" style="font-size:.85rem">連携済みです。アプリで銘柄を<strong>登録／削除</strong>すると、
+              <code>config/watchlist.txt</code> が自動更新され、翌営業日から自動取得されます。</p>
+            <button class="btn" id="ghTest">接続テスト</button>
+            <button class="linkbtn" id="ghClear" style="margin-left:12px">連携を解除（トークン削除）</button>
+            <span class="muted" id="ghMsg" style="font-size:.8rem;margin-left:8px"></span>
+          ` : `
+            <p class="muted" style="font-size:.85rem;margin-top:4px">
+              一度だけ設定すれば、以後アプリで登録するだけで自動反映されます。トークンは<strong>このブラウザ内だけ</strong>に保存され、他人からは見えません。
+            </p>
+            <ol class="muted" style="font-size:.82rem;padding-left:1.2em;margin:6px 0">
+              <li>GitHubで <strong>fine-grained トークン</strong>を作成
+                （<code>Settings → Developer settings → Fine-grained tokens → Generate</code>）</li>
+              <li>Repository access＝<strong>このリポジトリのみ</strong>（${GH.owner}/${GH.repo}）</li>
+              <li>Permissions＝<strong>Contents: Read and write</strong> を付与</li>
+              <li>発行された <code>github_pat_...</code> を下に貼り付けて保存</li>
+            </ol>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <input id="ghToken" type="password" class="field" placeholder="github_pat_..." autocomplete="off"
+                     style="padding:8px 10px;min-width:240px;flex:1" />
+              <button class="btn" id="ghSave">保存して連携</button>
+            </div>
+            <div style="margin-top:6px"><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener" class="muted" style="font-size:.8rem">→ トークン作成ページを開く</a>
+              <span class="muted" id="ghMsg" style="font-size:.8rem;margin-left:8px"></span></div>
+          `}
+        </div>
+      </details>`;
+      const save = document.getElementById("ghSave");
+      if (save) save.addEventListener("click", async ()=>{
+        const t = document.getElementById("ghToken").value.trim();
+        if (!t){ document.getElementById("ghMsg").textContent="トークンを入力してください"; return; }
+        setGhToken(t);
+        document.getElementById("ghMsg").textContent="接続を確認中…";
+        const ok = await ghTestConnection();
+        if (!ok){ clearGhToken(); document.getElementById("ghMsg").textContent="⚠ 接続失敗。権限（Contents:RW）とリポジトリ指定を確認してください"; return; }
+        renderGhSettings(); renderMyWatch();
+      });
+      const clear = document.getElementById("ghClear");
+      if (clear) clear.addEventListener("click", ()=>{ clearGhToken(); renderGhSettings(); renderMyWatch(); });
+      const test = document.getElementById("ghTest");
+      if (test) test.addEventListener("click", async ()=>{
+        document.getElementById("ghMsg").textContent="確認中…";
+        document.getElementById("ghMsg").textContent = (await ghTestConnection()) ? "✅ 接続OK" : "⚠ 接続失敗（権限/リポジトリを確認）";
+      });
+    }
+
+    async function ghTestConnection(){
+      try {
+        const r = await ghApi(`repos/${GH.owner}/${GH.repo}/contents/${GH.path}?ref=${GH.branch}`);
+        return r.status === 200 || r.status === 404;
+      } catch { return false; }
+    }
+
     function renderMyWatch(){
       const codes = getVWatch();
       const box = document.getElementById("myWatch");
@@ -202,23 +264,29 @@
         return `<tr data-code="${code}"><td class="l">${code}</td><td class="l">${info}</td><td>${status}</td>
           <td class="l"><a href="stock.html?code=${code}">開く</a> <button class="linkbtn" data-del="${code}">削除</button></td></tr>`;
       }).join("");
+      const linked = ghConfigured();
+      const note = linked
+        ? `GitHub連携済み：登録／削除は <code>config/watchlist.txt</code> に<strong>自動反映</strong>されます（翌営業日から自動取得）。`
+        : `ブラウザに保存された監視コードです。<strong>毎日データを取得</strong>するには、上の「⚙ 自動反映」を設定するか、この一覧を <code>config/watchlist.txt</code> に反映してください。`;
       box.innerHTML = `<div class="section-title">👁 マイ監視リスト（${codes.length}件）</div>
         <div class="card">
-          <p class="muted" style="font-size:.82rem;margin:0 0 10px">
-            ブラウザに保存された監視コードです。<strong>毎日データを取得</strong>するには、この一覧を
-            <code>config/watchlist.txt</code> に反映する必要があります（静的サイトのため自動反映は不可）。
-            下のボタンでコピーできます。
-          </p>
+          <p class="muted" style="font-size:.82rem;margin:0 0 10px">${note}</p>
           <div class="table-scroll"><table>
             <thead><tr><th class="l">コード</th><th class="l">銘柄 / 指標</th><th>状態</th><th class="l">操作</th></tr></thead>
             <tbody>${rows}</tbody>
           </table></div>
-          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn" id="copyWatch">📋 watchlist.txt 用にコピー</button>
-            <span class="muted" id="copyMsg" style="font-size:.8rem;align-self:center"></span>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            ${linked ? '' : '<button class="btn" id="copyWatch">📋 watchlist.txt 用にコピー</button>'}
+            <span class="muted" id="copyMsg" style="font-size:.8rem"></span>
           </div>
         </div>`;
-      box.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click", ()=>{ removeVWatch(b.dataset.del); renderMyWatch(); }));
+      box.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click", async ()=>{
+        const msg = document.getElementById("copyMsg");
+        if (linked && msg) msg.textContent = "反映中…";
+        const r = await unregisterWatch(b.dataset.del);
+        renderMyWatch();
+        const m2 = document.getElementById("copyMsg"); if (linked && m2) m2.textContent = ghResultMsg(r);
+      }));
       const cp = document.getElementById("copyWatch");
       if (cp) cp.addEventListener("click", async ()=>{
         const txt = getVWatch().join("\n") + "\n";
@@ -233,7 +301,7 @@
         DATA = await loadData();
         ROWS = DATA.candidates || [];
         document.getElementById("banner").innerHTML = sampleBanner(DATA);
-        renderTiles(); renderExits(); bindFilters(); bindCodeSearch(); renderMyWatch(); render();
+        renderTiles(); renderExits(); bindFilters(); bindCodeSearch(); renderGhSettings(); renderMyWatch(); render();
         document.getElementById("footer").textContent =
           `対象日 ${DATA.as_of_date}／生成 ${new Date(DATA.generated_at).toLocaleString("ja-JP")}`;
       } catch(err){

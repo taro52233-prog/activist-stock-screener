@@ -413,9 +413,13 @@ function renderValueView(c, data, root){
 
   document.getElementById("chart").innerHTML = buildPriceChart(c, plan);
   const vwBtn = document.getElementById("vwBtn");
-  vwBtn.addEventListener("click", ()=>{
-    if (isVWatched(c.code)){ removeVWatch(c.code); vwBtn.textContent = '👁 監視リストに登録'; document.getElementById("vwMsg").textContent = '監視リストから外しました'; }
-    else { addVWatch(c.code); vwBtn.textContent = '監視リストから外す'; document.getElementById("vwMsg").textContent = '登録しました（トップの監視リストに表示）'; }
+  vwBtn.addEventListener("click", async ()=>{
+    const msg = document.getElementById("vwMsg");
+    const removing = isVWatched(c.code);
+    if (ghConfigured()) msg.textContent = "反映中…";
+    const r = removing ? await unregisterWatch(c.code) : await registerWatch(c.code);
+    vwBtn.textContent = removing ? '👁 監視リストに登録' : '監視リストから外す';
+    msg.textContent = ghConfigured() ? ghResultMsg(r) : (removing ? '監視リストから外しました' : '登録しました（トップの監視リストに表示）');
   });
 }
 
@@ -444,9 +448,13 @@ function renderRegisterPanel(code, root){
     </div>
   `;
   const regBtn = document.getElementById("regBtn");
-  regBtn.addEventListener("click", ()=>{
-    if (isVWatched(code)){ removeVWatch(code); regBtn.textContent='👁 監視リストに登録する'; document.getElementById("regMsg").textContent='外しました'; }
-    else { addVWatch(code); regBtn.textContent='登録済み（外す）'; document.getElementById("regMsg").textContent='登録しました'; }
+  regBtn.addEventListener("click", async ()=>{
+    const msg = document.getElementById("regMsg");
+    const removing = isVWatched(code);
+    if (ghConfigured()) msg.textContent = "反映中…";
+    const r = removing ? await unregisterWatch(code) : await registerWatch(code);
+    regBtn.textContent = removing ? '👁 監視リストに登録する' : '登録済み（外す）';
+    msg.textContent = ghConfigured() ? ghResultMsg(r) : (removing ? '外しました' : '登録しました');
     drawRegList();
   });
   function drawRegList(){
