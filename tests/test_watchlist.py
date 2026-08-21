@@ -35,3 +35,30 @@ def test_build_watchlist_candidates_excludes_tracked():
     assert codes == ["7203", "9999"]        # 追跡中(6758)は除外
     assert all(c.is_watchlist for c in cands)
     assert all(not c.is_known_activist and c.fund == "" for c in cands)
+
+
+def test_classify_market():
+    assert config.classify_market("7203") == "JP"
+    assert config.classify_market("130A") == "JP"   # 日本の新形式（3桁数字＋英字）
+    assert config.classify_market("AAPL") == "US"
+    assert config.classify_market("KO") == "US"
+    assert config.classify_market("BRK.B") == "US"
+    assert config.classify_market("") == "JP"
+
+
+def test_build_watchlist_sets_us_market_and_currency():
+    cands = run.build_candidates_watchlist(["AAPL", "7203"], exclude=set())
+    by = {c.code: c for c in cands}
+    assert by["AAPL"].market_country == "US" and by["AAPL"].currency == "USD"
+    assert by["7203"].market_country == "JP" and by["7203"].currency == "JPY"
+
+
+def test_us_summary_to_fundamentals():
+    import usdata
+    res = {
+        "defaultKeyStatistics": {"bookValue": {"raw": 4.2}, "sharesOutstanding": {"raw": 1_000_000}, "trailingEps": {"raw": 6.1}},
+        "summaryDetail": {"dividendRate": {"raw": 0.96}},
+    }
+    f = usdata.summary_to_fundamentals(res)
+    assert f.bps == 4.2 and f.shares_out == 1_000_000 and f.eps == 6.1
+    assert f.dps_result == 0.96 and f.equity == 4.2 * 1_000_000

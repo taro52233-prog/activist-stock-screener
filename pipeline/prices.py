@@ -21,12 +21,20 @@ _SESSION = requests.Session()
 _SESSION.headers.update({"User-Agent": "Mozilla/5.0 (compatible; activist-screener/1.0)"})
 
 
-def get_price_and_history(code: str) -> tuple[PriceInfo, list[dict]]:
+def _stooq_sym(code: str, market: str) -> str:
+    return f"{code.lower()}.us" if market == "US" else f"{code.lower()}.jp"
+
+
+def _yahoo_sym(code: str, market: str) -> str:
+    return code.upper() if market == "US" else f"{code}.T"
+
+
+def get_price_and_history(code: str, market: str = "JP") -> tuple[PriceInfo, list[dict]]:
     """(最新終値, 履歴[{d,c}...]) を返す。取得できなければ (空PriceInfo, [])。"""
-    hist = _history_from_stooq(code)
+    hist = _history_from_stooq(code, market)
     src = "stooq"
     if not hist:
-        hist = _history_from_yahoo(code)
+        hist = _history_from_yahoo(code, market)
         src = "yahoo"
     if not hist:
         return PriceInfo(), []
@@ -34,19 +42,20 @@ def get_price_and_history(code: str) -> tuple[PriceInfo, list[dict]]:
     return PriceInfo(close=last["c"], date=last["d"], source=src), hist
 
 
-def get_prices_and_histories(codes: list[str]) -> dict[str, tuple[PriceInfo, list[dict]]]:
+def get_prices_and_histories(codes: list[str], markets: Optional[dict] = None) -> dict[str, tuple[PriceInfo, list[dict]]]:
+    markets = markets or {}
     out: dict[str, tuple[PriceInfo, list[dict]]] = {}
     for code in codes:
         try:
-            out[code] = get_price_and_history(code)
+            out[code] = get_price_and_history(code, markets.get(code, "JP"))
         except Exception:  # noqa: BLE001 - 1銘柄失敗しても継続
             out[code] = (PriceInfo(), [])
     return out
 
 
-def _history_from_stooq(code: str) -> list[dict]:
+def _history_from_stooq(code: str, market: str = "JP") -> list[dict]:
     """Stooqの日次CSV全期間から末尾約1年を [{d,c}] で返す（日付昇順）。"""
-    url = STOOQ_CSV.format(sym=f"{code}.jp")
+    url = STOOQ_CSV.format(sym=_stooq_sym(code, market))
     try:
         r = _SESSION.get(url, timeout=_TIMEOUT)
         r.raise_for_status()
@@ -69,9 +78,9 @@ def _history_from_stooq(code: str) -> list[dict]:
         return []
 
 
-def _history_from_yahoo(code: str) -> list[dict]:
+def _history_from_yahoo(code: str, market: str = "JP") -> list[dict]:
     """Yahoo chart(1年・日次)から [{d,c}] を返す。"""
-    url = YAHOO_CHART.format(sym=f"{code}.T")
+    url = YAHOO_CHART.format(sym=_yahoo_sym(code, market))
     try:
         r = _SESSION.get(url, params={"range": "1y", "interval": "1d"}, timeout=_TIMEOUT)
         r.raise_for_status()

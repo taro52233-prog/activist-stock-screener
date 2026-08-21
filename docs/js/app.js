@@ -23,6 +23,25 @@ function fmtYokuEn(x) {
   if (Math.abs(x) >= 1e8) return (x / 1e8).toFixed(1) + "億円";
   return nf.format(Math.round(x)) + "円";
 }
+const usdf = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+/* 通貨対応の価格表示（USD=$小数2桁 / JPY=整数円） */
+function fmtMoney(x, currency) {
+  if (x === null || x === undefined || isNaN(x)) return "—";
+  return currency === "USD" ? "$" + usdf.format(x) : nf.format(Math.round(x)) + "円";
+}
+/* 通貨対応の大きな金額（時価総額など） */
+function fmtBig(x, currency) {
+  if (x === null || x === undefined || isNaN(x)) return "—";
+  if (currency === "USD") {
+    if (Math.abs(x) >= 1e12) return "$" + (x / 1e12).toFixed(2) + "T";
+    if (Math.abs(x) >= 1e9) return "$" + (x / 1e9).toFixed(2) + "B";
+    if (Math.abs(x) >= 1e6) return "$" + (x / 1e6).toFixed(1) + "M";
+    return "$" + usdf.format(x);
+  }
+  return fmtYokuEn(x);
+}
+/* 英字ティッカー＝米国株 */
+function isUsTicker(code) { return /^[A-Z]{1,5}(\.[A-Z]{1,2})?$/.test(normCode(code)); }
 
 /* スコア→色 */
 function scoreColor(s) {

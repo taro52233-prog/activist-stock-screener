@@ -14,12 +14,12 @@
     <div class="card" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <strong style="font-size:.95rem">🔎 銘柄コードで開く</strong>
       <form id="codeForm" style="display:flex;gap:8px;flex-wrap:wrap">
-        <input id="codeInput" list="codeList" placeholder="例: 7731 / 6302 / 7203" class="field"
-               style="padding:8px 10px;min-width:180px" autocomplete="off" inputmode="numeric" />
+        <input id="codeInput" list="codeList" placeholder="例: 7731 / 7203 / AAPL" class="field"
+               style="padding:8px 10px;min-width:180px" autocomplete="off" />
         <datalist id="codeList"></datalist>
         <button class="btn" type="submit">開く</button>
       </form>
-      <span class="muted" style="font-size:.8rem">※リストに無いコードも入力可。未取得なら監視リストに登録できます。</span>
+      <span class="muted" style="font-size:.8rem">※日本株(4桁)も米国株(AAPL等の英字)もOK。未取得なら監視リストに登録できます。</span>
     </div>
 
     <div id="ghSettings"></div>
@@ -261,7 +261,8 @@
         const status = has ? '<span class="chip ok">取得済み</span>' : '<span class="chip">取得待ち</span>';
         const nm = has ? (/^\(code /.test(c.name) ? `銘柄 ${c.code}` : c.name) : '';
         const info = has ? `${nm}${c.derived.pbr!=null?`｜PBR${fmt2(c.derived.pbr)}`:''}` : '<span class="muted">日次取得に載るとチャート・財務が表示されます</span>';
-        return `<tr data-code="${code}"><td class="l">${code}</td><td class="l">${info}</td><td>${status}</td>
+        const flag = isUsTicker(code) ? ' <span class="chip">🇺🇸</span>' : '';
+        return `<tr data-code="${code}"><td class="l">${code}${flag}</td><td class="l">${info}</td><td>${status}</td>
           <td class="l"><a href="stock.html?code=${code}">開く</a> <button class="linkbtn" data-del="${code}">削除</button></td></tr>`;
       }).join("");
       const linked = ghConfigured();

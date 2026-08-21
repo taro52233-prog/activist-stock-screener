@@ -87,14 +87,19 @@ def build_candidates_watchlist(codes: list[str], exclude: set[str]) -> list[Cand
     アンカー（提出時株価）は持たないので買いゾーンは非対象。フロントでBPS基準の
     バリュー判定を表示する。
     """
+    from config import classify_market
     out = []
     for code in codes:
         if code in exclude:
             continue
+        market = classify_market(code)
         c = Candidate(code=code, name=f"(code {code})")
         c.fund = ""
         c.is_known_activist = False
         c.is_watchlist = True
+        c.market_country = market
+        c.currency = "USD" if market == "US" else "JPY"
+        c.market = "米国株" if market == "US" else c.market
         c._entry = None           # type: ignore[attr-defined]
         c._est_acq = None         # type: ignore[attr-defined]
         c._acq_method = "none"    # type: ignore[attr-defined]
@@ -128,11 +133,25 @@ def enrich_and_score(candidates: list[Candidate], conf, warnings: list[str]) -> 
     th, w = conf.thresholds, conf.weights
     codes = [c.code for c in candidates]
 
-    # J-Quants 財務。無料プランはレート制限が厳しいので、ユーザー監視リストを先に取得。
+    # 米国株の財務は Yahoo（J-Quantsは日本専用）。取得不可でも株価チャートは出る。
     fundamentals: dict = {}
+    us_codes = [c.code for c in candidates if getattr(c, "market_country", "JP") == "US"]
+    if us_codes:
+        try:
+            from usdata import us_fundamentals
+            for code in us_codes:
+                try:
+                    fundamentals[code] = us_fundamentals(code)
+                except Exception as e:  # noqa: BLE001
+                    warnings.append(f"米国株財務取得失敗 {code}: {e}")
+        except Exception as e:  # noqa: BLE001
+            warnings.append(f"米国株財務モジュール初期化失敗: {e}")
+
+    # J-Quants 財務（日本株のみ）。無料プランはレート制限が厳しいので、監視リストを先に取得。
     listed: dict = {}
-    watch_first = [c.code for c in candidates if c.is_watchlist]
-    others = [c.code for c in candidates if not c.is_watchlist]
+    jp = [c.code for c in candidates if getattr(c, "market_country", "JP") != "US"]
+    watch_first = [c.code for c in candidates if c.is_watchlist and getattr(c, "market_country", "JP") != "US"]
+    others = [code for code in jp if code not in set(watch_first)]
     fetch_order = watch_first + others
     if conf.secrets.has_jquants and fetch_order:
         try:
@@ -152,12 +171,13 @@ def enrich_and_score(candidates: list[Candidate], conf, warnings: list[str]) -> 
         except Exception as e:  # noqa: BLE001
             warnings.append(f"J-Quants認証失敗: {e}")
 
-    # 株価＋履歴
+    # 株価＋履歴（米国株はティッカーで取得）
     ph: dict = {}
     if codes:
         try:
             from prices import get_prices_and_histories
-            ph = get_prices_and_histories(codes)
+            markets = {c.code: getattr(c, "market_country", "JP") for c in candidates}
+            ph = get_prices_and_histories(codes, markets)
         except Exception as e:  # noqa: BLE001
             warnings.append(f"株価取得失敗: {e}")
 

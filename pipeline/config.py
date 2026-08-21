@@ -36,6 +36,24 @@ JQUANTS_SUMMARY = JQUANTS_BASE + "/fins/summary"
 
 STOOQ_CSV = "https://stooq.com/q/d/l/?s={sym}&i=d"
 YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
+YAHOO_QUOTESUMMARY = "https://query1.finance.yahoo.com/v10/finance/quoteSummary/{sym}"
+YAHOO_CRUMB = "https://query1.finance.yahoo.com/v1/test/getcrumb"
+
+
+def classify_market(code: str) -> str:
+    """コード表記から市場を推定する。'US'（英字ティッカー）or 'JP'（数字/日本の英数字コード）。
+
+    - 日本株: 4桁数字（7203）または 3桁数字＋英字1文字（130A 等の新形式）
+    - 米国株: 英字1〜5文字（AAPL, KO, F）＋任意の .X サフィックス（BRK.B）
+    - 判別不能はJP扱い（既存挙動を維持）
+    """
+    import re
+    c = (code or "").strip().upper()
+    if re.fullmatch(r"[0-9]{4}", c) or re.fullmatch(r"[0-9]{3}[A-Z]", c):
+        return "JP"
+    if re.fullmatch(r"[A-Z]{1,5}(\.[A-Z]{1,2})?", c):
+        return "US"
+    return "JP"
 
 CHATWORK_MESSAGES = "https://api.chatwork.com/v2/rooms/{room_id}/messages"
 

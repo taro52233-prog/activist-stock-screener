@@ -100,6 +100,8 @@ class Candidate:
     signal: Signal = field(default_factory=Signal)
     status: str = "UNCHANGED"   # NEW | CHANGED | UNCHANGED
     is_watchlist: bool = False   # True=ユーザー監視リスト（アクティビスト報告なし・バリュー参考）
+    market_country: str = "JP"   # JP | US（監視リストの銘柄が属する市場）
+    currency: str = "JPY"        # JPY | USD（表示通貨）
 
 
 @dataclass
@@ -148,6 +150,8 @@ def candidate_to_dict(c: Candidate) -> dict:
         },
         "status": c.status,
         "is_watchlist": c.is_watchlist,
+        "market_country": c.market_country,
+        "currency": c.currency,
     }
 
 

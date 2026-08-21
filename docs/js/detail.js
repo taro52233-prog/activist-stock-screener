@@ -181,6 +181,7 @@ function buildPriceChart(c, plan){
   const band = plan && plan.band;
   const tpPrice = plan && plan.tpPrice;
   const fair = plan && plan.fair;        // 簿価(PBR1倍)＝バリュー参考の基準線
+  const sym = (plan && plan.currency === "USD") ? "$" : "";
   const lossCut = (plan && plan.slPrice != null) ? plan.slPrice : (pf != null ? pf * 0.8 : null);
 
   let lo = Math.min(...closes), hi = Math.max(...closes);
@@ -249,7 +250,7 @@ function buildPriceChart(c, plan){
   if (fair != null){
     const yv = y(fair);
     markers += `<line x1="${padL}" y1="${yv.toFixed(1)}" x2="${padL+iw}" y2="${yv.toFixed(1)}" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="6 4"/>`;
-    markers += `<text x="${padL+iw+6}" y="${yv.toFixed(1)}" dominant-baseline="middle" font-size="10" fill="var(--good)">簿価 ${Math.round(fair).toLocaleString()}</text>`;
+    markers += `<text x="${padL+iw+6}" y="${yv.toFixed(1)}" dominant-baseline="middle" font-size="10" fill="var(--good)">簿価 ${sym}${Math.round(fair).toLocaleString()}</text>`;
   }
   if (fi >= 0){
     const xf = x(fi);
@@ -261,7 +262,7 @@ function buildPriceChart(c, plan){
   // 現在値の点
   const lastX = x(hist.length-1), lastY = y(closes[closes.length-1]);
   markers += `<circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="4.5" fill="var(--accent)"/>`;
-  markers += `<text x="${(lastX-6).toFixed(1)}" y="${(lastY-8).toFixed(1)}" text-anchor="end" font-size="11" font-weight="700" fill="var(--accent)">現在 ${Math.round(closes[closes.length-1]).toLocaleString()}</text>`;
+  markers += `<text x="${(lastX-6).toFixed(1)}" y="${(lastY-8).toFixed(1)}" text-anchor="end" font-size="11" font-weight="700" fill="var(--accent)">現在 ${sym}${Math.round(closes[closes.length-1]).toLocaleString()}</text>`;
 
   return `<div class="chart-scroll"><svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="株価チャート">
     <defs><linearGradient id="ar" x1="0" x2="0" y1="0" y2="1">
@@ -322,52 +323,58 @@ function acqMethod(m){ return { funds_div_shares:"取得資金÷株数", period_
 
 /* ===== 監視リスト（バリュー参考）＝アクティビスト不在の銘柄向け ===== */
 
-/* 簿価(PBR1倍株価=BPS)を基準にした割安/割高の目安 */
-function valueGuide(cur, bps, pbr){
+/* 簿価(PBR1倍株価=BPS)を基準にした割安/割高の目安（P=通貨対応の価格整形） */
+function valueGuide(cur, bps, pbr, P){
+  P = P || fmtPrice;
   if (bps==null) return { cls:"bg-neutral", price:"—", ideal:"簿価(BPS)が取得できず割安判定できません。", action:"", sub:"" };
-  const price = `${fmtPrice(bps)} 以下（PBR1倍）`;
+  const price = `${P(bps)} 以下（PBR1倍）`;
   const ideal = "PBRが低いほど割安（純資産に対して株価が安い）";
   const pbrTxt = pbr!=null ? `PBR ${fmt2(pbr)}` : "PBR—";
   if (cur==null) return { cls:"bg-neutral", price, ideal, action:"現在値が取得できません。", sub:"" };
   if (cur <= bps){
     return { cls:"bg-good", price, ideal,
-      action:`✅ 割安：現在 ${fmtPrice(cur)} は簿価 ${fmtPrice(bps)} 以下（${pbrTxt}）`,
-      sub:`純資産より安く買える水準。PBR1倍(=${fmtPrice(bps)})までの是正余地が目安。` };
+      action:`✅ 割安：現在 ${P(cur)} は簿価 ${P(bps)} 以下（${pbrTxt}）`,
+      sub:`純資産より安く買える水準。PBR1倍(=${P(bps)})までの是正余地が目安。` };
   }
   const up = (cur - bps) / cur;
   return { cls:"bg-warn", price, ideal,
-    action:`⏳ 簿価 ${fmtPrice(bps)} 以下で割安（現在 ${pbrTxt}）`,
-    sub:`現在 ${fmtPrice(cur)} は簿価より高い。${fmtPrice(bps)} 付近（-${(up*100).toFixed(1)}%）まで下げれば割安圏。` };
+    action:`⏳ 簿価 ${P(bps)} 以下で割安（現在 ${pbrTxt}）`,
+    sub:`現在 ${P(cur)} は簿価より高い。${P(bps)} 付近（-${(up*100).toFixed(1)}%）まで下げれば割安圏。` };
 }
 
 /* 監視リスト（バリュー参考）銘柄の詳細ビュー */
 function renderValueView(c, data, root){
   const d = c.derived, f = c.fundamentals;
+  const ccy = c.currency || "JPY";
+  const P = x => fmtMoney(x, ccy);
+  const isUS = (c.market_country === "US");
   const cur = c.price.close;
   const bps = (f.bps!=null) ? f.bps
     : (f.equity!=null && f.shares_out ? f.equity / f.shares_out : null);
-  const vg = valueGuide(cur, bps, d.pbr);
-  const plan = { band:null, tpPrice:null, slPrice:null, fair:bps };
+  const vg = valueGuide(cur, bps, d.pbr, P);
+  const plan = { band:null, tpPrice:null, slPrice:null, fair:bps, currency:ccy };
   const onVW = isVWatched(c.code);
   const dispName = /^\(code /.test(c.name) ? `銘柄 ${c.code}` : c.name;
+  const mktChip = isUS ? '<span class="chip">🇺🇸 米国株</span>' : '';
 
   root.innerHTML = `
     <a href="index.html" class="muted">← 候補一覧へ戻る</a>
     <div class="detail-head" style="margin-top:8px">
       <span class="code">${c.code}</span>
       <h1>${dispName}</h1>
+      ${mktChip}
       <span class="chip">監視・バリュー参考</span>
-      <span class="muted">${c.market || ''}</span>
+      <span class="muted">${isUS ? '' : (c.market || '')}</span>
     </div>
 
     <div class="banner info">この銘柄は<strong>アクティビストの大量保有報告がありません</strong>。
-      PBR・簿価によるバリュー参考表示です（アクティビスト追随の買いゾーンは非対象）。</div>
+      PBR・簿価によるバリュー参考表示です（アクティビスト追随の買いゾーンは非対象）。${isUS ? '米国株の財務はYahoo由来です。' : ''}</div>
 
     <div class="card">
       <h2>株価チャートと簿価（PBR1倍）水準</h2>
       <div class="filing-summary">
-        <div class="fs-item"><div class="k">現在値</div><div class="v">${fmtPrice(cur)}</div></div>
-        <div class="fs-item"><div class="k">簿価(BPS)</div><div class="v">${fmtPrice(bps)}</div></div>
+        <div class="fs-item"><div class="k">現在値</div><div class="v">${P(cur)}</div></div>
+        <div class="fs-item"><div class="k">簿価(BPS)</div><div class="v">${P(bps)}</div></div>
         <div class="fs-item"><div class="k">PBR</div><div class="v">${fmt2(d.pbr)}</div></div>
         <div class="fs-item"><div class="k">配当利回り</div><div class="v">${fmtPct(d.dividend_yield)}</div></div>
       </div>
@@ -393,10 +400,10 @@ function renderValueView(c, data, root){
       </div>
       <div class="metrics">
         ${metric("PBR", fmt2(d.pbr))}
-        ${metric("PBR1倍株価(簿価)", fmtPrice(bps))}
+        ${metric("PBR1倍株価(簿価)", P(bps))}
         ${metric("配当利回り", fmtPct(d.dividend_yield))}
-        ${metric("時価総額", fmtYokuEn(d.market_cap))}
-        ${metric("現在値", fmtPrice(cur))}
+        ${metric("時価総額", fmtBig(d.market_cap, ccy))}
+        ${metric("現在値", P(cur))}
       </div>
       <p class="muted" style="font-size:.8rem;margin-top:10px">
         バリュー参考です。<strong>PBR&lt;1（株価&lt;簿価）＝純資産より安い</strong>の目安を示すもので、
@@ -408,7 +415,7 @@ function renderValueView(c, data, root){
       </div>
     </div>
 
-    ${financeCard(f, d)}
+    ${financeCard(f, d, ccy)}
   `;
 
   document.getElementById("chart").innerHTML = buildPriceChart(c, plan);
@@ -474,24 +481,25 @@ function renderRegisterPanel(code, root){
   drawRegList();
 }
 
-/* 財務・派生指標カード（アクティビスト/バリュー両ビューで共用） */
-function financeCard(f, d){
+/* 財務・派生指標カード（監視リスト＝JP/US両対応、通貨対応） */
+function financeCard(f, d, ccy){
+  ccy = ccy || "JPY";
+  const P = x => fmtMoney(x, ccy);
+  const B = x => fmtBig(x, ccy);
   return `<div class="card">
       <h2>財務・派生指標</h2>
       <div class="metrics">
         ${metric("PBR", fmt2(d.pbr))}
         ${metric("配当利回り", fmtPct(d.dividend_yield))}
         ${metric("配当性向", fmtPct(d.payout_ratio))}
-        ${metric("時価総額", fmtYokuEn(d.market_cap))}
-        ${metric("ネットキャッシュ", fmtYokuEn(d.net_cash))}
-        ${metric("NC/時価総額", fmtPct(d.net_cash_to_mktcap))}
-        ${metric("純資産", fmtYokuEn(f.equity))}
-        ${metric("1株純資産(BPS)", f.bps!=null?fmtPrice(f.bps):'—')}
-        ${metric("1株利益(EPS)", f.eps!=null?fmtPrice(f.eps):'—')}
-        ${metric("実績DPS", f.dps_result!=null?fmtPrice(f.dps_result):'—')}
+        ${metric("時価総額", B(d.market_cap))}
+        ${metric("純資産", B(f.equity))}
+        ${metric("1株純資産(BPS)", f.bps!=null?P(f.bps):'—')}
+        ${metric("1株利益(EPS)", f.eps!=null?P(f.eps):'—')}
+        ${metric("実績DPS", f.dps_result!=null?P(f.dps_result):'—')}
       </div>
       <p class="muted" style="font-size:.8rem;margin-top:10px">
-        財務は開示日 ${f.statement_date||'—'} 時点${f.jquants_stale?'（J-Quants無料枠のため最大約12週遅延）':''}。PBR・利回りは最新終値で再計算。
+        ${ccy==='USD' ? '財務はYahoo由来（最新の四半期/通期）。' : `財務は開示日 ${f.statement_date||'—'} 時点${f.jquants_stale?'（J-Quants無料枠のため最大約12週遅延）':''}。`}PBR・利回りは最新終値で再計算。
       </p>
     </div>`;
 }
