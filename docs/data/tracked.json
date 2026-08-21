@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-21T02:45:54.428190+00:00",
+  "updated_at": "2026-08-21T02:56:09.688946+00:00",
   "entries": {
     "3544::テラ株式会社": {
       "code": "3544",
@@ -8433,6 +8433,44 @@
       "prev_ratio": 0.1536,
       "is_joint": false,
       "doc_id": "S100YY0Q",
+      "first_seen": "2026-08-21",
+      "last_seen": "2026-08-21",
+      "exited": false
+    },
+    "2997::楽天証券株式会社": {
+      "code": "2997",
+      "name": "株式会社ストレージ王",
+      "fund": "楽天証券株式会社",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-08-21",
+      "anchor_price": 1324.0,
+      "est_acq_price": null,
+      "acq_method": "none",
+      "shares_out_edinet": 1854000.0,
+      "holding_ratio": 0.0111,
+      "prev_ratio": 0.0772,
+      "is_joint": false,
+      "doc_id": "S100YXAQ",
+      "first_seen": "2026-08-21",
+      "last_seen": "2026-08-21",
+      "exited": false
+    },
+    "7089::楽天証券株式会社": {
+      "code": "7089",
+      "name": "フォースタートアップス株式会社",
+      "fund": "楽天証券株式会社",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-08-21",
+      "anchor_price": 1529.0,
+      "est_acq_price": null,
+      "acq_method": "none",
+      "shares_out_edinet": 6613200.0,
+      "holding_ratio": 0.0179,
+      "prev_ratio": 0.0632,
+      "is_joint": false,
+      "doc_id": "S100YXAV",
       "first_seen": "2026-08-21",
       "last_seen": "2026-08-21",
       "exited": false
