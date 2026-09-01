@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-01T01:01:51.886237+00:00",
+  "updated_at": "2026-09-01T23:48:30.268278+00:00",
   "entries": {
     "3544::テラ株式会社": {
       "code": "3544",
@@ -207,7 +207,7 @@
       "is_joint": true,
       "doc_id": "S100YZ7I",
       "first_seen": "2026-08-12",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "4320::杉本　惠昭": {
@@ -867,12 +867,12 @@
       "est_acq_price": 1659.6013494517852,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 87561600.0,
-      "holding_ratio": 0.2134,
-      "prev_ratio": 0.2031,
+      "holding_ratio": 0.2238,
+      "prev_ratio": 0.2134,
       "is_joint": false,
-      "doc_id": "S100YXBF",
+      "doc_id": "S100YZ18",
       "first_seen": "2026-08-12",
-      "last_seen": "2026-08-24",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "9627::オアシス": {
@@ -2867,7 +2867,7 @@
       "is_joint": true,
       "doc_id": "S100YZGN",
       "first_seen": "2026-08-13",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "2667::ａｂｃ株式会社": {
@@ -3223,12 +3223,12 @@
       "est_acq_price": 154.09976240962624,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 34630651.0,
-      "holding_ratio": 0.5441,
-      "prev_ratio": 0.5551,
+      "holding_ratio": 0.5212,
+      "prev_ratio": 0.5212,
       "is_joint": false,
-      "doc_id": "S100YY4H",
+      "doc_id": "S100YZY5",
       "first_seen": "2026-08-13",
-      "last_seen": "2026-08-25",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "3905::アースエレメンツ・キャピタル株式会社": {
@@ -3375,12 +3375,12 @@
       "est_acq_price": 0.02740927996865077,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 101753408.0,
-      "holding_ratio": 0.3024,
-      "prev_ratio": 0.3246,
+      "holding_ratio": 0.282,
+      "prev_ratio": 0.3024,
       "is_joint": true,
-      "doc_id": "S100YZ6S",
+      "doc_id": "S100YZF6",
       "first_seen": "2026-08-14",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "2157::アイエックスジーエス・インク（IXGS, Inc.）": {
@@ -3665,7 +3665,7 @@
       "is_joint": false,
       "doc_id": "S100YZNK",
       "first_seen": "2026-08-14",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "4320::光通信株式会社": {
@@ -3874,7 +3874,7 @@
       "is_joint": true,
       "doc_id": "S100YZ84",
       "first_seen": "2026-08-14",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "9327::須田　忠雄": {
@@ -4083,7 +4083,7 @@
       "is_joint": true,
       "doc_id": "S100YZH2",
       "first_seen": "2026-08-17",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "6706::ｆｕｎｄｎｏｔｅ株式会社": {
@@ -4387,7 +4387,7 @@
       "is_joint": true,
       "doc_id": "S100YZNA",
       "first_seen": "2026-08-18",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "3900::牧　寛之": {
@@ -4501,7 +4501,7 @@
       "is_joint": false,
       "doc_id": "S100YZHJ",
       "first_seen": "2026-08-18",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "9399::アタリ　キャピタル　リミテッド（Atari Capital Limited）": {
@@ -4615,7 +4615,7 @@
       "is_joint": true,
       "doc_id": "S100YZAW",
       "first_seen": "2026-08-18",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "6625::グロースパートナーズ株式会社": {
@@ -5009,12 +5009,12 @@
       "est_acq_price": 2.601760176017602,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 8332800.0,
-      "holding_ratio": 0.0567,
-      "prev_ratio": 0.0676,
+      "holding_ratio": 0.0384,
+      "prev_ratio": 0.0567,
       "is_joint": true,
-      "doc_id": "S100YYFO",
+      "doc_id": "S100YZI4",
       "first_seen": "2026-08-19",
-      "last_seen": "2026-08-27",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "4883::エボ　ファンド（Evo Fund）": {
@@ -5161,12 +5161,12 @@
       "est_acq_price": 1676.9999452744487,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 9152316.0,
-      "holding_ratio": 0.3993,
-      "prev_ratio": 0.4013,
+      "holding_ratio": 0.0,
+      "prev_ratio": 0.3993,
       "is_joint": false,
-      "doc_id": "S100YXF3",
+      "doc_id": "S100YY9T",
       "first_seen": "2026-08-19",
-      "last_seen": "2026-08-20",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "4222::エンデバー・ユナイテッド株式会社": {
@@ -5185,7 +5185,7 @@
       "is_joint": false,
       "doc_id": "S100YYF6",
       "first_seen": "2026-08-19",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "5992::株式会社ＤＯＥ５パーセント": {
@@ -6928,12 +6928,12 @@
       "est_acq_price": 8.05,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 1869487.0,
-      "holding_ratio": 0.1383,
-      "prev_ratio": 0.1649,
+      "holding_ratio": 0.1277,
+      "prev_ratio": 0.1383,
       "is_joint": false,
-      "doc_id": "S100YWUA",
+      "doc_id": "S100YYTV",
       "first_seen": "2026-08-21",
-      "last_seen": "2026-08-24",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "5997::ＡＲＮＥ　ＷＯＬＦ　ＫＬＡＵＳ　ＤＥＵＳＳＥＮ": {
@@ -9308,7 +9308,7 @@
       "is_joint": false,
       "doc_id": "S100YZIY",
       "first_seen": "2026-08-25",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "2286::中部　哲二": {
@@ -9382,9 +9382,9 @@
       "holding_ratio": 0.1577,
       "prev_ratio": 0.2032,
       "is_joint": true,
-      "doc_id": "S100YZ5T",
+      "doc_id": "S100YZU8",
       "first_seen": "2026-08-25",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "277A::田中　耕平": {
@@ -10804,12 +10804,12 @@
       "est_acq_price": 5.797101449275362,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 4125700.0,
-      "holding_ratio": 0.3345,
+      "holding_ratio": 0.3346,
       "prev_ratio": 0.3346,
       "is_joint": true,
-      "doc_id": "S100YZ24",
+      "doc_id": "S100YZHQ",
       "first_seen": "2026-08-28",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "3455::三井住友トラスト・アセットマネジメント株式会社": {
@@ -11567,9 +11567,9 @@
       "holding_ratio": 0.0342,
       "prev_ratio": 0.0,
       "is_joint": true,
-      "doc_id": "S100YYPA",
+      "doc_id": "S100YZH4",
       "first_seen": "2026-08-31",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "4170::黒田　直樹": {
@@ -11645,7 +11645,7 @@
       "is_joint": true,
       "doc_id": "S100YZFV",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "2338::Ｂｌａｃｋｗｅｌｌ　Ｃｌｏｕｄ　Ｃｏ．，　Ｌｉｍｉｔｅｄ": {
@@ -11664,7 +11664,7 @@
       "is_joint": false,
       "doc_id": "S100YZPJ",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "4674::有限会社イワサキコーポレーション": {
@@ -11683,7 +11683,7 @@
       "is_joint": false,
       "doc_id": "S100YZH3",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "4819::オールド・ピーク・グループ・リミテッド(Old Peak Group Ltd.)": {
@@ -11702,7 +11702,7 @@
       "is_joint": true,
       "doc_id": "S100YZFD",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "616A::小川　浩二": {
@@ -11721,7 +11721,7 @@
       "is_joint": false,
       "doc_id": "S100YZLZ",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "3281::三菱ＵＦＪ信託銀行株式会社": {
@@ -11740,7 +11740,7 @@
       "is_joint": true,
       "doc_id": "S100YYRZ",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "3290::三菱ＵＦＪ信託銀行株式会社": {
@@ -11759,7 +11759,7 @@
       "is_joint": true,
       "doc_id": "S100YYS1",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "6455::株式会社三菱ＵＦＪ銀行": {
@@ -11778,7 +11778,7 @@
       "is_joint": true,
       "doc_id": "S100YYS3",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "8742::日産証券グループ株式会社": {
@@ -11797,7 +11797,7 @@
       "is_joint": false,
       "doc_id": "S100YYTH",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "5162::株式会社タマス": {
@@ -11816,7 +11816,7 @@
       "is_joint": false,
       "doc_id": "S100YZM9",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "3133::中川　龍太郎": {
@@ -11835,7 +11835,7 @@
       "is_joint": false,
       "doc_id": "S100YZLS",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "4627::ナトコ共栄会　理事長　大鳥居　清和": {
@@ -11854,7 +11854,7 @@
       "is_joint": false,
       "doc_id": "S100YZIB",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "7138::エボ　ファンド（Evo Fund）": {
@@ -11873,7 +11873,7 @@
       "is_joint": true,
       "doc_id": "S100YZAG",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "4461::片山 晃": {
@@ -11892,7 +11892,7 @@
       "is_joint": false,
       "doc_id": "S100YZKM",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "7061::アーカス・インベストメント・リミテッド": {
@@ -11911,7 +11911,7 @@
       "is_joint": false,
       "doc_id": "S100YZME",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "7975::有限会社　新居浜ビジネスセンター": {
@@ -11930,7 +11930,7 @@
       "is_joint": false,
       "doc_id": "S100YZHG",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "3133::松村　康平": {
@@ -11949,7 +11949,7 @@
       "is_joint": false,
       "doc_id": "S100YZMH",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "1826::佐田建設伸佐会持株会　理事長　平方　宏": {
@@ -11968,7 +11968,7 @@
       "is_joint": false,
       "doc_id": "S100YYD2",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "2961::株式会社マルゼン": {
@@ -11987,7 +11987,7 @@
       "is_joint": true,
       "doc_id": "S100YNSO",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "3667::エボ　ファンド（Evo Fund）": {
@@ -12006,7 +12006,7 @@
       "is_joint": true,
       "doc_id": "S100YZCY",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "3189::エボ　ファンド（Evo Fund）": {
@@ -12025,7 +12025,7 @@
       "is_joint": true,
       "doc_id": "S100YZDR",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "245A::青柳　誠希": {
@@ -12044,7 +12044,7 @@
       "is_joint": true,
       "doc_id": "S100YZGA",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "616A::青山商事株式会社": {
@@ -12063,7 +12063,7 @@
       "is_joint": false,
       "doc_id": "S100YYN5",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "4076::富山　広己": {
@@ -12082,7 +12082,7 @@
       "is_joint": true,
       "doc_id": "S100YZFH",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "6408::成成株式会社": {
@@ -12101,7 +12101,7 @@
       "is_joint": true,
       "doc_id": "S100YZH1",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "4404::株式会社ＤＯＥ５パーセント": {
@@ -12120,7 +12120,7 @@
       "is_joint": true,
       "doc_id": "S100YYL8",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "9115::ゼナーアセットマネジメントエルエルピー": {
@@ -12139,7 +12139,7 @@
       "is_joint": false,
       "doc_id": "S100YYTY",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "3765::ＳＯＮ　Ｆｉｎａｎｃｉａｌ合同会社": {
@@ -12158,7 +12158,7 @@
       "is_joint": true,
       "doc_id": "S100YXCU",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "8934::伊藤忠商事株式会社": {
@@ -12177,7 +12177,7 @@
       "is_joint": true,
       "doc_id": "S100YZKD",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "4058::株式会社サムライキャピタル": {
@@ -12196,7 +12196,7 @@
       "is_joint": true,
       "doc_id": "S100YZIA",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "5571::西條　晋一": {
@@ -12215,7 +12215,7 @@
       "is_joint": true,
       "doc_id": "S100YZLO",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "7272::シルチェスター": {
@@ -12234,7 +12234,7 @@
       "is_joint": false,
       "doc_id": "S100YZKG",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "7523::ＭＡＧＯ　ＣＲＥＡＴＩＯＮ株式会社": {
@@ -12253,7 +12253,7 @@
       "is_joint": false,
       "doc_id": "S100YZHI",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "9424::三田　聖二": {
@@ -12272,7 +12272,7 @@
       "is_joint": false,
       "doc_id": "S100YZ4K",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "332A::峯村　竜太": {
@@ -12291,7 +12291,7 @@
       "is_joint": false,
       "doc_id": "S100YXQ6",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "2338::ハイツ・キャピタル・マネジメント・インク(Heights Capital Management, Inc.)": {
@@ -12310,7 +12310,7 @@
       "is_joint": false,
       "doc_id": "S100YZM5",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
       "exited": false
     },
     "7063::KANDB INVESTMENT LLCDirector　畑瀬　匡甫": {
@@ -12329,7 +12329,463 @@
       "is_joint": false,
       "doc_id": "S100YZH0",
       "first_seen": "2026-09-01",
-      "last_seen": "2026-09-01",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "5726::三井住友トラスト・アセットマネジメント株式会社": {
+      "code": "5726",
+      "name": "株式会社大阪チタニウムテクノロジーズ",
+      "fund": "三井住友トラスト・アセットマネジメント株式会社",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 2700.0,
+      "est_acq_price": 2722.9648930334615,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 36800000.0,
+      "holding_ratio": 0.0198,
+      "prev_ratio": 0.0222,
+      "is_joint": true,
+      "doc_id": "S100YZ9R",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "7818::ニューバーガー・バーマン株式会社": {
+      "code": "7818",
+      "name": "株式会社トランザクション",
+      "fund": "ニューバーガー・バーマン株式会社",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 1169.0,
+      "est_acq_price": null,
+      "acq_method": "none",
+      "shares_out_edinet": 57550800.0,
+      "holding_ratio": 0.0853,
+      "prev_ratio": 0.0864,
+      "is_joint": true,
+      "doc_id": "S100YZSR",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "2721::エボ　ファンド（Evo Fund）": {
+      "code": "2721",
+      "name": "株式会社ジェイホールディングス",
+      "fund": "エボ　ファンド（Evo Fund）",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 110.0,
+      "est_acq_price": 0.1707945861338735,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 16578500.0,
+      "holding_ratio": 0.2099,
+      "prev_ratio": 0.221,
+      "is_joint": true,
+      "doc_id": "S100YZJM",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "7037::株式会社カナモリコーポレーション": {
+      "code": "7037",
+      "name": "株式会社テノ.ホールディングス",
+      "fund": "株式会社カナモリコーポレーション",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 815.0,
+      "est_acq_price": 678.2135154565061,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 4701300.0,
+      "holding_ratio": 0.0592,
+      "prev_ratio": 0.0704,
+      "is_joint": false,
+      "doc_id": "S100YZIT",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "9788::西山 由之": {
+      "code": "9788",
+      "name": "株式会社ナック",
+      "fund": "西山 由之",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 524.0,
+      "est_acq_price": 287.7811869981962,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 46613500.0,
+      "holding_ratio": 0.0097,
+      "prev_ratio": 0.0093,
+      "is_joint": true,
+      "doc_id": "S100YZQ9",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "6033::佐藤　昌平": {
+      "code": "6033",
+      "name": "株式会社エクストリーム",
+      "fund": "佐藤　昌平",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 1688.0,
+      "est_acq_price": 73.26429030186256,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 5508676.0,
+      "holding_ratio": 0.1131,
+      "prev_ratio": 0.3981,
+      "is_joint": true,
+      "doc_id": "S100YZHD",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "3777::ＯＲＣＨＩＤ　ＰＬＵＳ　ＰＴＥ．　ＬＴＤ．": {
+      "code": "3777",
+      "name": "株式会社環境フレンドリーホールディングス",
+      "fund": "ＯＲＣＨＩＤ　ＰＬＵＳ　ＰＴＥ．　ＬＴＤ．",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 48.0,
+      "est_acq_price": 29.473503167027893,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 371231280.0,
+      "holding_ratio": 0.3046,
+      "prev_ratio": 0.3125,
+      "is_joint": false,
+      "doc_id": "S100YZHA",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "407A::大豊建設株式会社": {
+      "code": "407A",
+      "name": "株式会社ＵＮＩＣＯＮホールディングス",
+      "fund": "大豊建設株式会社",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 949.0,
+      "est_acq_price": 879.9999762206675,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 9894900.0,
+      "holding_ratio": 0.17,
+      "prev_ratio": null,
+      "is_joint": false,
+      "doc_id": "S100YZMC",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "2329::植村　久子": {
+      "code": "2329",
+      "name": "株式会社　東北新社",
+      "fund": "植村　久子",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 505.0,
+      "est_acq_price": 0.9701040161257507,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 140206002.0,
+      "holding_ratio": 0.0952,
+      "prev_ratio": 0.2079,
+      "is_joint": false,
+      "doc_id": "S100YY68",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "4960::Ｓｕｄｉａｎ　Ｉｎｖｅｓｔｍｅｎｔ　Ｃｏ．　Ｌｉｍｉｔｅｄ": {
+      "code": "4960",
+      "name": "ケミプロ化成株式会社",
+      "fund": "Ｓｕｄｉａｎ　Ｉｎｖｅｓｔｍｅｎｔ　Ｃｏ．　Ｌｉｍｉｔｅｄ",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 552.0,
+      "est_acq_price": 500.49985578309776,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 16623613.0,
+      "holding_ratio": 0.2086,
+      "prev_ratio": null,
+      "is_joint": false,
+      "doc_id": "S100YXYN",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "192A::藤井　一郎": {
+      "code": "192A",
+      "name": "インテグループ株式会社",
+      "fund": "藤井　一郎",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 1258.0,
+      "est_acq_price": 6.942515967786726,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 2186000.0,
+      "holding_ratio": 0.3295,
+      "prev_ratio": 0.3513,
+      "is_joint": false,
+      "doc_id": "S100YZVT",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "7523::株式会社Orsay": {
+      "code": "7523",
+      "name": "アールビバン株式会社",
+      "fund": "株式会社Orsay",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 1878.0,
+      "est_acq_price": 1900.0,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 9152316.0,
+      "holding_ratio": 0.5973,
+      "prev_ratio": 0.5973,
+      "is_joint": true,
+      "doc_id": "S100YZXE",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "6834::細江由紀子": {
+      "code": "6834",
+      "name": "株式会社精工技研",
+      "fund": "細江由紀子",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 5630.0,
+      "est_acq_price": 2834.8176991150444,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 9333654.0,
+      "holding_ratio": 0.0303,
+      "prev_ratio": 0.0303,
+      "is_joint": true,
+      "doc_id": "S100YZOR",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "4477::牧　寛之": {
+      "code": "4477",
+      "name": "BASE株式会社",
+      "fund": "牧　寛之",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 365.0,
+      "est_acq_price": 416.58690596446525,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 117937657.0,
+      "holding_ratio": 0.2053,
+      "prev_ratio": 0.2053,
+      "is_joint": false,
+      "doc_id": "S100YZUK",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "3490::マッコーリー　バンク　リミテッド (Macquarie Bank Limited)": {
+      "code": "3490",
+      "name": "株式会社アズ企画設計",
+      "fund": "マッコーリー　バンク　リミテッド (Macquarie Bank Limited)",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 3030.0,
+      "est_acq_price": 34.011432414256895,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 1521500.0,
+      "holding_ratio": 0.1636,
+      "prev_ratio": 0.1986,
+      "is_joint": false,
+      "doc_id": "S100YZIF",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "9127::ＧＬＯＢＡＬ　ＭＡＮＡＧＥＭＥＮＴ　ＰＡＲＴＮＥＲＳ　ＬＩＭＩＴＥＤ": {
+      "code": "9127",
+      "name": "玉井商船株式会社",
+      "fund": "ＧＬＯＢＡＬ　ＭＡＮＡＧＥＭＥＮＴ　ＰＡＲＴＮＥＲＳ　ＬＩＭＩＴＥＤ",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 3495.0,
+      "est_acq_price": 3128.052930056711,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 1932000.0,
+      "holding_ratio": 0.0821,
+      "prev_ratio": 0.0715,
+      "is_joint": false,
+      "doc_id": "S100YYU7",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "407A::エンデバー・ユナイテッド株式会社": {
+      "code": "407A",
+      "name": "株式会社ＵＮＩＣＯＮホールディングス",
+      "fund": "エンデバー・ユナイテッド株式会社",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 949.0,
+      "est_acq_price": 575.9069359912504,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 9894900.0,
+      "holding_ratio": 0.23,
+      "prev_ratio": 0.4,
+      "is_joint": false,
+      "doc_id": "S100YW5F",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "4170::株式会社ＳＢＩ証券": {
+      "code": "4170",
+      "name": "株式会社Ｋａｉｚｅｎ　Ｐｌａｔｆｏｒｍ",
+      "fund": "株式会社ＳＢＩ証券",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 138.0,
+      "est_acq_price": null,
+      "acq_method": "none",
+      "shares_out_edinet": 17103711.0,
+      "holding_ratio": 0.0985,
+      "prev_ratio": 0.1107,
+      "is_joint": false,
+      "doc_id": "S100YZ07",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "9557::モノフル・ピーティーイー・リミテッド（Monoful Pte. Ltd.）": {
+      "code": "9557",
+      "name": "株式会社エアークローゼット",
+      "fund": "モノフル・ピーティーイー・リミテッド（Monoful Pte. Ltd.）",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 240.0,
+      "est_acq_price": null,
+      "acq_method": "none",
+      "shares_out_edinet": 8284200.0,
+      "holding_ratio": 0.0,
+      "prev_ratio": 0.1001,
+      "is_joint": false,
+      "doc_id": "S100YZSA",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "3997::浅見　勝弘": {
+      "code": "3997",
+      "name": "株式会社トレードワークス",
+      "fund": "浅見　勝弘",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 391.0,
+      "est_acq_price": 1.9154733869294138,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 41042000.0,
+      "holding_ratio": 0.27,
+      "prev_ratio": 0.2879,
+      "is_joint": false,
+      "doc_id": "S100YZVG",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "617A::住吉　秀一": {
+      "code": "617A",
+      "name": "株式会社レイシャス",
+      "fund": "住吉　秀一",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 2679.0,
+      "est_acq_price": 9.090021956574775,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 550000.0,
+      "holding_ratio": 0.7453,
+      "prev_ratio": null,
+      "is_joint": true,
+      "doc_id": "S100YZKW",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "6897::牧　寛之": {
+      "code": "6897",
+      "name": "株式会社ツインバード",
+      "fund": "牧　寛之",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 670.0,
+      "est_acq_price": 628.1886247208722,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 10906300.0,
+      "holding_ratio": 0.0698,
+      "prev_ratio": null,
+      "is_joint": false,
+      "doc_id": "S100YZYK",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "5131::ＳＢＩインベストメント株式会社": {
+      "code": "5131",
+      "name": "リンカーズ株式会社",
+      "fund": "ＳＢＩインベストメント株式会社",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 123.0,
+      "est_acq_price": 551.0,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 13897000.0,
+      "holding_ratio": 0.0914,
+      "prev_ratio": 0.0914,
+      "is_joint": true,
+      "doc_id": "S100YZ8M",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
+      "exited": false
+    },
+    "6572::髙橋　知道": {
+      "code": "6572",
+      "name": "オープングループ株式会社",
+      "fund": "髙橋　知道",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-01",
+      "anchor_price": 292.0,
+      "est_acq_price": null,
+      "acq_method": "none",
+      "shares_out_edinet": 63268990.0,
+      "holding_ratio": 0.2987,
+      "prev_ratio": 0.3746,
+      "is_joint": true,
+      "doc_id": "S100YZY4",
+      "first_seen": "2026-09-02",
+      "last_seen": "2026-09-02",
       "exited": false
     }
   }
