@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-20T23:51:58.074026+00:00",
+  "updated_at": "2026-09-22T02:20:51.553823+00:00",
   "entries": {
     "3544::テラ株式会社": {
       "code": "3544",
@@ -302,7 +302,7 @@
       "is_joint": true,
       "doc_id": "S100Z2HV",
       "first_seen": "2026-08-12",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "3944::株式会社アダチメディカルレンタルリース": {
@@ -549,7 +549,7 @@
       "is_joint": false,
       "doc_id": "S100Z286",
       "first_seen": "2026-08-12",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "2413::オアシス": {
@@ -943,12 +943,12 @@
       "est_acq_price": 2706.4993802384606,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 37149400.0,
-      "holding_ratio": 0.0785,
-      "prev_ratio": 0.0549,
+      "holding_ratio": 0.1091,
+      "prev_ratio": 0.0785,
       "is_joint": false,
-      "doc_id": "S100Z2CJ",
+      "doc_id": "S100Z2IH",
       "first_seen": "2026-08-12",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "7745::ストラテジックキャピタル": {
@@ -3777,9 +3777,9 @@
       "holding_ratio": 0.1398,
       "prev_ratio": 0.1524,
       "is_joint": true,
-      "doc_id": "S100Z2RC",
+      "doc_id": "S100Z3A4",
       "first_seen": "2026-08-17",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "8141::サンド　グローブ　キャピタル　マネジメント　エルエルピー（Sand Grove Capital Management LLP）": {
@@ -3950,7 +3950,7 @@
       "is_joint": true,
       "doc_id": "S100Z35Y",
       "first_seen": "2026-08-17",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "6706::ｆｕｎｄｎｏｔｅ株式会社": {
@@ -4083,7 +4083,7 @@
       "is_joint": false,
       "doc_id": "S100Z34P",
       "first_seen": "2026-08-18",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "6237::Ｃｈａｒｏｎ　Ｆｉｎａｎｃｅ　ＧｍｂＨ": {
@@ -4364,11 +4364,11 @@
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 8077774.0,
       "holding_ratio": 0.3359,
-      "prev_ratio": 0.3621,
+      "prev_ratio": 0.3359,
       "is_joint": false,
-      "doc_id": "S100Z2T2",
+      "doc_id": "S100Z398",
       "first_seen": "2026-08-18",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "9399::アタリ　キャピタル　リミテッド（Atari Capital Limited）": {
@@ -4634,7 +4634,7 @@
       "is_joint": false,
       "doc_id": "S100Z2HE",
       "first_seen": "2026-08-19",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "8050::三光起業株式会社": {
@@ -4895,12 +4895,12 @@
       "est_acq_price": 0.09170037600991,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 105124098.0,
-      "holding_ratio": 0.1028,
-      "prev_ratio": 0.1423,
+      "holding_ratio": 0.0902,
+      "prev_ratio": 0.1028,
       "is_joint": true,
-      "doc_id": "S100Z2PI",
+      "doc_id": "S100Z313",
       "first_seen": "2026-08-19",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "7058::株式会社あっとプラニング": {
@@ -5261,7 +5261,7 @@
       "is_joint": true,
       "doc_id": "S100Z3AI",
       "first_seen": "2026-08-20",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "9962::JPモルガン・アセット・マネジメント株式会社": {
@@ -5299,7 +5299,7 @@
       "is_joint": true,
       "doc_id": "S100Z3AL",
       "first_seen": "2026-08-20",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "5838::JPモルガン・アセット・マネジメント株式会社": {
@@ -5375,7 +5375,7 @@
       "is_joint": true,
       "doc_id": "S100Z38Q",
       "first_seen": "2026-08-20",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "1780::株式会社信州エンタープライズ　代表取締役　中島　光孝": {
@@ -6510,12 +6510,12 @@
       "est_acq_price": 2331.881334867966,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 38902785.0,
-      "holding_ratio": 0.039,
-      "prev_ratio": 0.0392,
+      "holding_ratio": 0.0384,
+      "prev_ratio": 0.039,
       "is_joint": true,
-      "doc_id": "S100Z2TT",
+      "doc_id": "S100Z38J",
       "first_seen": "2026-08-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "8818::ウエリントン・マネージメント・カンパニー・エルエルピー（Wellington Management Company LLP）": {
@@ -6629,7 +6629,7 @@
       "is_joint": true,
       "doc_id": "S100Z2XN",
       "first_seen": "2026-08-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "5936::東洋シヤッター取引先持株会　理事長　中野　光二": {
@@ -8548,7 +8548,7 @@
       "is_joint": false,
       "doc_id": "S100Z2DT",
       "first_seen": "2026-08-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "4658::三井住友ＤＳアセットマネジメント株式会社": {
@@ -9726,7 +9726,7 @@
       "is_joint": true,
       "doc_id": "S100Z2RZ",
       "first_seen": "2026-08-26",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "2334::吉田　直人": {
@@ -10068,7 +10068,7 @@
       "is_joint": true,
       "doc_id": "S100Z2EH",
       "first_seen": "2026-08-26",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "6807::シンプレクス・アセット・マネジメント株式会社": {
@@ -10087,7 +10087,7 @@
       "is_joint": false,
       "doc_id": "S100Z2JI",
       "first_seen": "2026-08-26",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "4178::株式会社Ｏｒｃｈｅｓｔｒａ　Ｈｏｌｄｉｎｇｓ": {
@@ -10389,9 +10389,9 @@
       "holding_ratio": 0.213,
       "prev_ratio": 0.213,
       "is_joint": true,
-      "doc_id": "S100Z1YE",
+      "doc_id": "S100Z34U",
       "first_seen": "2026-08-27",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "2186::ＮＥＸＣＯＲＥ株式会社": {
@@ -10408,9 +10408,9 @@
       "holding_ratio": 0.213,
       "prev_ratio": 0.213,
       "is_joint": true,
-      "doc_id": "S100Z1YF",
+      "doc_id": "S100Z34Y",
       "first_seen": "2026-08-27",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "9274::王子ホールディングス株式会社": {
@@ -11417,7 +11417,7 @@
       "is_joint": false,
       "doc_id": "S100Z36F",
       "first_seen": "2026-08-31",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "3944::ＡＲＮＥ　ＷＯＬＦ　ＫＬＡＵＳ　ＤＥＵＳＳＥＮ": {
@@ -12272,7 +12272,7 @@
       "is_joint": false,
       "doc_id": "S100Z2HN",
       "first_seen": "2026-09-02",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "9788::西山 由之": {
@@ -13013,7 +13013,7 @@
       "is_joint": true,
       "doc_id": "S100Z2YC",
       "first_seen": "2026-09-04",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "3063::新田　二郎": {
@@ -13203,7 +13203,7 @@
       "is_joint": true,
       "doc_id": "S100Z3AJ",
       "first_seen": "2026-09-04",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "5857::JPモルガン・アセット・マネジメント株式会社": {
@@ -16148,7 +16148,7 @@
       "is_joint": true,
       "doc_id": "S100Z34W",
       "first_seen": "2026-09-08",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "8961::野村證券株式会社": {
@@ -16181,12 +16181,12 @@
       "est_acq_price": 936.9487807257887,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 183660417.0,
-      "holding_ratio": 0.0237,
+      "holding_ratio": 0.0242,
       "prev_ratio": 0.0237,
       "is_joint": true,
-      "doc_id": "S100Z30Y",
+      "doc_id": "S100Z357",
       "first_seen": "2026-09-08",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "9425::野村證券株式会社": {
@@ -16490,7 +16490,7 @@
       "is_joint": true,
       "doc_id": "S100Z3EE",
       "first_seen": "2026-09-08",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "6071::石坂　茂": {
@@ -17530,12 +17530,12 @@
       "est_acq_price": 2.989937106918239,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 8861100.0,
-      "holding_ratio": 0.3375,
-      "prev_ratio": 0.3499,
+      "holding_ratio": 0.3257,
+      "prev_ratio": 0.3375,
       "is_joint": false,
-      "doc_id": "S100Z2SY",
+      "doc_id": "S100Z3BQ",
       "first_seen": "2026-09-10",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "4260::ＳＯＬＴＥＣ　ＩＮＶＥＳＴＭＥＮＴＳ　ＰＴＥ．　ＬＴＤ．": {
@@ -18219,7 +18219,7 @@
       "is_joint": true,
       "doc_id": "S100Z2FE",
       "first_seen": "2026-09-15",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "8968::福岡地所株式会社": {
@@ -18542,7 +18542,7 @@
       "is_joint": false,
       "doc_id": "S100Z2YW",
       "first_seen": "2026-09-16",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "194A::Ｊ－ＳＴＡＲ　Ｎｏ．３　ＳＳ　ＧＰ，　Ｌｔｄ．ＤｉｒｅｃｔｏｒＳａｍｏｎ　Ｓｕｗａｎｎａｒａｔ": {
@@ -19300,9 +19300,9 @@
       "holding_ratio": 0.0852,
       "prev_ratio": 0.0852,
       "is_joint": true,
-      "doc_id": "S100Z2FX",
+      "doc_id": "S100Z33G",
       "first_seen": "2026-09-18",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "4112::株式会社ＤＯＥ５パーセント": {
@@ -19601,12 +19601,12 @@
       "est_acq_price": 2.8091666666666666,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 174042851.0,
-      "holding_ratio": 0.2181,
-      "prev_ratio": 0.2272,
+      "holding_ratio": 0.0444,
+      "prev_ratio": 0.2181,
       "is_joint": false,
-      "doc_id": "S100Z28Z",
+      "doc_id": "S100YPPZ",
       "first_seen": "2026-09-18",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "3787::秋元　利規": {
@@ -19623,9 +19623,9 @@
       "holding_ratio": 0.0,
       "prev_ratio": 0.0887,
       "is_joint": false,
-      "doc_id": "S100Z2TL",
+      "doc_id": "S100Z3EQ",
       "first_seen": "2026-09-18",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "3611::松岡　典之": {
@@ -19701,7 +19701,7 @@
       "is_joint": true,
       "doc_id": "S100Z35I",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "6638::シュローダー・インベストメント・マネジメント株式会社": {
@@ -19720,7 +19720,7 @@
       "is_joint": false,
       "doc_id": "S100Z2SQ",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "1904::大成温調取引先持株会　理事長　高橋　洋": {
@@ -19739,7 +19739,7 @@
       "is_joint": false,
       "doc_id": "S100Z2Z5",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "2978::中村真広": {
@@ -19758,7 +19758,7 @@
       "is_joint": true,
       "doc_id": "S100Z387",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "3577::ミソノサービス株式会社": {
@@ -19777,7 +19777,7 @@
       "is_joint": false,
       "doc_id": "S100Z33L",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "7477::有限会社ドリーム・ワークス": {
@@ -19796,7 +19796,7 @@
       "is_joint": false,
       "doc_id": "S100Z2JU",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "3054::玉田　宏一": {
@@ -19815,7 +19815,7 @@
       "is_joint": false,
       "doc_id": "S100Z3AC",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "5131::加福　秀亙": {
@@ -19834,7 +19834,7 @@
       "is_joint": false,
       "doc_id": "S100Z3BO",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "1893::JPモルガン・アセット・マネジメント株式会社": {
@@ -19853,7 +19853,7 @@
       "is_joint": true,
       "doc_id": "S100Z3AG",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "2585::JPモルガン・アセット・マネジメント株式会社": {
@@ -19872,7 +19872,7 @@
       "is_joint": true,
       "doc_id": "S100Z3AH",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "8136::JPモルガン・アセット・マネジメント株式会社": {
@@ -19891,7 +19891,7 @@
       "is_joint": true,
       "doc_id": "S100Z3AM",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "6269::JPモルガン・アセット・マネジメント株式会社": {
@@ -19910,7 +19910,7 @@
       "is_joint": true,
       "doc_id": "S100Z3AK",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "1812::JPモルガン・アセット・マネジメント株式会社": {
@@ -19929,7 +19929,7 @@
       "is_joint": true,
       "doc_id": "S100Z38P",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "145A::大和企業投資株式会社": {
@@ -19948,7 +19948,7 @@
       "is_joint": false,
       "doc_id": "S100Z35A",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "3974::モダンパス合同会社": {
@@ -19967,7 +19967,7 @@
       "is_joint": false,
       "doc_id": "S100Z2AV",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "7691::ジャフコ グループ株式会社": {
@@ -19986,7 +19986,7 @@
       "is_joint": false,
       "doc_id": "S100Z22H",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "3185::ＲＩＺＡＰグループ株式会社": {
@@ -20005,7 +20005,7 @@
       "is_joint": false,
       "doc_id": "S100Z2YN",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "3989::ＳＢＩアセットマネジメント株式会社": {
@@ -20024,7 +20024,7 @@
       "is_joint": false,
       "doc_id": "S100Z38X",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "215A::ノルウェー銀行(Norges Bank)": {
@@ -20043,7 +20043,7 @@
       "is_joint": false,
       "doc_id": "S100Z38K",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "5125::光通信株式会社": {
@@ -20062,7 +20062,7 @@
       "is_joint": true,
       "doc_id": "S100Z28T",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "9629::光通信株式会社": {
@@ -20081,7 +20081,7 @@
       "is_joint": true,
       "doc_id": "S100Z28U",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "4320::日本電気株式会社": {
@@ -20100,7 +20100,7 @@
       "is_joint": false,
       "doc_id": "S100Z2Q2",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "3571::スタイレム株式会社": {
@@ -20119,7 +20119,7 @@
       "is_joint": true,
       "doc_id": "S100Z2F3",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     },
     "9353::山本裕治": {
@@ -20138,7 +20138,7 @@
       "is_joint": false,
       "doc_id": "S100Z3ET",
       "first_seen": "2026-09-21",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-22",
       "exited": false
     }
   }
