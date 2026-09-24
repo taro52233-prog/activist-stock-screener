@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-23T01:48:37.103333+00:00",
+  "updated_at": "2026-09-24T01:51:02.775645+00:00",
   "entries": {
     "3544::テラ株式会社": {
       "code": "3544",
@@ -414,9 +414,9 @@
       "holding_ratio": 0.2725,
       "prev_ratio": 0.2725,
       "is_joint": false,
-      "doc_id": "S100Z2WI",
+      "doc_id": "S100Z3JP",
       "first_seen": "2026-08-12",
-      "last_seen": "2026-09-21",
+      "last_seen": "2026-09-24",
       "exited": false
     },
     "6877::小原　康嗣": {
@@ -20120,6 +20120,25 @@
       "doc_id": "S100Z3ET",
       "first_seen": "2026-09-21",
       "last_seen": "2026-09-22",
+      "exited": false
+    },
+    "1332::野村證券株式会社": {
+      "code": "1332",
+      "name": "株式会社ニッスイ",
+      "fund": "野村證券株式会社",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-09-24",
+      "anchor_price": 1155.5,
+      "est_acq_price": 134365.45049674547,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 305265402.0,
+      "holding_ratio": 0.0,
+      "prev_ratio": 0.0042,
+      "is_joint": true,
+      "doc_id": "S100Z3FI",
+      "first_seen": "2026-09-24",
+      "last_seen": "2026-09-24",
       "exited": false
     }
   }
