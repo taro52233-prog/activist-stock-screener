@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-12T02:51:32.751003+00:00",
+  "updated_at": "2026-10-13T04:39:02.435287+00:00",
   "entries": {
     "3544::テラ株式会社": {
       "code": "3544",
@@ -264,7 +264,7 @@
       "is_joint": true,
       "doc_id": "S100Z6YG",
       "first_seen": "2026-08-12",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "3612::寺井　秀藏": {
@@ -1190,12 +1190,12 @@
       "est_acq_price": 3080.9432637941118,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 38916561.0,
-      "holding_ratio": 0.1215,
-      "prev_ratio": 0.1318,
+      "holding_ratio": 0.1207,
+      "prev_ratio": 0.111,
       "is_joint": false,
-      "doc_id": "S100YWB3",
+      "doc_id": "S100Z6ZS",
       "first_seen": "2026-08-12",
-      "last_seen": "2026-08-21",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "3765::ストラテジックキャピタル": {
@@ -2772,7 +2772,7 @@
       "is_joint": false,
       "doc_id": "S100Z7DJ",
       "first_seen": "2026-08-13",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "3905::アースエレメンツ・キャピタル株式会社": {
@@ -2867,7 +2867,7 @@
       "is_joint": true,
       "doc_id": "S100Z6RX",
       "first_seen": "2026-08-14",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "268A::アトム・インベストメント・エルピー（Atom Investment, L.P.）": {
@@ -3760,7 +3760,7 @@
       "is_joint": false,
       "doc_id": "S100Z6E4",
       "first_seen": "2026-08-18",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "6237::Ｃｈａｒｏｎ　Ｆｉｎａｎｃｅ　ＧｍｂＨ": {
@@ -4634,7 +4634,7 @@
       "is_joint": true,
       "doc_id": "S100Z6M6",
       "first_seen": "2026-08-19",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "5199::不二ラテックス共栄会　理事長　田中　眞介": {
@@ -7807,7 +7807,7 @@
       "is_joint": false,
       "doc_id": "S100Z7D0",
       "first_seen": "2026-08-21",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "2997::楽天証券株式会社": {
@@ -9289,7 +9289,7 @@
       "is_joint": true,
       "doc_id": "S100Z750",
       "first_seen": "2026-08-26",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "7444::株式会社西松屋チェーン": {
@@ -10595,12 +10595,12 @@
       "est_acq_price": 13912.570099460543,
       "acq_method": "funds_div_shares",
       "shares_out_edinet": 191152811.0,
-      "holding_ratio": 0.1188,
-      "prev_ratio": 0.1186,
+      "holding_ratio": 0.1278,
+      "prev_ratio": 0.1188,
       "is_joint": true,
-      "doc_id": "S100Z5UP",
+      "doc_id": "S100Z6RQ",
       "first_seen": "2026-08-28",
-      "last_seen": "2026-10-08",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "7063::アークサービス株式会社": {
@@ -10999,7 +10999,7 @@
       "is_joint": true,
       "doc_id": "S100Z6WS",
       "first_seen": "2026-08-31",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "9245::横川　尚佳": {
@@ -12139,7 +12139,7 @@
       "is_joint": false,
       "doc_id": "S100Z70F",
       "first_seen": "2026-09-02",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "3490::マッコーリー　バンク　リミテッド (Macquarie Bank Limited)": {
@@ -14001,7 +14001,7 @@
       "is_joint": false,
       "doc_id": "S100Z7DP",
       "first_seen": "2026-09-07",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "615A::舩越　裕勝": {
@@ -17440,7 +17440,7 @@
       "is_joint": false,
       "doc_id": "S100Z6MK",
       "first_seen": "2026-09-11",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "5034::三菱商事株式会社": {
@@ -17915,7 +17915,7 @@
       "is_joint": true,
       "doc_id": "S100Z5NF",
       "first_seen": "2026-09-16",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "4576::日髙　有一": {
@@ -18314,7 +18314,7 @@
       "is_joint": false,
       "doc_id": "S100Z76V",
       "first_seen": "2026-09-16",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "194A::Ｊ－ＳＴＡＲ　Ｎｏ．３　ＪＦ　ＧＰ，　Ｌｔｄ．ＤｉｒｅｃｔｏｒＪｏｈｎ　Ｎｏｒｒｉｓ　Ｆｉｎｌａｙｓｏｎ": {
@@ -20423,7 +20423,7 @@
       "is_joint": true,
       "doc_id": "S100Z7B1",
       "first_seen": "2026-09-25",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "3237::和德投資有限公司": {
@@ -23900,7 +23900,7 @@
       "is_joint": true,
       "doc_id": "S100Z59N",
       "first_seen": "2026-09-30",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "4436::ＳＢＩインベストメント株式会社": {
@@ -23976,7 +23976,7 @@
       "is_joint": true,
       "doc_id": "S100Z6DM",
       "first_seen": "2026-10-01",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "5386::鶴見　哲": {
@@ -25078,7 +25078,7 @@
       "is_joint": true,
       "doc_id": "S100Z7BR",
       "first_seen": "2026-10-05",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "247A::龍川　誠": {
@@ -27168,7 +27168,7 @@
       "is_joint": true,
       "doc_id": "S100Z7AE",
       "first_seen": "2026-10-08",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "4180::ベイリー・ギフォード・アンド・カンパニー(Baillie Gifford &amp; Co)": {
@@ -28878,7 +28878,7 @@
       "is_joint": false,
       "doc_id": "S100Z6SK",
       "first_seen": "2026-10-09",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "4893::岡三証券株式会社": {
@@ -28897,7 +28897,7 @@
       "is_joint": false,
       "doc_id": "S100Z6DJ",
       "first_seen": "2026-10-09",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "2498::パシフィックコンサルタンツ株式会社": {
@@ -28916,7 +28916,7 @@
       "is_joint": false,
       "doc_id": "S100Z6IE",
       "first_seen": "2026-10-09",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "3161::株式会社Ａｓａｈｉｃｈｏ": {
@@ -28935,7 +28935,7 @@
       "is_joint": false,
       "doc_id": "S100Z773",
       "first_seen": "2026-10-09",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "4022::ラサ工業取引先持株会　理事長　船橋　光和": {
@@ -29180,9 +29180,9 @@
       "holding_ratio": 0.0818,
       "prev_ratio": null,
       "is_joint": false,
-      "doc_id": "S100Z71J",
+      "doc_id": "S100Z7CE",
       "first_seen": "2026-10-09",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "5838::株式会社みずほ銀行": {
@@ -29235,11 +29235,11 @@
       "acq_method": "none",
       "shares_out_edinet": 20209104.0,
       "holding_ratio": 0.0555,
-      "prev_ratio": 0.049,
+      "prev_ratio": 0.0555,
       "is_joint": true,
-      "doc_id": "S100Z6MY",
+      "doc_id": "S100Z76K",
       "first_seen": "2026-10-09",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "6616::カナメ・キャピタル・エルピー（Ｋａｎａｍｅ　Ｃａｐｉｔａｌ，Ｌ．Ｐ．）": {
@@ -29256,9 +29256,9 @@
       "holding_ratio": 0.1,
       "prev_ratio": 0.1116,
       "is_joint": false,
-      "doc_id": "S100Z6VF",
+      "doc_id": "S100Z791",
       "first_seen": "2026-10-09",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "7740::エフィッシモ": {
@@ -29334,7 +29334,7 @@
       "is_joint": false,
       "doc_id": "S100Z69R",
       "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "5484::大同特殊鋼株式会社": {
@@ -29353,7 +29353,7 @@
       "is_joint": true,
       "doc_id": "S100Z73A",
       "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "4071::三室　克哉": {
@@ -29372,7 +29372,7 @@
       "is_joint": true,
       "doc_id": "S100Z6W3",
       "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "4572::キャンター　フィッツジェラルド　ヨーロッパ(Cantor Fitzgerald Europe)": {
@@ -29391,7 +29391,7 @@
       "is_joint": false,
       "doc_id": "S100Z77V",
       "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "638A::株式会社惻隠坊": {
@@ -29410,7 +29410,7 @@
       "is_joint": true,
       "doc_id": "S100Z6VR",
       "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "4247::神田　隆生": {
@@ -29429,7 +29429,7 @@
       "is_joint": true,
       "doc_id": "S100Z1Z5",
       "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "3276::株式会社Amsterdam1": {
@@ -29448,7 +29448,7 @@
       "is_joint": true,
       "doc_id": "S100Z7C2",
       "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "4847::安達　一彦": {
@@ -29467,7 +29467,7 @@
       "is_joint": false,
       "doc_id": "S100Z6YT",
       "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "5484::岡谷鋼機株式会社": {
@@ -29486,7 +29486,7 @@
       "is_joint": true,
       "doc_id": "S100Z7BB",
       "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "3905::杉原　行洋": {
@@ -29505,7 +29505,7 @@
       "is_joint": true,
       "doc_id": "S100Z7DC",
       "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "6696::藤吉　英彦": {
@@ -29524,7 +29524,7 @@
       "is_joint": true,
       "doc_id": "S100Z74B",
       "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
       "exited": false
     },
     "5484::東京窯業株式会社": {
@@ -29543,7 +29543,26 @@
       "is_joint": true,
       "doc_id": "S100Z707",
       "first_seen": "2026-10-12",
-      "last_seen": "2026-10-12",
+      "last_seen": "2026-10-13",
+      "exited": false
+    },
+    "2498::パシフィックコンサルタンツホールディングス株式会社": {
+      "code": "2498",
+      "name": "株式会社オリエンタルコンサルタンツホールディングス",
+      "fund": "パシフィックコンサルタンツホールディングス株式会社",
+      "is_known": false,
+      "bonus": 0,
+      "anchor_filing_date": "2026-10-13",
+      "anchor_price": 3025.0,
+      "est_acq_price": 3010.0,
+      "acq_method": "funds_div_shares",
+      "shares_out_edinet": 12359740.0,
+      "holding_ratio": 0.0542,
+      "prev_ratio": null,
+      "is_joint": false,
+      "doc_id": "S100Z7BI",
+      "first_seen": "2026-10-13",
+      "last_seen": "2026-10-13",
       "exited": false
     }
   }
